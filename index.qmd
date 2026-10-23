@@ -4,7 +4,7 @@ This book collects notes on multilevel and longitudinal models, written for appl
 
 ::: {.callout-warning}
 ## Work in progress
-This is a draft. Chapter 1 is complete; the remaining chapters are placeholders and will be filled in over time.
+This is a draft and will be updated over time.
 :::
 
 ## Who this book is for
