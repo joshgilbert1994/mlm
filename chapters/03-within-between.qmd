@@ -1,0 +1,6 @@
+# Within, Between, and Contextual Effects {#sec-within-between}
+
+::: {.callout-note}
+## Coming soon
+This chapter separates the within-group and between-group relationships that a single pooled regression slope mixes together.
+:::

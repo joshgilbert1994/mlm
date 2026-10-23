@@ -1,0 +1,47 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Multilevel and Longitudinal Models"
+  subtitle: "Notes for applied researchers in education and the social sciences"
+  author: "Josh Gilbert"
+  date: today
+  date-format: "MMMM YYYY"
+  site-url: https://joshgilbert1994.github.io/mlm/
+  repo-url: https://github.com/joshgilbert1994/mlm
+  repo-actions: [edit, issue]
+  search: true
+  page-navigation: true
+  sidebar:
+    style: floating
+  chapters:
+    - index.qmd
+    - part: "Clustered data"
+      chapters:
+        - chapters/01-variance-components.qmd
+        - chapters/02-random-intercepts.qmd
+        - chapters/03-within-between.qmd
+        - chapters/04-random-slopes.qmd
+    - part: "Longitudinal data"
+      chapters:
+        - chapters/05-linear-growth.qmd
+        - chapters/06-nonlinear-growth.qmd
+    - part: "Beyond continuous outcomes"
+      chapters:
+        - chapters/07-binary-outcomes.qmd
+
+format:
+  html:
+    theme: [cosmo, custom.scss]
+    toc: true
+    toc-depth: 3
+    toc-title: "On this page"
+    number-sections: true
+    number-depth: 3
+    crossref:
+      chapters: true
+    fig-cap-location: bottom
+    reference-location: margin
+    code-copy: true
+    callout-appearance: simple

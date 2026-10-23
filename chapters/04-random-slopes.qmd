@@ -1,0 +1,6 @@
+# Random Slopes Models {#sec-random-slopes}
+
+::: {.callout-note}
+## Coming soon
+This chapter lets the effect of a predictor vary across groups.
+:::

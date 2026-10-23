@@ -1,0 +1,6 @@
+# Longitudinal Data and Linear Growth {#sec-linear-growth}
+
+::: {.callout-note}
+## Coming soon
+This chapter treats repeated measures as observations nested in people and models linear change over time.
+:::

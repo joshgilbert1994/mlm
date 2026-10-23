@@ -1,0 +1,6 @@
+# Binary Outcomes and Multilevel Logistic Regression {#sec-binary-outcomes}
+
+::: {.callout-note}
+## Coming soon
+This chapter extends multilevel models to yes/no outcomes.
+:::

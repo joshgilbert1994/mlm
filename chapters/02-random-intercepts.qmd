@@ -1,0 +1,6 @@
+# Random Intercepts Models and Inference {#sec-random-intercepts}
+
+::: {.callout-note}
+## Coming soon
+This chapter adds a student-level covariate to the variance components model to get the random intercepts model, then turns to inference: standard errors, confidence intervals, and tests for both fixed effects and variance components.
+:::

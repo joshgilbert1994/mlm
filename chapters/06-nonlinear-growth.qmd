@@ -1,0 +1,6 @@
+# Non-Linear Growth, Autocorrelation, and Dynamic Models {#sec-nonlinear-growth}
+
+::: {.callout-note}
+## Coming soon
+This chapter extends growth models to curved trajectories and correlated residuals over time.
+:::
