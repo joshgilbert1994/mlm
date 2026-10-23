@@ -15,4 +15,6 @@ The rendered book goes to `_book/`. Pushing to `main` builds and publishes it to
 - `_quarto.yml`: book structure and chapter order
 - `index.qmd`: preface
 - `chapters/`: one `.qmd` per chapter, with figures in `chapters/images/<chapter>/`
+- `code/`: R scripts that generate each chapter's figures (run from the repo root)
+- `data/`: the datasets used in the book
 - `custom.scss`: theme

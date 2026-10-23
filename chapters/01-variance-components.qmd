@@ -84,6 +84,8 @@ We use one simple dataset for the first several chapters, and layer complexity o
 | `std_baseline` | 1 (student) | Beginning-of-year state standardized reading score (used starting in @sec-random-intercepts) |
 | `cluster_id` | 2 (school) | School identifier |
 
+The 10-school sample is available to download as [`jebs_sub.csv`](../data/jebs_sub.csv), so you can fit every model in this book yourself.
+
 The outcome scale is arbitrary, as test scores usually are. It was set so that $\mu = 50$ and $\sigma = 10$ in the **full** sample. In our 10-school subsample the mean is 47.92 and the SD is 9.54.
 
 **A word about $n_j$, which is not a variable.** You will see $n_j$ all over this chapter. It is simply **the number of students sampled in school $j$**: 13 students in school 11, 116 in school 47, and so on. It is a count that describes the *shape of our data*, not something we measured about anybody and not something we could put on the right side of a regression equation. It has no level in the "level-1 predictor / level-2 predictor" sense, because it is not a predictor at all.

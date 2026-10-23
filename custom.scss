@@ -77,3 +77,6 @@ blockquote {
 .self-check .callout { margin: 0.5rem 0; }
 
 .quickref pre { font-size: 0.72rem; }
+
+// Show R operators like <- literally, not as ligature arrows
+code, pre { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
