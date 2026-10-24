@@ -17,7 +17,7 @@ Multilevel data means our observations arrive in **groups**: students in schools
 Data often have structure. Some standard examples:
 
 | Level 1 (the observation) | Level 2 (the group)   | What we call it         |
-|--------------------------|----------------------|------------------------|
+|---------------------------|-----------------------|-------------------------|
 | Students                  | Schools               | Clustered / nested data |
 | Patients                  | Hospitals             | Clustered / nested data |
 | Repeated measures         | People                | Longitudinal data       |
@@ -52,7 +52,7 @@ The direction is not guaranteed. Roughly, for predictors that vary mostly *betwe
 Both are errors of applying a finding at one level to a different level (see Robson & Pevalin, Ch. 1).
 
 | Fallacy | Direction | Example |
-|------------------|------------------|-----------------------------------|
+|----|----|----|
 | **Ecological** | Group $\rightarrow$ individual | Low-income neighborhoods have higher crime rates, so low-income residents are more likely to commit crime |
 | **Atomistic** | Individual $\rightarrow$ group | In the 2000 US presidential election, wealthier *voters* preferred the Republican candidate, but *states* with wealthier populations did not. |
 
@@ -75,7 +75,7 @@ We use one simple dataset for the first four chapters, and layer complexity onto
 **Source.** Gilbert, Kim, & Miratrix ([2023](https://journals.sagepub.com/doi/pdf/10.3102/10769986231171710?casa_token=x3jNXUGSOLcAAAAA:zaf5NeBKTwW6o0bXHueUS4Tak0FzZDBJVcDXUAE8txGAUDeCRyNhOhqsPLQb-q220kcrwRsOz2WS)), *Journal of Educational and Behavioral Statistics*. Full sample: 7,797 grade 3 students in 110 schools. In this chapter we use a **random sample of 10 schools**, giving 780 students.
 
 | Variable | Level | What it is |
-|------------------|------------------|-----------------------------------|
+|----|----|----|
 | `read_comp` | 1 (student) | Outcome. End-of-year reading comprehension, 30-item researcher-designed test |
 | `std_baseline` | 1 (student) | Beginning-of-year state standardized reading score (used starting in @sec-random-intercepts) |
 | `cluster_id` | 2 (school) | School identifier |
@@ -174,7 +174,7 @@ $$
 Every symbol, in plain language:
 
 | Symbol | Name | In words |
-|------------------|------------------|-----------------------------------|
+|----|----|----|
 | $Y_{ij}$ | Outcome | Reading score for student $i$ in school $j$ |
 | $\beta_{0j}$ | School mean | The **true** mean score for school $j$ |
 | $\gamma_{0}$ | Grand mean | The average across all schools: the center of the whole system |
@@ -354,7 +354,7 @@ The shared piece $u_j$ is simultaneously "how much schools differ" and "what mak
 ### Reading the extremes {#sec-icc-extremes}
 
 | ICC | What it means | Do we need an MLM? |
-|------------------|-----------------------------|-------------------------|
+|----|----|----|
 | $0$ | School means are all identical. Knowing a student's school tells you nothing. | No: ordinary regression is fine (with some caveats that may become clear in later chapters) |
 | $\approx 0.10$–$0.25$ | Typical range for student achievement nested in schools | Yes |
 | $1$ | No variation within schools at all; every student in a school is identical. All variation is between schools. | An MLM is not useful either: you effectively have $J$ observations, not $N$ |
@@ -457,7 +457,7 @@ Another framing of the same idea: $\widehat{u_j}$ is a **precision-weighted aver
 Everything above, computed. `Raw resid.` is $\overline{Y_j} - \widehat{\gamma_0}$; $R_j$ is the shrinkage factor; $\widehat{u_j}$ is the Empirical Bayes estimate.
 
 | School | $n_j$ | $\overline{Y_j}$ | Raw resid. | $R_j$ | $\widehat{u_j}$ | SE$(\widehat{u_j})$ |
-|----------:|----------:|----------:|----------:|----------:|----------:|----------:|
+|---:|---:|---:|---:|---:|---:|---:|
 | 62 | 67 | 42.1 | $-6.37$ | 0.934 | $-5.95$ | 1.05 |
 | 47 | 116 | 45.3 | $-3.09$ | 0.961 | $-2.97$ | 0.81 |
 | 74 | 69 | 45.7 | $-2.72$ | 0.935 | $-2.54$ | 1.04 |
@@ -563,7 +563,7 @@ Empirical Bayes is not merely a reasonable compromise between the raw mean and t
 The literature uses many synonyms. Nothing here is a distinction; these are just different names.
 
 | Term | Also called |
-|------------------------------------|------------------------------------|
+|----|----|
 | Variance components model | Random intercepts model with no predictors; null model; empty model; unconditional means model |
 | $u_j$ | Random effect; school residual; group offset; level-2 residual; BLUP |
 | $\widehat{u_j}$ | Empirical Bayes estimate; shrunken estimate; partially pooled estimate; BLUP |

@@ -20,7 +20,7 @@ book:
     style: floating
   chapters:
     - index.qmd
-    - part: "Clustered data"
+    - part: "Clustered data and cross-sectional models"
       chapters:
         - chapters/01-variance-components.qmd
         - chapters/02-random-intercepts.qmd
