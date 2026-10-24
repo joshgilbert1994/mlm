@@ -7,8 +7,8 @@ project:
 
 book:
   title: "Multilevel and Longitudinal Models"
-  subtitle: "Notes for applied researchers in education and the social sciences"
-  author: "Josh Gilbert"
+  subtitle: "A textbook for applied researchers in education and the social sciences"
+  author: "Josh Gilbert and Bill Young"
   date: today
   date-format: "MMMM YYYY"
   site-url: https://joshgilbert1994.github.io/mlm/

@@ -1,33 +1,30 @@
 # Preface {.unnumbered}
 
-This book collects notes on multilevel and longitudinal models, written for applied researchers in education and the social sciences. It grew out of S-043 at the Harvard Graduate School of Education.
+This textbook on multilevel and longitudinal models is written for applied researchers in education and the social sciences. It grew out of the course *S-043: Multilevel and Longitudinal Models* at the Harvard Graduate School of Education. The content is primarily based on Josh Gilbert's S-043 lecture slides when he taught the course in Fall 2026. Bill Young turned the slides into detailed lecture notes which form the foundation of this text. Josh then used AI tools to convert Bill's notes into this online format and further edited the content. Thus, Josh and Bill are equal contributors to this work.
 
-::: {.callout-warning}
+::: callout-warning
 ## Work in progress
+
 This is a draft and will be updated over time.
 :::
 
 ## Who this book is for
 
-Readers who are comfortable with ordinary regression and want to know what changes when observations come in groups: students in schools, patients in hospitals, repeated measures in people. We assume familiarity with R, but the focus is on what the models *mean*, not on syntax.
+Readers who are comfortable with ordinary regression and want to know what changes when observations come in groups: students in schools, patients in hospitals, repeated measures in people. We assume familiarity with R, but the focus is on what the models *mean* rather than syntax or mathematical derivations.
 
 ## How each chapter is organized
 
-Every chapter follows the same shape, so you always know where to look:
+Every chapter follows the same structure:
 
 - **The chapter in one paragraph.** The whole argument, before the details.
 - **The main text.** Built around a single running example, with every equation tied to R code and every number in the output used in a sentence.
 - **Vocabulary decoder and common mistakes.** The field uses many names for the same thing; these sections sort them out.
-- **Quick reference.** The formulas, on one screen.
+- **Quick reference.** The formulas in one place.
 - **Worked examples and self-check.** Questions with answers hidden until you want them.
-
-## The running dataset
-
-The first several chapters share one dataset of grade 3 students' reading comprehension scores, nested in schools. Each chapter layers new complexity onto the same data, so the models can be compared directly.
 
 ## Software
 
-All models are fit in R with `lme4`:
+Almost all models are fit in R with `lme4`:
 
 ``` r
 install.packages("lme4")
@@ -36,4 +33,4 @@ library(lme4)
 
 ## Acknowledgments
 
-Chapter 1 was adapted from course notes by Bill Young. These notes owe a large debt to Luke Miratrix's [online MLM handouts](https://lmiratrix.github.io/MLM/), which remain an excellent companion reference.
+These notes owe a large debt to Luke Miratrix's [online MLM handouts](https://lmiratrix.github.io/MLM/), which remain an excellent companion reference.
