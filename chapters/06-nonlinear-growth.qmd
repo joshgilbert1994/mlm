@@ -12,11 +12,11 @@ This chapter uses the full depression data, 256 patients, and asks three questio
 
 ### The full data {#sec-nl-data}
 
-The data come from Schumacher (2023), a randomized trial of psychotherapy for chronic depression. @sec-linear-growth used only the first 12 patients; this chapter uses everyone in the data file: **256 patients and 5,517 measurements**. The data are available as [`dep.csv`](../data/dep.csv).
+The data come from Schumacher, et al. ([2023](https://doi.org/10.1001/jamapsychiatry.2023.2823)), a randomized trial of psychotherapy for chronic depression. @sec-linear-growth used only the first 12 patients; this chapter uses everyone in the data file: **256 patients and 5,517 measurements**. The data are available as [`dep.csv`](../data/dep.csv).
 
--   `mdd9` is the outcome: the number of the nine symptoms of major depressive disorder (mood, concentration, self-worth, suicidal ideation, tiredness, sleep, pleasure, psychomotor changes, appetite) that a patient reports at moderate or strong intensity.
--   `wave` is the session number. As in @sec-linear-growth, we treat it as **weeks from the start of the study**, so every slope below is per week.
--   `treat` is 1 for a patient who received the **disorder-specific therapy** and 0 for the **nonspecific therapy** (sometimes called "targeted" and "generic" psychotherapy).
+- `mdd9` is the outcome: the number of the nine symptoms of major depressive disorder (mood, concentration, self-worth, suicidal ideation, tiredness, sleep, pleasure, psychomotor changes, appetite) that a patient reports at moderate or strong intensity.
+- `wave` is the session number. As in @sec-linear-growth, we treat it as **weeks from the start of the study**, so every slope below is per week.
+- `treat` is 1 for a patient who received the **disorder-specific therapy** and 0 for the **nonspecific therapy** (sometimes called "targeted" and "generic" psychotherapy).
 
 | Feature | Value |
 |:-----------------------------------|:-----------------------------------|
@@ -41,13 +41,13 @@ $$\begin{aligned}
 && e_{ij} &\sim N(0, \sigma^2)
 \end{aligned}$$
 
--   $\beta_{0j}$ is patient $j$'s **intercept** (their predicted score at week 0) and $\beta_{1j}$ is their **rate of change** per week (their slope). Together they define **patient $j$'s predicted line**, $\beta_{0j} + \beta_{1j}\,\text{wave}_{ij}$: the score predicted for patient $j$ at each week. "Predicted line" has this meaning throughout the chapter.
--   In each $\gamma$, the first subscript is the level-1 coefficient (0 for the intercept, 1 for the slope) and the second is the level-2 term (0 for the constant, 1 for `treat`): $\gamma_{00}$ and $\gamma_{10}$ are the nonspecific group's average intercept and average rate of change, and $\gamma_{01}$ and $\gamma_{11}$ are how much higher those two averages are in the disorder-specific group.
--   $u_{0j}$ and $u_{1j}$ are patient $j$'s departures from **their own group's** average intercept and average rate of change.
--   The pair $(u_{0j}, u_{1j})$ is **assumed** to come from a two-dimensional normal distribution with covariance matrix $\Sigma$: $\tau_0^2$ and $\tau_1^2$ are the variances of the intercepts and of the slopes, and $\tau_{01}$ is the **covariance** of the two departures (R's output has the correlation, $\rho = \tau_{01}/(\tau_0\tau_1)$).
--   $e_{ij}$ is the **level-1 residual**: how far measurement $i$ is from patient $j$'s predicted line, $e_{ij} = \text{MDD}_{ij} - (\beta_{0j} + \beta_{1j}\,\text{wave}_{ij})$. It is **assumed** normal with mean zero and variance $\sigma^2$.
+- $\beta_{0j}$ is patient $j$'s **intercept** (their predicted score at week 0) and $\beta_{1j}$ is their **rate of change** per week (their slope). Together they define **patient** $j$'s predicted line, $\beta_{0j} + \beta_{1j}\,\text{wave}_{ij}$: the score predicted for patient $j$ at each week. "Predicted line" has this meaning throughout the chapter.
+- In each $\gamma$, the first subscript is the level-1 coefficient (0 for the intercept, 1 for the slope) and the second is the level-2 term (0 for the constant, 1 for `treat`): $\gamma_{00}$ and $\gamma_{10}$ are the nonspecific group's average intercept and average rate of change, and $\gamma_{01}$ and $\gamma_{11}$ are how much higher those two averages are in the disorder-specific group.
+- $u_{0j}$ and $u_{1j}$ are patient $j$'s departures from **their own group's** average intercept and average rate of change.
+- The pair $(u_{0j}, u_{1j})$ is **assumed** to come from a two-dimensional normal distribution with covariance matrix $\Sigma$: $\tau_0^2$ and $\tau_1^2$ are the variances of the intercepts and of the slopes, and $\tau_{01}$ is the **covariance** of the two departures (R's output has the correlation, $\rho = \tau_{01}/(\tau_0\tau_1)$).
+- $e_{ij}$ is the **level-1 residual**: how far measurement $i$ is from patient $j$'s predicted line, $e_{ij} = \text{MDD}_{ij} - (\beta_{0j} + \beta_{1j}\,\text{wave}_{ij})$. It is **assumed** normal with mean zero and variance $\sigma^2$.
 
-**The parameter of interest is $\gamma_{11}$**: the difference in rates of change between the two therapies. Substituting the level-2 equations into level 1 gives the reduced form, in which $\gamma_{11}$ multiplies $\text{treat}_j \times \text{wave}_{ij}$, an **interaction** between a level-2 and a level-1 variable:
+**The parameter of interest is** $\gamma_{11}$: the difference in rates of change between the two therapies. Substituting the level-2 equations into level 1 gives the reduced form, in which $\gamma_{11}$ multiplies $\text{treat}_j \times \text{wave}_{ij}$, an **interaction** between a level-2 and a level-1 variable:
 
 $$\text{MDD}_{ij} = \gamma_{00} + \gamma_{01}\,\text{treat}_j + \gamma_{10}\,\text{wave}_{ij} + \gamma_{11}\,\text{treat}_j \times \text{wave}_{ij} + u_{0j} + u_{1j}\,\text{wave}_{ij} + e_{ij}$$
 
@@ -78,7 +78,7 @@ $\widehat{\gamma_{01}} = -0.46$. *Interpretation.* At week 0, an average disorde
 
 $\widehat{\gamma_{10}} = -0.055$. *Interpretation.* For an average nonspecific-therapy patient, symptoms decrease by 0.055 per week, or $0.0547 \times 24 = 1.31$ symptoms over 24 weeks.
 
-$\widehat{\gamma_{11}} = -0.026$. *Interpretation.* Symptoms decrease 0.026 more per week in the disorder-specific group than in the nonspecific group, so the disorder-specific group's average rate is $-0.0547 + (-0.0257) = -0.0804$ per week. Over 24 weeks the extra decrease is $0.0257 \times 24 = 0.62$ symptoms. With $Z = -2.37$, there is evidence that the disorder-specific therapy is associated with a faster decrease.
+$\widehat{\gamma_{11}} = -0.026$. *Interpretation.* Symptoms decrease 0.026 more per week in the disorder-specific group than in the nonspecific group, so the disorder-specific group's average rate is $-0.0547 + (-0.0257) = -0.0804$ per week. Over 24 weeks the extra decrease is $0.0257 \times 24 = 0.62$ symptoms. With $Z = -2.37$, there is evidence that the disorder-specific therapy causes a faster decrease.
 
 With the first 12 patients (@sec-linear-growth), the same coefficient was $-0.046$ (SE 0.0535, $Z = -0.86$), not distinguishable from zero; with 256 patients its standard error, 0.0108, is about one fifth as large.
 
@@ -134,11 +134,11 @@ $$\begin{aligned}
 && e_{ij} &\sim N(0, \sigma^2)
 \end{aligned}$$
 
--   $\beta_{0j}$, $\beta_{1j}$ and $\beta_{2j}$ are patient $j$'s intercept, slope at week 0 and quadratic coefficient (curvature). Together they define **patient $j$'s predicted curve**, $\beta_{0j} + \beta_{1j}\,\text{wave}_{ij} + \beta_{2j}\,\text{wave}^2_{ij}$.
--   $\gamma_{00}$, $\gamma_{10}$ and $\gamma_{20}$ are the averages of these three coefficients across patients, and $u_{0j}$, $u_{1j}$, $u_{2j}$ are patient $j$'s departures from those averages.
--   With three random effects, $\Sigma$ has **six** parameters. The three variances, $\tau_0^2$, $\tau_1^2$ and $\tau_2^2$, describe how much patients differ in their intercepts, their slopes at week 0 and their curvatures. The three covariances are $\tau_{01}$, the covariance between the intercept and slope departures; $\tau_{02}$, the covariance between the intercept and quadratic departures; and $\tau_{12}$, the covariance between the slope and quadratic departures (not to be confused with the variance $\tau_1^2$).
--   $e_{ij}$ is the level-1 residual: how far measurement $i$ is from patient $j$'s predicted curve.
--   Treatment is left out of this model for now.
+- $\beta_{0j}$, $\beta_{1j}$ and $\beta_{2j}$ are patient $j$'s intercept, slope at week 0 and quadratic coefficient (curvature). Together they define **patient** $j$'s predicted curve, $\beta_{0j} + \beta_{1j}\,\text{wave}_{ij} + \beta_{2j}\,\text{wave}^2_{ij}$.
+- $\gamma_{00}$, $\gamma_{10}$ and $\gamma_{20}$ are the averages of these three coefficients across patients, and $u_{0j}$, $u_{1j}$, $u_{2j}$ are patient $j$'s departures from those averages.
+- With three random effects, $\Sigma$ has **six** parameters. The three variances, $\tau_0^2$, $\tau_1^2$ and $\tau_2^2$, describe how much patients differ in their intercepts, their slopes at week 0 and their curvatures. The three covariances are $\tau_{01}$, the covariance between the intercept and slope departures; $\tau_{02}$, the covariance between the intercept and quadratic departures; and $\tau_{12}$, the covariance between the slope and quadratic departures (not to be confused with the variance $\tau_1^2$).
+- $e_{ij}$ is the level-1 residual: how far measurement $i$ is from patient $j$'s predicted curve.
+- Treatment is left out of this model for now.
 
 Substituting the level-2 equations into level 1 gives the reduced form, here grouped into the intercept, linear and quadratic terms:
 
@@ -162,7 +162,7 @@ With the code in @sec-nl-quad-model, you will see a warning that the model "fail
 :::
 
 | Term | Estimate | SE | $Z$ |
-|:--------------------------------------|----------:|----------:|----------:|
+|:--------------------------------|------------:|------------:|------------:|
 | $\widehat{\gamma_{00}}$ `(Intercept)` | 4.7079 | 0.1131 | 41.61 |
 | $\widehat{\gamma_{10}}$ `wave` | $-0.1064$ | 0.0292 | $-3.64$ |
 | $\widehat{\gamma_{20}}$ `wave2` | 0.00145 | 0.00102 | 1.43 |
@@ -185,7 +185,7 @@ $\widehat{\gamma_{20}} = 0.00145$. *Interpretation.* The quadratic term adds $\g
 **How the weekly change changes.** The table below has the predicted change in symptoms over each of the first five weeks: the linear coefficient plus the quadratic coefficient times that week's increase in $\text{wave}^2_{ij}$.
 
 | From week | To week | Increase in $\text{wave}^2_{ij}$ | Predicted change in symptoms |
-|--------------:|--------------:|----------------:|--------------------------:|
+|---------------:|---------------:|---------------:|-----------------------:|
 | 0 | 1 | $1 - 0 = 1$ | $-0.105$ |
 | 1 | 2 | $4 - 1 = 3$ | $-0.102$ |
 | 2 | 3 | $9 - 4 = 5$ | $-0.099$ |
@@ -218,9 +218,9 @@ $\widehat{\tau_2} = 0.0152$. *Interpretation.* Patients' quadratic coefficients 
 
 **The correlations.** In R's output, each covariance in $\Sigma$ is printed as a correlation.
 
--   **Intercept–slope correlation** (from $\tau_{01}$), 0.009. Patients' predicted scores at week 0 are essentially unrelated to their slopes at week 0.
--   **Intercept–quadratic correlation** (from $\tau_{02}$), $-0.053$. Patients' predicted scores at week 0 are essentially unrelated to their curvatures.
--   **Slope–quadratic correlation** (from $\tau_{12}$), $-0.985$. Patients whose slope at week 0 is more negative than average (symptoms decreasing faster at the start) tend to have a larger quadratic coefficient, so their decrease becomes less steep more quickly.
+- **Intercept–slope correlation** (from $\tau_{01}$), 0.009. Patients' predicted scores at week 0 are essentially unrelated to their slopes at week 0.
+- **Intercept–quadratic correlation** (from $\tau_{02}$), $-0.053$. Patients' predicted scores at week 0 are essentially unrelated to their curvatures.
+- **Slope–quadratic correlation** (from $\tau_{12}$), $-0.985$. Patients whose slope at week 0 is more negative than average (symptoms decreasing faster at the start) tend to have a larger quadratic coefficient, so their decrease becomes less steep more quickly.
 
 The slope–quadratic correlation is $-0.985$, which is very close to $-1$. This means that patients who have a more positive-than-average slope at week 0 tend to have a more negative-than-average quadratic term, and vice versa. In other words, the two random effects are very strongly related across patients.
 
@@ -242,8 +242,8 @@ The three SDs describe how much patients differ in their predicted score at week
 
 **Do all patients' curves have the same shape?** No. The right panel has every patient's quadratic coefficient.
 
--   **59% of patients have a positive coefficient** (to the right of the black line). Their predicted curve is curved upward: their slope increases each week, so a decrease in symptoms becomes less steep over time.
--   **41% of patients have a negative coefficient** (to the left of the black line). Their predicted curve is curved downward: their slope decreases each week, so a decrease in symptoms becomes steeper over time.
+- **59% of patients have a positive coefficient** (to the right of the black line). Their predicted curve is curved upward: their slope increases each week, so a decrease in symptoms becomes less steep over time.
+- **41% of patients have a negative coefficient** (to the left of the black line). Their predicted curve is curved downward: their slope decreases each week, so a decrease in symptoms becomes steeper over time.
 
 The average coefficient (the dashed red line, 0.00145) is close to zero because the positive and negative coefficients partly cancel when they are averaged, so the average curve is much less curved than many patients' predicted curves.
 
@@ -264,8 +264,8 @@ $$\begin{aligned}
 \Sigma = \begin{bmatrix} \tau_0^2 & \tau_{01} \\ \tau_{01} & \tau_1^2 \end{bmatrix}, \qquad e_{ij} \sim N(0, \sigma^2)
 \end{aligned}$$
 
--   $\beta_2$ has no $j$ and there is no $u_{2j}$: the quadratic coefficient is the same number, $\gamma_{20}$, for every patient.
--   Each patient's predicted curve is the average curve plus a straight line, $u_{0j} + u_{1j}\,\text{wave}_{ij}$. Adding a straight line to a curve changes its intercept and slope but not its curvature.
+- $\beta_2$ has no $j$ and there is no $u_{2j}$: the quadratic coefficient is the same number, $\gamma_{20}$, for every patient.
+- Each patient's predicted curve is the average curve plus a straight line, $u_{0j} + u_{1j}\,\text{wave}_{ij}$. Adding a straight line to a curve changes its intercept and slope but not its curvature.
 
 In R, `wave2` is in the fixed part but not in the random part:
 
@@ -296,7 +296,7 @@ anova(m_linear, m_intermediate, m_quadratic)
 The three models, from simplest to most complex:
 
 | Model | What each patient has | Parameters | $\ell$ |
-|:---------------|:---------------------------|-------------:|-------------:|
+|:---------------|:------------------------|---------------:|---------------:|
 | **A.** Linear growth model with random slopes | An intercept and a slope (a straight predicted line) | 6 | $-10330.219$ |
 | **B.** Intermediate model | The average curve plus a straight-line departure (an intercept and a slope); the same curvature for everyone | 7 | $-10314.611$ |
 | **C.** Quadratic growth model | An intercept, a slope and a curvature (a predicted curve); the curvature differs between patients | 10 | $-10221.980$ |
@@ -304,17 +304,17 @@ The three models, from simplest to most complex:
 Model A's six parameters are $\gamma_{00}$, $\gamma_{10}$, $\tau_0^2$, $\tau_1^2$, $\tau_{01}$ and $\sigma^2$. Model B also has the average quadratic coefficient, $\gamma_{20}$. Model C also has the variance of the patients' quadratic departures, $\tau_2^2$, and the intercept–quadratic and slope–quadratic covariances, $\tau_{02}$ and $\tau_{12}$.
 
 | Comparison | Question | $\chi^2$ | df | 5% cutoff |
-|:-----------|:--------------------------|-----------:|-----------:|-----------:|
+|:------------|:--------------------|------------:|------------:|------------:|
 | A against C (the main test) | Do curves, each with its own curvature, fit better than straight lines? | 216.48 | 4 | 9.49 |
 | A against B | Is the average trajectory curved, when everyone has the same curvature? | 31.22 | 1 | 3.84 |
 | B against C | Do patients differ in their curvature? | 185.26 | 3 | 7.81 |
 
 Each $\chi^2$ is $-2$ times the difference in the two models' $\ell$; for A against C, $\chi^2 = -2(-10330.219 - (-10221.980)) = 216.48$. The degrees of freedom are the number of parameters added, and the 5% cutoff is the value that a $\chi^2$ with those degrees of freedom exceeds only 5% of the time if the extra parameters are zero. All three $\chi^2$ values are above their cutoffs.
 
--   **A against C.** *Interpretation.* There is strong evidence that the quadratic growth model describes these data better than the linear growth model with random slopes.
--   **A against B.** *Interpretation.* With the same curvature for every patient, there is evidence that the average trajectory is curved.
--   **B against C.** *Interpretation.* There is strong evidence that patients differ in their curvature. This $\chi^2$ is 185.26 of the 216.48 for A against C, so most of the evidence for curves is about patients' curves having different shapes, not about the shape of the average curve.
--   **The boundary.** Under Models A and B, $\tau_2^2 = 0$, the boundary of the parameter space (a variance cannot be negative), so for A against C and B against C the usual $\chi^2$ p-value is too large and the tests are conservative: when the usual p-value is below 0.05, as here, the correct one is too.
+- **A against C.** *Interpretation.* There is strong evidence that the quadratic growth model describes these data better than the linear growth model with random slopes.
+- **A against B.** *Interpretation.* With the same curvature for every patient, there is evidence that the average trajectory is curved.
+- **B against C.** *Interpretation.* There is strong evidence that patients differ in their curvature. This $\chi^2$ is 185.26 of the 216.48 for A against C, so most of the evidence for curves is about patients' curves having different shapes, not about the shape of the average curve.
+- **The boundary.** Under Models A and B, $\tau_2^2 = 0$, the boundary of the parameter space (a variance cannot be negative), so for A against C and B against C the usual $\chi^2$ p-value is too large and the tests are conservative: when the usual p-value is below 0.05, as here, the correct one is too.
 
 ::: callout-tip
 ## Straight line or curve?
@@ -356,9 +356,9 @@ The residuals $e_{ij}$ are **assumed** IID, an assumption often reasonable for d
 
 ![Simulated data, 100 time points around the same straight trend, with three different correlations between consecutive residuals.](images/06/fig07_autocorrelation_sim.png){#fig-nl-autocorrelation-sim width="82%"}
 
--   **Negative autocorrelation** (left): consecutive points tend to be on opposite sides of the trend line.
--   **No autocorrelation** (middle): a point's side of the line is unrelated to the previous point's.
--   **Positive autocorrelation** (right): consecutive points tend to be on the same side, in long stretches above or below the line.
+- **Negative autocorrelation** (left): consecutive points tend to be on opposite sides of the trend line.
+- **No autocorrelation** (middle): a point's side of the line is unrelated to the previous point's.
+- **Positive autocorrelation** (right): consecutive points tend to be on the same side, in long stretches above or below the line.
 
 Positive autocorrelation is common in data measured repeatedly over time. For example, a global stock fund's daily price in 2020 was close to the previous day's price, and far below the year's trend line for weeks after the large decrease in March.
 
@@ -368,7 +368,7 @@ To check, pair each residual $e_{ij}$ from the treatment-by-time model of @sec-n
 
 ![Left: the distribution of residuals under the treatment-by-time model. Right: each residual against the same patient's previous residual, with a fitted straight line.](images/06/fig08_residual_lag.png){#fig-nl-residual-lag width="74%"}
 
-**Is $e_{i-1,j}$ correlated with $e_{ij}$?** Yes. A residual and the same patient's previous residual are correlated **0.25**: a patient whose score is above their predicted line at one measurement tends to be above it at the next one too. Among the first 12 patients, the correlations computed separately for each patient with at least three pairs range from 0.56 (patient 1) to slightly below zero; across the 251 such patients, the median is 0.22 and 76% are positive. With about 20 pairs per patient, each is imprecise, so the 0.25 from all pairs is the more reliable summary.
+**Is** $e_{i-1,j}$ correlated with $e_{ij}$? Yes. A residual and the same patient's previous residual are correlated **0.25**: a patient whose score is above their predicted line at one measurement tends to be above it at the next one too. Among the first 12 patients, the correlations computed separately for each patient with at least three pairs range from 0.56 (patient 1) to slightly below zero; across the 251 such patients, the median is 0.22 and 76% are positive. With about 20 pairs per patient, each is imprecise, so the 0.25 from all pairs is the more reliable summary.
 
 Because of skipped sessions, 842 of the 5,261 pairs (16%) are two or more weeks apart; with only the pairs one week apart, the correlation is almost the same, 0.26.
 
@@ -383,9 +383,9 @@ e_{ij} &= \phi\, e_{i-1,j} + \nu_{ij} \\
 
 In words: this measurement's residual, $e_{ij}$, is $\phi$ times the same patient's previous residual, $e_{i-1,j}$, plus a new part, $\nu_{ij}$.
 
--   $\phi$ (the Greek letter phi) is the **autoregressive parameter**: the residual is predicted to be $\phi$ times the previous residual, and here, with no other piece in the residual, $\phi$ is also the correlation between consecutive residuals of a patient ("autoregressive": the residual is regressed on its own previous value; "order 1": on one previous value).
--   $\nu_{ij}$ (the Greek letter nu) is the **new part** of the residual at measurement $i$, unrelated to all of the patient's earlier residuals and **assumed** IID normal with mean zero and variance $\sigma_\nu^2$ (some presentations write $\sigma^2$ here; this chapter keeps $\sigma^2$ for a second piece of the residual, @sec-nl-ar1-fit).
--   $\phi$ is **assumed** to be the same for every patient, and between $-1$ and 1.
+- $\phi$ (the Greek letter phi) is the **autoregressive parameter**: the residual is predicted to be $\phi$ times the previous residual, and here, with no other piece in the residual, $\phi$ is also the correlation between consecutive residuals of a patient ("autoregressive": the residual is regressed on its own previous value; "order 1": on one previous value).
+- $\nu_{ij}$ (the Greek letter nu) is the **new part** of the residual at measurement $i$, unrelated to all of the patient's earlier residuals and **assumed** IID normal with mean zero and variance $\sigma_\nu^2$ (some presentations write $\sigma^2$ here; this chapter keeps $\sigma^2$ for a second piece of the residual, @sec-nl-ar1-fit).
+- $\phi$ is **assumed** to be the same for every patient, and between $-1$ and 1.
 
 **An example.** Suppose $\phi = 0.6$ and a patient's score is 2 symptoms above their predicted line, so the residual is 2. The next residual is predicted to be $0.6 \times 2 = 1.2$ (the new part, $\nu_{ij}$, has mean zero), then $0.6 \times 1.2 = 0.72$, then 0.43: each 0.6 times the one before, on the same side of the line but closer to zero. The correlation decreases with distance in the same way: $\phi$ one measurement apart, $\phi \times \phi = \phi^2$ two apart (the two residuals are related only through the one in between) and $\phi^k$ for $k$ apart. With $\phi = 0.6$, these are 0.60, 0.36 and 0.22 one, two and three apart, and below 0.1 from five apart. So nearby residuals are strongly related and distant ones almost unrelated, whereas under a random intercept only, two measurements of a patient are equally correlated at every distance. With $\phi = 0$, the residuals would be unrelated, as under the IID assumption; with $\phi$ close to 1, a residual would be followed by residuals of almost the same size for many measurements.
 
@@ -400,10 +400,10 @@ dep <- dep |> mutate(wave_f = factor(wave))
 lmer(mdd9 ~ 1 + treat * wave + (1 + wave | id) + ar1(0 + wave_f | id), data = dep)
 ```
 
--   `wave_f` is `wave` as a category: 28 weeks, 0 to 27.
--   `ar1(0 + wave_f | id)` is the **autocorrelated piece**: one value for each patient at each week, with correlation $\phi^k$ between values $k$ weeks apart. With `0 +`, the term has no separate intercept; the patient's intercept is in `(1 + wave | id)`.
--   **Skipped weeks.** Because the term is defined by `wave_f`, the correlation depends on how many **weeks** apart two measurements are: patient 1 has no measurement at week 5, so their week-4 and week-6 measurements are consecutive but two weeks apart, and their autocorrelated pieces have correlation $\phi^2$, not $\phi$.
--   **The independent piece**, $\varepsilon_{ij}$ (the Greek letter epsilon), with variance $\sigma^2$, is also in the model, like the level-1 residual of the models in @sec-nl-txtime and @sec-nl-quadratic.
+- `wave_f` is `wave` as a category: 28 weeks, 0 to 27.
+- `ar1(0 + wave_f | id)` is the **autocorrelated piece**: one value for each patient at each week, with correlation $\phi^k$ between values $k$ weeks apart. With `0 +`, the term has no separate intercept; the patient's intercept is in `(1 + wave | id)`.
+- **Skipped weeks.** Because the term is defined by `wave_f`, the correlation depends on how many **weeks** apart two measurements are: patient 1 has no measurement at week 5, so their week-4 and week-6 measurements are consecutive but two weeks apart, and their autocorrelated pieces have correlation $\phi^2$, not $\phi$.
+- **The independent piece**, $\varepsilon_{ij}$ (the Greek letter epsilon), with variance $\sigma^2$, is also in the model, like the level-1 residual of the models in @sec-nl-txtime and @sec-nl-quadratic.
 
 So, writing $a_{ij}$ for the autocorrelated piece, the residual is:
 
@@ -414,7 +414,7 @@ Both $\nu_{ij}$ and $\varepsilon_{ij}$ are new at each measurement, but $\nu_{ij
 In the `lmer` output, the row `id.1  wave_f0  1.27595  0.77 (ar1)` has the SD of the autocorrelated piece (1.27595) and $\phi$ (0.77); the `Residual` row (0.96436) is the SD of the independent piece.
 
 | Term                                            |  Estimate |     SE |     $Z$ |
-|:------------------------------------|-----------:|-----------:|-----------:|
+|:------------------------------|-------------:|-------------:|-------------:|
 | $\widehat{\gamma_{00}}$ `(Intercept)`           |    4.8829 | 0.1915 |   25.49 |
 | $\widehat{\gamma_{01}}$ `treat1`                | $-0.5328$ | 0.2636 | $-2.02$ |
 | $\widehat{\gamma_{10}}$ `wave`                  | $-0.0592$ | 0.0078 | $-7.63$ |
@@ -426,9 +426,9 @@ In the `lmer` output, the row `id.1  wave_f0  1.27595  0.77 (ar1)` has the SD of
 | $\widehat{\phi}$                                |    0.7739 |        |         |
 | SD of the independent piece, $\varepsilon_{ij}$ |    0.9644 |        |         |
 
-**How should we interpret $\phi$?** $\widehat{\phi} = 0.77$. *Interpretation.* The autocorrelated pieces of a patient's residuals are correlated 0.77 one week apart, $0.7739^2 = 0.60$ two weeks apart, and $0.77^k$ for $k$ weeks apart.
+**How should we interpret** $\phi$? $\widehat{\phi} = 0.77$. *Interpretation.* The autocorrelated pieces of a patient's residuals are correlated 0.77 one week apart, $0.7739^2 = 0.60$ two weeks apart, and $0.77^k$ for $k$ weeks apart.
 
-**Why $\phi = 0.77$ does not mean the residuals themselves correlate 0.77.**
+**Why** $\phi = 0.77$ does not mean the residuals themselves correlate 0.77.
 
 Under this model, each residual has **two pieces**:
 
@@ -490,19 +490,19 @@ The estimated coefficients describe the average trajectory, and they often chang
 
 For each structure, ask: what do two points of the same person have in common?
 
--   **Independent residuals (ordinary regression, OLS).** Nothing beyond the average line: each person's points scatter around the average line itself, and whether person A is above it at one week is unrelated to whether A is above it at any other week.
--   **Random intercepts.** The person's intercept: the points scatter independently around a predicted line **parallel** to the average line (person A's about 2 above it, person B's about 2 below), so two points of a person are equally alike at any distance apart.
--   **Random slopes.** The person's intercept and slope: the points scatter independently around a predicted line with its own slope (person A's almost flat, person B's decreasing more steeply than the average line). The predicted line's distance from the average line changes steadily, so points close in time are more alike than points far apart.
--   **Positive autocorrelation, AR(1) with $\phi > 0$.** Closeness in time: with no random intercept or slope, each predicted line is the average line, but consecutive points are close to each other, in stretches above the line, then below it. Points one week apart are strongly related, and points 20 weeks apart almost unrelated.
+- **Independent residuals (ordinary regression, OLS).** Nothing beyond the average line: each person's points scatter around the average line itself, and whether person A is above it at one week is unrelated to whether A is above it at any other week.
+- **Random intercepts.** The person's intercept: the points scatter independently around a predicted line **parallel** to the average line (person A's about 2 above it, person B's about 2 below), so two points of a person are equally alike at any distance apart.
+- **Random slopes.** The person's intercept and slope: the points scatter independently around a predicted line with its own slope (person A's almost flat, person B's decreasing more steeply than the average line). The predicted line's distance from the average line changes steadily, so points close in time are more alike than points far apart.
+- **Positive autocorrelation, AR(1) with** $\phi > 0$. Closeness in time: with no random intercept or slope, each predicted line is the average line, but consecutive points are close to each other, in stretches above the line, then below it. Points one week apart are strongly related, and points 20 weeks apart almost unrelated.
 
 ### Where autocorrelation comes from, and when it matters {#sec-nl-ac-source}
 
 Four points summarize autocorrelation.
 
--   **It is often ignored, and it is sometimes useful to check for.** The check is the plot of residuals against previous residuals (@sec-nl-ac-check).
--   **It generally changes the standard errors more than the coefficients.** In these data both changes were small: 15% for the coefficient, 2% for its standard error (@sec-nl-ar1-treat).
--   **It can be a consequence of a time trend that is too restrictive.** If a patient's scores follow a curve but the model has a straight line for that patient, the scores are above the line for a stretch, then below it, then above it again: a pattern that looks like autocorrelation but is due to the shape of the trend.
--   **In the AR(1) model, the autocorrelation is a nuisance**: a feature of the residuals to account for so that the standard errors are right, not a quantity of interest in itself.
+- **It is often ignored, and it is sometimes useful to check for.** The check is the plot of residuals against previous residuals (@sec-nl-ac-check).
+- **It generally changes the standard errors more than the coefficients.** In these data both changes were small: 15% for the coefficient, 2% for its standard error (@sec-nl-ar1-treat).
+- **It can be a consequence of a time trend that is too restrictive.** If a patient's scores follow a curve but the model has a straight line for that patient, the scores are above the line for a stretch, then below it, then above it again: a pattern that looks like autocorrelation but is due to the shape of the trend.
+- **In the AR(1) model, the autocorrelation is a nuisance**: a feature of the residuals to account for so that the standard errors are right, not a quantity of interest in itself.
 
 Patient 191 is an example of the third point. Around their predicted line under the linear growth model with random slopes, the scores are above the line for weeks 0 to 3, below it from week 4 to week 15, and mostly above it from week 17 on, and consecutive residuals are correlated 0.50. Around their predicted curve under the quadratic growth model, the correlation is 0.01. Across all patients, consecutive residuals are correlated 0.25 around the predicted lines and 0.17 around the predicted curves: a better-fitting trend accounts for part of the autocorrelation, but not all of it.
 
@@ -546,12 +546,12 @@ dep_lag <- dep |>
 |    1 |      4 |      6 |          7 |         0.25 |
 |    1 |      6 |      6 |          6 |      $-0.75$ |
 
--   **The previous score.** `mdd9_lag`, the **lagged** score, is simply the patient's MDD score from their previous observed measurement. For patient 1 at week 6, the previous observed measurement was week 4, where MDD was 6, so `mdd9_lag = 6`.
--   **One row per patient is dropped.** The first measurement for each patient has no previous score (`NA`), so 256 rows are dropped, leaving 5,261 rows from 254 patients (two patients have only one measurement).
--   **The patient's average previous score**, `mean(mdd9_lag, na.rm = TRUE)`. For each patient, R averages **all nonmissing values of `mdd9_lag` in that patient's full record**. For patient 1, that average is 6.75. You cannot reproduce 6.75 from only the six rows shown above, because the patient has additional measurements later in the dataset that are not displayed here.
--   **The demeaned previous score.** `c_mdd9_lag` is how far the patient's previous score was above or below their own average previous score. So for patient 1, a previous score of 7 gives $7-6.75=0.25$ while a previous score of 6 gives $6-6.75=-0.75$.
-    -   *Interpretation.* A value of 0.25 means the patient's previous MDD score was 0.25 symptoms **above their usual previous-score level**; a value of $-0.75$ means it was 0.75 symptoms **below** that level.
--   **Not always the previous week.** With `lag()`, the previous score is from the patient's previous **observed measurement**, not necessarily the immediately preceding calendar week. Patient 1's week-6 previous score is from week 4; 16% of pairs are two or more weeks apart (@sec-nl-ac-check).
+- **The previous score.** `mdd9_lag`, the **lagged** score, is simply the patient's MDD score from their previous observed measurement. For patient 1 at week 6, the previous observed measurement was week 4, where MDD was 6, so `mdd9_lag = 6`.
+- **One row per patient is dropped.** The first measurement for each patient has no previous score (`NA`), so 256 rows are dropped, leaving 5,261 rows from 254 patients (two patients have only one measurement).
+- **The patient's average previous score**, `mean(mdd9_lag, na.rm = TRUE)`. For each patient, R averages **all nonmissing values of `mdd9_lag` in that patient's full record**. For patient 1, that average is 6.75. You cannot reproduce 6.75 from only the six rows shown above, because the patient has additional measurements later in the dataset that are not displayed here.
+- **The demeaned previous score.** `c_mdd9_lag` is how far the patient's previous score was above or below their own average previous score. So for patient 1, a previous score of 7 gives $7-6.75=0.25$ while a previous score of 6 gives $6-6.75=-0.75$.
+  - *Interpretation.* A value of 0.25 means the patient's previous MDD score was 0.25 symptoms **above their usual previous-score level**; a value of $-0.75$ means it was 0.75 symptoms **below** that level.
+- **Not always the previous week.** With `lag()`, the previous score is from the patient's previous **observed measurement**, not necessarily the immediately preceding calendar week. Patient 1's week-6 previous score is from week 4; 16% of pairs are two or more weeks apart (@sec-nl-ac-check).
 
 ### Why demean the previous score? {#sec-nl-demean}
 
@@ -596,9 +596,9 @@ $$\begin{aligned}
 \Sigma = \begin{bmatrix} \tau_0^2 & \tau_{01} \\ \tau_{01} & \tau_1^2 \end{bmatrix}, \qquad e_{ij} \sim N(0, \sigma^2)
 \end{aligned}$$
 
--   $\text{MDD}_{i-1,j}$ is patient $j$'s previous score (`mdd9_lag`), and $\overline{\text{MDD}}_{\text{prev},j}$ is their average previous score, their usual level (also written $\overline{\text{MDD}_{i-1}}_j$). The difference in parentheses is the demeaned previous score (`c_mdd9_lag`).
--   $\beta_2$ is the **dynamic effect**, assumed for now to be the same for every patient (it has no $j$).
--   The rest is the treatment-by-time model of @sec-nl-txtime: $\beta_{0j} + \beta_{1j}\,\text{wave}_{ij}$ is patient $j$'s predicted line, estimated again in this model, so it differs from the one in @sec-nl-txresults.
+- $\text{MDD}_{i-1,j}$ is patient $j$'s previous score (`mdd9_lag`), and $\overline{\text{MDD}}_{\text{prev},j}$ is their average previous score, their usual level (also written $\overline{\text{MDD}_{i-1}}_j$). The difference in parentheses is the demeaned previous score (`c_mdd9_lag`).
+- $\beta_2$ is the **dynamic effect**, assumed for now to be the same for every patient (it has no $j$).
+- The rest is the treatment-by-time model of @sec-nl-txtime: $\beta_{0j} + \beta_{1j}\,\text{wave}_{ij}$ is patient $j$'s predicted line, estimated again in this model, so it differs from the one in @sec-nl-txresults.
 
 ### Fitting it and reading the output {#sec-nl-dyn-fit}
 
@@ -618,7 +618,7 @@ lmer(mdd9 ~ 1 + treat * wave + c_mdd9_lag + (1 + wave | id), data = dep_lag)
 | $\widehat{\rho}$ `cor__(Intercept).wave` | $-0.2413$ |        |         |
 | $\widehat{\sigma}$ `sd__Observation`     |    1.3377 |        |         |
 
-**How do we interpret $\beta_2$?** $\widehat{\beta_2} = 0.30$. *Interpretation.* This coefficient is the difference in the current MDD score per symptom that the previous score was **above or below the patient's own usual previous-score level**. Holding treatment status, patient, and the current week constant, a previous score that is 1 symptom higher than that patient's usual level is associated with a current score that is 0.30 symptoms higher. A previous score 1 symptom lower than usual is associated with a current score 0.30 symptoms lower ($Z = 22.75$, clearly distinguishable from zero).
+**How do we interpret** $\beta_2$? $\widehat{\beta_2} = 0.30$. *Interpretation.* This coefficient is the difference in the current MDD score per symptom that the previous score was **above or below the patient's own usual previous-score level**. Holding treatment status, patient, and the current week constant, a previous score that is 1 symptom higher than that patient's usual level is associated with a current score that is 0.30 symptoms higher. A previous score 1 symptom lower than usual is associated with a current score 0.30 symptoms lower ($Z = 22.75$, clearly distinguishable from zero).
 
 **An example.** Take a patient whose usual level is 4. If their previous score was 6 (two above that level), their predicted score at this measurement is $0.30 \times 2 = 0.60$ above their predicted line at this week; if it was 3 (one below), 0.30 below it; if it was exactly 4 (a demeaned previous score of 0), the prediction is the value of the predicted line.
 
@@ -682,8 +682,8 @@ $$\begin{aligned}
 \Sigma = \begin{bmatrix} \tau_0^2 & \tau_{01} & \tau_{02} \\ \tau_{01} & \tau_1^2 & \tau_{12} \\ \tau_{02} & \tau_{12} & \tau_2^2 \end{bmatrix}
 \end{aligned}$$
 
--   $\gamma_{20}$ is the average dynamic effect across patients (in @sec-nl-dyn-treat, the nonspecific group's dynamic effect), and $u_{2j}$ is patient $j$'s departure from it.
--   In $\Sigma$, $\tau_2^2$ is the variance of patients' dynamic effects, $\tau_{02}$ the intercept–dynamic-effect covariance and $\tau_{12}$ the slope–dynamic-effect covariance. (In @sec-nl-quadratic, the same symbols were for the quadratic coefficients.)
+- $\gamma_{20}$ is the average dynamic effect across patients (in @sec-nl-dyn-treat, the nonspecific group's dynamic effect), and $u_{2j}$ is patient $j$'s departure from it.
+- In $\Sigma$, $\tau_2^2$ is the variance of patients' dynamic effects, $\tau_{02}$ the intercept–dynamic-effect covariance and $\tau_{12}$ the slope–dynamic-effect covariance. (In @sec-nl-quadratic, the same symbols were for the quadratic coefficients.)
 
 Here this model is fitted with the raw previous score, `mdd9_lag`, not the demeaned one, so $\widehat{\gamma_{20}}$ below is the average coefficient on $\text{MDD}_{i-1,j}$, not directly comparable with the 0.30 of @sec-nl-dyn-fit:
 
@@ -731,13 +731,13 @@ This section covers two alternatives to a polynomial for a curved average trajec
 Instead of choosing a shape for the average trajectory, give **every week its own mean**:
 
 $$\begin{aligned}
-\text{MDD}_{ij} &= \alpha_{t[ij]} + u_{0j} + u_{1j}\,\text{wave}_{ij} + e_{ij} \\
+\text{MDD}_{ij} &= \alpha_i + u_{0j} + u_{1j}\,\text{wave}_{ij} + e_{ij} \\
 \begin{bmatrix} u_{0j} \\ u_{1j} \end{bmatrix} &\sim N\left( \begin{bmatrix} 0 \\ 0 \end{bmatrix}, \Sigma \right), \qquad
 \Sigma = \begin{bmatrix} \tau_0^2 & \tau_{01} \\ \tau_{01} & \tau_1^2 \end{bmatrix}, \qquad e_{ij} \sim N(0, \sigma^2)
 \end{aligned}$$
 
--   $\alpha_t$ is the average patient's mean at week $t$ (28 means, with no assumed shape); $t[ij]$ is the week of measurement $i$ of patient $j$. ($\alpha_t$ is unrelated to the reliability $\alpha_j$ of @sec-linear-growth.)
--   $u_{0j} + u_{1j}\,\text{wave}_{ij}$ is patient $j$'s straight-line departure from that average trajectory, with intercept $u_{0j}$ and slope $u_{1j}$.
+- $\alpha_i$ is the average patient's mean at week $i$ (28 means, with no assumed shape)
+- $u_{0j} + u_{1j}\,\text{wave}_{ij}$ is patient $j$'s straight-line departure from that average trajectory, with intercept $u_{0j}$ and slope $u_{1j}$.
 
 This follows the advice of Rabe-Hesketh and Skrondal to allow more flexibility in the fixed part than in the random part: only each patient's **departure** from the average curve is assumed linear in time. One mean per week requires a shared set of weeks, as here.
 
@@ -772,8 +772,8 @@ lmer(mdd9 ~ 1 + wave_f * treat + (1 + wave | id), data = dep)
 
 ![Left: each group's predicted mean at each week, with 95% confidence intervals. Right: the 27 treatment-by-week interactions, each the change in the treatment gap between week 0 and that week, with 95% confidence intervals; the dashed line is zero.](images/06/fig15_event_study.png){#fig-nl-event-study width="80%"}
 
--   The coefficient on `treat1`, $-0.70$ (SE 0.3162), is the gap between the groups at week 0.
--   Each interaction `wave_fk:treat1` is the gap at week $k$ minus the gap at week 0. At week 20 it is $-0.67$, so the gap is $-0.6957 + (-0.6692) = -1.36$ symptoms.
+- The coefficient on `treat1`, $-0.70$ (SE 0.3162), is the gap between the groups at week 0.
+- Each interaction `wave_fk:treat1` is the gap at week $k$ minus the gap at week 0. At week 20 it is $-0.67$, so the gap is $-0.6957 + (-0.6692) = -1.36$ symptoms.
 
 Economists call the right panel an **event-study plot**: how a difference between groups changes in each period after an event, here the start of therapy. The interactions are mostly positive in the first half of the study (a smaller gap than at week 0) and mostly negative in the second (a larger gap), but only the week-20 interval excludes zero: week by week, the gap is estimated imprecisely. The treatment-by-time interaction $\gamma_{11}$ (@sec-nl-txresults), estimated from all weeks together, is distinguishable from zero.
 
@@ -782,17 +782,17 @@ Economists call the right panel an **event-study plot**: how a difference betwee
 In a compromise between a straight line and one mean per week, each week's departure from the line is a **random effect**:
 
 $$\begin{aligned}
-\text{MDD}_{ij} &= \gamma_{00} + \gamma_{10}\,\text{wave}_{ij} + \eta_{t[ij]} + u_{0j} + u_{1j}\,\text{wave}_{ij} + e_{ij} \\
-\eta_t &\sim N(0, \sigma_{\text{week}}^2), \qquad \begin{bmatrix} u_{0j} \\ u_{1j} \end{bmatrix} \sim N\left( \begin{bmatrix} 0 \\ 0 \end{bmatrix}, \Sigma \right), \qquad e_{ij} \sim N(0, \sigma^2)
+\text{MDD}_{ij} &= \gamma_{00} + \gamma_{10}\,\text{wave}_{ij} + u_i + u_{0j} + u_{1j}\,\text{wave}_{ij} + e_{ij} \\
+u_i &\sim N(0, \tau^2_i), \qquad \begin{bmatrix} u_{0j} \\ u_{1j} \end{bmatrix} \sim N\left( \begin{bmatrix} 0 \\ 0 \end{bmatrix}, \Sigma \right), \qquad e_{ij} \sim N(0, \sigma^2)
 \end{aligned}$$
 
-$\eta_t$ (the Greek letter eta) is week $t$'s departure from the straight line, shared by every patient measured that week and **assumed** normal with mean zero and variance $\sigma^2_{\text{week}}$. Weeks are **crossed** with patients (@sec-nl-data): each measurement belongs to both a patient and a week. With $\sigma_{\text{week}} = 0$, the model is the straight line; with a very large $\sigma_{\text{week}}$, each week has its own unrestricted mean, as in time fixed effects. In between, week means are pulled toward the line, more so for weeks with fewer measurements, whose means are estimated less precisely: the same partial pooling as for patients.
+$\alpha_i$ is week $i$'s departure from the straight line, shared by every patient measured that week and **assumed** normal with mean zero and variance $\tau^2_i$. Weeks are **crossed** with patients (@sec-nl-data): each measurement belongs to both a patient and a week. With $\tau^2_i = 0$, the model is the straight line; with a very large $\tau^2_i$, each week has its own unrestricted mean, as in time fixed effects. In between, week means are pulled toward the line, more so for weeks with fewer measurements, whose means are estimated less precisely: the same partial pooling as for patients.
 
 ``` r
-lmer(mdd9 ~ 1 + wave + (1 + wave | id) + (1 | wave), data = dep)
+lmer(mdd9 ~  wave + (wave | id) + (1 | wave), data = dep)
 ```
 
-$\widehat{\sigma}_{\text{week}} = 0.13$. *Interpretation.* Week means differ from the straight line by about 0.13 symptoms in SD terms, small compared with the SD of patients' intercepts ($\widehat{\tau_0} = 2.09$). In a version with `(1 + treat | wave)`, the treatment difference also varies by week: the SDs are 0.16 for the weeks' departures and 0.10 for the treatment difference, and the treatment-by-time coefficient is $-0.0266$ (SE 0.0111), almost the same as in @sec-nl-txresults. Crossed random effects are a topic of their own, beyond this chapter.
+$\widehat{\tau_i} = 0.13$. *Interpretation.* Week means differ from the straight line by about 0.13 symptoms in SD terms, small compared with the SD of patients' intercepts ($\widehat{\tau_0} = 2.09$). In a version with `(1 + treat | wave)`, the treatment difference also varies by week: the SDs are 0.16 for the weeks' departures and 0.10 for the treatment difference, and the treatment-by-time coefficient is $-0.0266$ (SE 0.0111), almost the same as in @sec-nl-txresults. Crossed random effects are a topic of their own, beyond this chapter.
 
 ## Vocabulary decoder {#sec-nl-vocab}
 
@@ -832,17 +832,17 @@ $\widehat{\sigma}_{\text{week}} = 0.13$. *Interpretation.* Week means differ fro
 
 3.  **Reading a positive quadratic coefficient as "symptoms get worse."** It means the decrease becomes less steep (deceleration); the average curve's lowest point, about week 37, is after the data end.
 
-4.  **Reading $Z = 1.43$ for the quadratic coefficient as the test of curves against straight lines.** It is about the average curvature only; that test is the likelihood ratio test ($\chi^2 = 216.48$, 4 df).
+4.  **Reading** $Z = 1.43$ for the quadratic coefficient as the test of curves against straight lines. It is about the average curvature only; that test is the likelihood ratio test ($\chi^2 = 216.48$, 4 df).
 
-5.  **Comparing $\tau_1$ across the linear and quadratic models.** Quadratic model: the SD of slopes at week 0 only (0.44). Linear growth model with random slopes: the SD of patients' slopes, one per patient (0.076).
+5.  **Comparing** $\tau_1$ across the linear and quadratic models. Quadratic model: the SD of slopes at week 0 only (0.44). Linear growth model with random slopes: the SD of patients' slopes, one per patient (0.076).
 
-6.  **Reading a random-effect correlation near $\pm 1$ as a finding about patients.** The slope–quadratic correlation, $-0.985$, depends on where week 0 is placed; values near $\pm 1$ often appear with a convergence warning.
+6.  **Reading a random-effect correlation near** $\pm 1$ as a finding about patients. The slope–quadratic correlation, $-0.985$, depends on where week 0 is placed; values near $\pm 1$ often appear with a convergence warning.
 
 7.  **Miscounting the degrees of freedom in the test of curves against straight lines.** Four ($\gamma_{20}$, $\tau_2^2$, $\tau_{02}$, $\tau_{12}$); against the intermediate model, which already has $\gamma_{20}$, three.
 
 8.  **Assuming the random effects account for all correlation between nearby measurements.** In the treatment-by-time model (random intercept and slope), consecutive residuals are still correlated 0.25.
 
-9.  **Reading $\widehat{\phi} = 0.77$ as the correlation between residuals one week apart.** That correlation is 0.49 under the AR(1) model; $\phi$ is the correlation of the autocorrelated piece only.
+9.  **Reading** $\widehat{\phi} = 0.77$ as the correlation between residuals one week apart. That correlation is 0.49 under the AR(1) model; $\phi$ is the correlation of the autocorrelated piece only.
 
 10. **Comparing dynamic effects without checking which previous score is in the model.** Demeaned versus raw previous score: 0.30 versus 0.39 in the dynamic model (@sec-nl-demean); 0.28 versus 0.40 with a random dynamic effect (@sec-nl-dyn-random). The raw score also contains the patient's usual level (@sec-nl-demean).
 
@@ -850,7 +850,7 @@ $\widehat{\sigma}_{\text{week}} = 0.13$. *Interpretation.* Week means differ fro
 
 ## Quick reference {#sec-nl-quickref}
 
-:::::::::: quickref
+::::::::: quickref
 ::: {}
 **Treatment-by-time model**
 
@@ -901,15 +901,15 @@ Level 2 as in the treatment-by-time model. Treatment by dynamic effect: $\beta_{
 ::: {}
 **The `lmer` calls**
 
--   Treatment by time: `lmer(mdd9 ~ 1 + treat * wave + (1 + wave | id))`
--   Quadratic: `lmer(mdd9 ~ 1 + wave + wave2 + (1 + wave + wave2 | id))`
--   Intermediate: `lmer(mdd9 ~ 1 + wave + wave2 + (1 + wave | id))`
--   AR(1): `lmer(mdd9 ~ 1 + treat * wave + (1 + wave | id) + ar1(0 + wave_f | id))`
--   Dynamic: `lmer(mdd9 ~ 1 + treat * wave + c_mdd9_lag + (1 + wave | id))`
--   Treatment by dynamic effect: `lmer(mdd9 ~ 1 + treat * (wave + c_mdd9_lag) + (1 + wave | id))`
--   Random dynamic effect (raw previous score): `lmer(mdd9 ~ 1 + treat * wave + mdd9_lag + (1 + wave + mdd9_lag | id))`
+- Treatment by time: `lmer(mdd9 ~ 1 + treat * wave + (1 + wave | id))`
+- Quadratic: `lmer(mdd9 ~ 1 + wave + wave2 + (1 + wave + wave2 | id))`
+- Intermediate: `lmer(mdd9 ~ 1 + wave + wave2 + (1 + wave | id))`
+- AR(1): `lmer(mdd9 ~ 1 + treat * wave + (1 + wave | id) + ar1(0 + wave_f | id))`
+- Dynamic: `lmer(mdd9 ~ 1 + treat * wave + c_mdd9_lag + (1 + wave | id))`
+- Treatment by dynamic effect: `lmer(mdd9 ~ 1 + treat * (wave + c_mdd9_lag) + (1 + wave | id))`
+- Random dynamic effect (raw previous score): `lmer(mdd9 ~ 1 + treat * wave + mdd9_lag + (1 + wave + mdd9_lag | id))`
 :::
-::::::::::
+:::::::::
 
 **Our numbers (256 patients and 5,517 measurements; in the dynamic models, 254 and 5,261)**
 
@@ -931,7 +931,7 @@ Level 2 as in the treatment-by-time model. Treatment by dynamic effect: $\beta_{
 
 ### Example 1: our patients
 
-*Use the quadratic growth model of @sec-nl-quad-fixed ($\widehat{\gamma_{00}} = 4.7079$, $\widehat{\gamma_{10}} = -0.1064$, $\widehat{\gamma_{20}} = 0.00145$), the AR(1) model of @sec-nl-ar1-fit ($\widehat{\phi} = 0.7739$) and the dynamic model of @sec-nl-dyn-fit ($\widehat{\beta_2} = 0.3021$).*
+*Use the quadratic growth model of @sec-nl-quad-fixed (*$\widehat{\gamma_{00}} = 4.7079$, $\widehat{\gamma_{10}} = -0.1064$, $\widehat{\gamma_{20}} = 0.00145$), the AR(1) model of @sec-nl-ar1-fit ($\widehat{\phi} = 0.7739$) and the dynamic model of @sec-nl-dyn-fit ($\widehat{\beta_2} = 0.3021$).
 
 **(a) What is the slope of the average curve at week 6 and at week 20?**
 
@@ -965,7 +965,7 @@ Autocorrelated pieces: $0.7739^3 = 0.4635$, about 0.46. For the residuals as a w
 The demeaned previous score is $1 - 3 = -2$, so the predicted score differs by $0.3021 \times (-2) = -0.60$: 0.60 fewer symptoms.
 :::
 
-**(e) In the dynamic model, the coefficient on `wave` is $-0.033$. A colleague concludes that the therapy is less effective than in @sec-nl-txresults, where it was $-0.055$. What is wrong with that?**
+**(e) In the dynamic model, the coefficient on `wave` is** $-0.033$. A colleague concludes that the therapy is less effective than in @sec-nl-txresults, where it was $-0.055$. What is wrong with that?
 
 ::: {.callout-tip collapse="true" icon="false"}
 ## Show solution
@@ -975,7 +975,7 @@ The coefficient $-0.033$ is the weekly change holding the previous score fixed, 
 
 ### Example 2: a growth study in a new setting
 
-*A study measures 300 first-graders' oral reading fluency (words read correctly per minute) every week from week 0 to week 20. In a quadratic growth model, the estimates are $\widehat{\gamma_{00}} = 30$, $\widehat{\gamma_{10}} = 4.0$ and $\widehat{\gamma_{20}} = -0.08$. The residuals from each child's predicted curve are modeled as AR(1), with $\widehat{\phi} = 0.5$ and no independent piece.*
+*A study measures 300 first-graders' oral reading fluency (words read correctly per minute) every week from week 0 to week 20. In a quadratic growth model, the estimates are* $\widehat{\gamma_{00}} = 30$, $\widehat{\gamma_{10}} = 4.0$ and $\widehat{\gamma_{20}} = -0.08$. The residuals from each child's predicted curve are modeled as AR(1), with $\widehat{\phi} = 0.5$ and no independent piece.
 
 **(a) What is the average child's growth rate at week 0 and at week 10?**
 
@@ -1021,7 +1021,7 @@ Each child's curve describes only smooth growth. Anything that affects reading f
 
 Try each one before opening the answer. The section reference points to the fuller explanation.
 
-:::::::::::::::::::: self-check
+::::::::::::::::: self-check
 ::: {.callout-note collapse="true" icon="false"}
 ## Write the treatment-by-time model, give the `lmer` call, and interpret $\gamma_{01}$ and $\gamma_{11}$.
 
@@ -1105,16 +1105,16 @@ AR(1) changes the SEs, not what the coefficients mean; in a dynamic model, the p
 
 0.30: for the same patient at the same week, a previous score one symptom higher, relative to their usual level, is associated with 0.30 more symptoms now. Interaction 0.005 (SE 0.027): no evidence that the therapy changes it. Random dynamic effect (raw previous score): average 0.40, with about 95% of patients between 0.07 and 0.72. *See @sec-nl-dyn-fit, @sec-nl-dyn-treat and @sec-nl-dyn-random.*
 :::
-::::::::::::::::::::
+:::::::::::::::::
 
 ## Going deeper {#sec-nl-deeper}
 
 From Luke Miratrix's online MLM handouts:
 
--   [A flexible longitudinal model](https://lmiratrix.github.io/MLM/longitudinal.html) — one mean per week plus linear departures (@sec-nl-appendix).
--   [An overview of complex error structures](https://lmiratrix.github.io/MLM/complex_error.html) — residual correlation structures such as AR(1).
--   [Error messages and optimization algorithms for MLMs](https://lmiratrix.github.io/MLM/lmer_optimization.html) — convergence warnings and what to try (@sec-nl-quad-fixed).
--   [Likelihood ratio tests](https://lmiratrix.github.io/MLM/lr_test.html) — the test used in @sec-nl-lrt.
+- [A flexible longitudinal model](https://lmiratrix.github.io/MLM/longitudinal.html) — one mean per week plus linear departures (@sec-nl-appendix).
+- [An overview of complex error structures](https://lmiratrix.github.io/MLM/complex_error.html) — residual correlation structures such as AR(1).
+- [Error messages and optimization algorithms for MLMs](https://lmiratrix.github.io/MLM/lmer_optimization.html) — convergence warnings and what to try (@sec-nl-quad-fixed).
+- [Likelihood ratio tests](https://lmiratrix.github.io/MLM/lr_test.html) — the test used in @sec-nl-lrt.
 
 **Further reading on dynamic models.** Chapters 5 and 6 of Rabe-Hesketh and Skrondal, *Multilevel and Longitudinal Modeling Using Stata*.
 
