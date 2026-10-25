@@ -57,10 +57,10 @@ blockquote {
 
 .byline { font-family: $font-family-sans-serif; font-size: 0.85rem; color: #5a6470; }
 
-// Quick reference grid
+// Quick reference cards, one per row so long equations and R calls fit
 .quickref {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: 1fr;
   gap: 0.75rem;
   margin: 1rem 0;
   > div {
