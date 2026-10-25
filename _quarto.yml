@@ -30,7 +30,7 @@ book:
       chapters:
         - chapters/05-linear-growth.qmd
         - chapters/06-nonlinear-growth.qmd
-    - part: "Beyond continuous outcomes"
+    - part: "Generalized and cross-classified models"
       chapters:
         - chapters/07-binary-outcomes.qmd
 
