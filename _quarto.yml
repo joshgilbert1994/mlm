@@ -10,7 +10,7 @@ book:
   subtitle: "A textbook for applied researchers in education and the social sciences"
   author: "Josh Gilbert and Bill Young"
   date: today
-  date-format: "MMMM YYYY"
+  date-format: "DD MMMM YYYY"
   site-url: https://joshgilbert1994.github.io/mlm/
   repo-url: https://github.com/joshgilbert1994/mlm
   repo-actions: [edit, issue]
