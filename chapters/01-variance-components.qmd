@@ -518,11 +518,11 @@ Look at the plot and notice how many bars cross zero. With ten schools and this 
 
 #### Seeing the shrinkage directly {.unnumbered}
 
-@fig-shrink-movement shows what shrinkage actually did to each school. The hollow circle is the **raw residual**: the school's observed average minus the grand mean, with no correction at all. The filled circle is the Empirical Bayes estimate after shrinking. The arrow between them is the correction.
+@fig-shrink-movement shows what shrinkage actually did to each school. The hollow circle is the **raw residual**: the school's observed average minus the grand mean, with no correction at all. The filled circle is the Empirical Bayes estimate after shrinking. The line joining them is the correction.
 
 ![Panel (a) shows where each school lands, on the real score scale. Panel (b) shows the share of each school's raw residual that got thrown away, which is what makes the small corrections visible.](images/01/fig08_shrink_movement.png){#fig-shrink-movement}
 
-**Panel (a)** is on the actual scale of the outcome, and on that scale most of the arrows are too short to see. Almost every school here has enough students to be measured well, so almost every school barely budges. School 11 is the exception, dropping from $+8.69$ all the way to $+6.36$, and in doing so falling from first place to second.
+**Panel (a)** is on the actual scale of the outcome, and on that scale most of those lines are too short to see. Almost every school here has enough students to be measured well, so almost every school barely budges. School 11 is the exception, dropping from $+8.69$ all the way to $+6.36$, and in doing so falling from first place to second.
 
 **Panel (b)** is there because "too short to see" is not the same as "zero." It plots $1 - R_j$, the percentage of each school's raw residual discarded as noise, and every single bar is above zero. School 11 loses 26.8% of its raw residual. The rest lose between 3.9% and 7.7%: small, but real. **Every group gets shrunk. No group escapes it.** The large schools simply have less taken away, because their averages are measured more reliably in the first place.
 
@@ -821,6 +821,18 @@ All from Luke Miratrix's online MLM handouts:
 - [Pooling](https://lmiratrix.github.io/MLM/pooling.html): pooled/unpooled versus fixed/random, sorted out carefully
 - [ICC visualizer](https://lmiratrix.github.io/MLM/icc_viz.html): set the ICC and watch the data change. Predict what ICC $= 0$ and ICC $= 1$ look like *before* moving the slider
 - [Model representations](https://lmiratrix.github.io/MLM/model_representations.html): hierarchical, reduced, and matrix forms side by side
+
+## Code for this chapter's figures {#sec-vc-code}
+
+Every figure in this chapter is computed live from the data by one R script, so the figures and the numbers in the text cannot drift apart. It fits the variance components model and then builds each figure in turn. [Download `01-figures.R`](../code/01-figures.R) and the data it reads, [`jebs_sub.csv`](../data/jebs_sub.csv), then run the script from a folder where the data sits at `data/jebs_sub.csv`.
+
+::: {.callout-note collapse="true" icon="false"}
+## Show the full script
+
+``` r
+{{< include ../code/01-figures.R >}}
+```
+:::
 
 ## What comes next {.unnumbered}
 
