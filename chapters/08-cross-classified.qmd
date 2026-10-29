@@ -14,7 +14,7 @@ In earlier chapters, each outcome was one measurement of a student, such as a re
 
 ### The vocabulary data {#sec-cc-data}
 
-The data come from [Relyea et al. (2025)](https://doi.org/10.1002/rrq.70048), an evaluation of a literacy intervention, MORE, in a randomized controlled trial with Grade 3 students in a large urban school district in the southeastern United States, available as [`vocab.csv`](../data/vocab.csv). Each row of the data is one **response**: one student's answer to one item.
+The data come from Relyea et al. ([2025](https://doi.org/10.1002/rrq.70048)), an evaluation of a literacy intervention, MORE, in a randomized controlled trial with Grade 3 students in a large urban school district in the southeastern United States, available as [`vocab.csv`](../data/vocab.csv). Each row of the data is one **response**: one student's answer to one item.
 
 - `id` is the student (1 to 1,914), and `item` is the item (`vocab_q0` to `vocab_q35`, called items 0 to 35 here).
 - `resp` is 1 if the response is correct and 0 if not.
@@ -51,14 +51,14 @@ An item's **difficulty** is how hard it is; **easiness** is the reverse, and the
 
 Each student has up to 36 rows. The first rows are student 909's responses to items 0 to 5:
 
-|  `id` | `item`     | `resp` | `cov_lep` | `cov_ses_high` | `cov_ses_med` |
-|------:|:-----------|-------:|----------:|---------------:|--------------:|
-|   909 | `vocab_q0` |      1 |         0 |              0 |             0 |
-|   909 | `vocab_q1` |      0 |         0 |              0 |             0 |
-|   909 | `vocab_q2` |      1 |         0 |              0 |             0 |
-|   909 | `vocab_q3` |      1 |         0 |              0 |             0 |
-|   909 | `vocab_q4` |      0 |         0 |              0 |             0 |
-|   909 | `vocab_q5` |      0 |         0 |              0 |             0 |
+| `id` | `item`     | `resp` | `cov_lep` | `cov_ses_high` | `cov_ses_med` |
+|-----:|:-----------|-------:|----------:|---------------:|--------------:|
+|  909 | `vocab_q0` |      1 |         0 |              0 |             0 |
+|  909 | `vocab_q1` |      0 |         0 |              0 |             0 |
+|  909 | `vocab_q2` |      1 |         0 |              0 |             0 |
+|  909 | `vocab_q3` |      1 |         0 |              0 |             0 |
+|  909 | `vocab_q4` |      0 |         0 |              0 |             0 |
+|  909 | `vocab_q5` |      0 |         0 |              0 |             0 |
 
 One row per response is **long** format, as for longitudinal data, where each row is one measurement of a person. The student's variables, `cov_lep` and the SES indicators, have the same value on all of the student's rows. Student 909 is a low-SES student who is not an English learner.
 
@@ -111,7 +111,7 @@ $$\begin{aligned}
 && u_i &\sim N(0, \tau^2_i)
 \end{aligned}$$
 
-- $\text{resp}_{ij}$ is the response of student $j$ to item $i$: 1 if correct and 0 if not. **In this chapter, $i$ is the item and $j$ is the student.**
+- $\text{resp}_{ij}$ is the response of student $j$ to item $i$: 1 if correct and 0 if not. **In this chapter,** $i$ is the item and $j$ is the student.
 - $\text{logit}\big(\Pr(\text{resp}_{ij} = 1)\big)$ is the log-odds that student $j$ answers item $i$ correctly.
 - $\beta_{0ij}$ ($\beta$ is the Greek letter beta) has both subscripts because each combination of a student and an item has its own log-odds.
 - $\gamma_0$ ($\gamma$ is the Greek letter gamma) is the log-odds of a correct response for a **student of average proficiency** on an **item of average easiness**. A student of average proficiency is a student with $u_j = 0$, at the center of the distribution of students, and an item of average easiness is an item with $u_i = 0$, at the center of the distribution of items. Each is one student or one item, not an average over many. Item 20 (estimated $u_i = -0.02$) is close to an item of average easiness.
@@ -130,17 +130,17 @@ glmer(resp ~ 1 + (1 | id) + (1 | item), data = vocab, family = binomial)
 
 The `1` is $\gamma_0$, `(1 | id)` is $u_j$ (one random intercept per student), `(1 | item)` is $u_i$ (one per item), and `family = binomial` is the 0/1 outcome with the logit link. The formula would be the same for nested groupings; here the groupings are crossed because of the data.
 
-**A connection to measurement.** In educational measurement, m1 is the **one-parameter logistic (1PL) item response theory (IRT) model**, or **Rasch model**: $\text{logit}(p) = \text{ability} + \text{easiness}$, with one parameter per item. In IRT, each item's difficulty (the negative of easiness) is usually a fixed number; in m1 and in the explanatory item response model of Gilbert, Kim, & Miratrix (2023), each item's easiness is a draw from a normal distribution.
+**A connection to measurement.** In educational measurement, m1 is the **one-parameter logistic (1PL) item response theory (IRT) model**, or **Rasch model**: $\text{logit}(p) = \text{ability} + \text{easiness}$, with one parameter per item. In IRT, each item's difficulty (the negative of easiness) is usually a fixed number; in m1 and in the explanatory item response model of Gilbert, Kim, & Miratrix ([2023](https://journals.sagepub.com/doi/pdf/10.3102/10769986231171710?casa_token=x3jNXUGSOLcAAAAA:zaf5NeBKTwW6o0bXHueUS4Tak0FzZDBJVcDXUAE8txGAUDeCRyNhOhqsPLQb-q220kcrwRsOz2WS)), each item's easiness is a draw from a normal distribution.
 
 **Ability, easiness, and the reification fallacy.** In m1, $u_j$ ("ability") and $u_i$ ("easiness") are **residuals**: $u_j$ is the part of student $j$'s log-odds not accounted for by $\gamma_0$. The **reification fallacy** is treating an abstract quantity as if it were a concrete thing: calling a student's estimated $u_j$, a summary of the student's responses to these 36 items under m1's assumptions, a fixed "vocabulary ability" the student would show on any test.
 
 ### Fitting it (m1) {#sec-cc-m1}
 
-| Term | Estimate | SE | $Z$ |
-|:-----------------------------------|----------:|-------:|-------:|
-| $\widehat{\gamma_0}$ `(Intercept)` | 0.3493 | 0.1879 | 1.86 |
-| $\widehat{\tau_j}$ `sd__(Intercept)`, group `id` | 1.1869 | | |
-| $\widehat{\tau_i}$ `sd__(Intercept)`, group `item` | 1.1141 | | |
+| Term                                               | Estimate |     SE |  $Z$ |
+|:---------------------------------------------------|---------:|-------:|-----:|
+| $\widehat{\gamma_0}$ `(Intercept)`                 |   0.3493 | 0.1879 | 1.86 |
+| $\widehat{\tau_j}$ `sd__(Intercept)`, group `id`   |   1.1869 |        |      |
+| $\widehat{\tau_i}$ `sd__(Intercept)`, group `item` |   1.1141 |        |      |
 
 $\widehat{\gamma_0} = 0.35$. *Interpretation.* For a student of average proficiency ($u_j = 0$) on an item of average easiness ($u_i = 0$), the predicted log-odds of a correct response are 0.35. As a probability, $e^{0.3493}/(1 + e^{0.3493}) = 0.586$: a 58.6% chance.
 
@@ -154,7 +154,7 @@ $\widehat{\tau_j} = 1.19$. *Interpretation.* On any item, students' log-odds of 
 The table below turns $\widehat{\tau_j}$ into chances of a correct response. Each row is a student at a different distance from average proficiency, with the student's log-odds, $0.3493 + u_j$, and that student's probability of answering the item correctly. **Which item is in the table?** A probability depends on both the student and the item, so one item has to be chosen. In every row, the item is an item of average easiness ($u_i = 0$), and only the student changes.
 
 | Student | Log-odds, $0.3493 + u_j$ | Probability of a correct response |
-|:------------------|--------------------------------:|---------:|
+|:-------------------|-----------------------------------:|---------------:|
 | 2 SDs below average proficiency | $0.3493 - 2(1.1869) = -2.02$ | 0.117 (11.7%) |
 | 1 SD below | $0.3493 - 1.1869 = -0.84$ | 0.302 (30.2%) |
 | Average proficiency ($u_j = 0$) | 0.3493 | 0.586 (58.6%) |
@@ -170,7 +170,7 @@ $\widehat{\tau_i} = 1.11$. *Interpretation.* For any student, items' log-odds of
 The table below is the table for students with the roles switched. In every row, the student is a student of average proficiency ($u_j = 0$), and only the item changes: each row is an item at a different distance from average easiness, with log-odds $0.3493 + u_i$.
 
 | Item | Log-odds, $0.3493 + u_i$ | Probability of a correct response |
-|:------------------|--------------------------------:|---------:|
+|:-------------------|-----------------------------------:|---------------:|
 | 2 SDs harder than average | $0.3493 - 2(1.1141) = -1.88$ | 0.133 (13.3%) |
 | 1 SD harder | $0.3493 - 1.1141 = -0.76$ | 0.318 (31.8%) |
 | Average easiness ($u_i = 0$) | 0.3493 | 0.586 (58.6%) |
@@ -182,7 +182,7 @@ For a student of average proficiency, about 95% of items are expected to have lo
 **Students and items together.** In the table below, three students (1 SD below, at and 1 SD above average proficiency) are crossed with three items (1 SD harder than average, of average easiness and 1 SD easier). Each cell is the probability of a correct response, from the log-odds $0.3493 + u_j + u_i$.
 
 | Student | Item 1 SD harder | Item of average easiness | Item 1 SD easier |
-|:-------------------------------|---------:|---------:|---------:|
+|:-------------------------------|-------------:|-------------:|-------------:|
 | 1 SD below average proficiency | 12.4% | 30.2% | 56.9% |
 | Average proficiency ($u_j = 0$) | 31.8% | 58.6% | 81.2% |
 | 1 SD above average proficiency | 60.4% | 82.3% | 93.4% |
@@ -191,7 +191,7 @@ For a student of average proficiency, about 95% of items are expected to have lo
 
 So for research question 1: in log-odds, students differ by about 1.19 and items by about 1.11 in SD terms, about the same amount, and both differences are large.
 
-**Why is the SE of $\widehat{\gamma_0}$ so large?** With 68,538 responses, an SE of 0.19 looks large. But $\gamma_0$ is for a student of average proficiency on an item of average easiness, and the items' average easiness is estimated from only 36 items: with a different set of 36 items, $\widehat{\gamma_0}$ would differ. An average of $n$ independent values with SD $\tau$ has variance $\tau^2/n$. If $\widehat{\gamma_0}$ is thought of as an average of 36 item departures and 1,914 student departures, its SE is about
+**Why is the SE of** $\widehat{\gamma_0}$ so large? With 68,538 responses, an SE of 0.19 looks large. But $\gamma_0$ is for a student of average proficiency on an item of average easiness, and the items' average easiness is estimated from only 36 items: with a different set of 36 items, $\widehat{\gamma_0}$ would differ. An average of $n$ independent values with SD $\tau$ has variance $\tau^2/n$. If $\widehat{\gamma_0}$ is thought of as an average of 36 item departures and 1,914 student departures, its SE is about
 
 $$\sqrt{\frac{\widehat{\tau_i}^2}{36} + \frac{\widehat{\tau_j}^2}{1{,}914}} = \sqrt{\frac{1.2412}{36} + \frac{1.4087}{1{,}914}} = \sqrt{0.0345 + 0.0007} = 0.188$$
 
@@ -271,7 +271,7 @@ The two definitions are also the two interpretations of the ICC from @sec-icc-in
 
 ### What is a latent response? {#sec-cc-latent}
 
-**Where does an error come from, if m1 has no $e_{ij}$?** The ICC and the reliability are ratios of variances, with an error variance in the denominator. But m1 has no error term $e_{ij}$: as in every logit model, each response's variance, $p(1-p)$, is set by its probability $p$ (@sec-cc-m1-model). So the error variance comes from a second way of writing m1, in which each 0/1 response is the result of an unobserved number, the student's **latent response** to the item, written $y^*_{ij}$. There is no $y^*_{ij}$ in the data: the data have only 0s and 1s. This is not a new model. Under it, every response has exactly the same probability of being correct as under m1 (shown below), so it has the same estimates. The only addition is an error $e_{ij}$, whose variance is used in the ICC and the reliability. In @sec-bin-icc, retention was written the same way, with a latent propensity to be retained.
+**Where does an error come from, if m1 has no** $e_{ij}$? The ICC and the reliability are ratios of variances, with an error variance in the denominator. But m1 has no error term $e_{ij}$: as in every logit model, each response's variance, $p(1-p)$, is set by its probability $p$ (@sec-cc-m1-model). So the error variance comes from a second way of writing m1, in which each 0/1 response is the result of an unobserved number, the student's **latent response** to the item, written $y^*_{ij}$. There is no $y^*_{ij}$ in the data: the data have only 0s and 1s. This is not a new model. Under it, every response has exactly the same probability of being correct as under m1 (shown below), so it has the same estimates. The only addition is an error $e_{ij}$, whose variance is used in the ICC and the reliability. In @sec-bin-icc, retention was written the same way, with a latent propensity to be retained.
 
 $$\begin{aligned}
 y^*_{ij} &= \gamma_0 + u_j + u_i + e_{ij} \\
@@ -287,10 +287,10 @@ with $u_j \sim N(0, \tau^2_j)$ and $u_i \sim N(0, \tau^2_i)$ as in m1. Each piec
 - In the second line, the response is correct (1) when the latent response is above 0, and incorrect (0) otherwise. So 0 is a cutoff on the log-odds scale, not a probability.
 - A **logistic distribution** is bell-shaped like the normal. Its variance is **fixed** at $\pi^2/3 \approx 3.29$, an SD of 1.81 ($\pi$ is the Greek letter pi, 3.14159...).
 
-**Why is the error variance fixed, and why at $\pi^2/3$?**
+**Why is the error variance fixed, and why at** $\pi^2/3$?
 
 - *Why fixed, not estimated.* Each 0 or 1 contains only whether the latent response is above 0, not how far above or below 0 it is. If every latent response were twice as far from 0, with its center and its error both doubled, every one above 0 would still be above 0 and every one below 0 still below, so the 0s and 1s would be exactly the same. So the 0s and 1s contain no information about how spread out the latent responses are, and the error variance has to be set to a number, not estimated. Doubling would also double $\gamma_0$, $\tau_j$ and $\tau_i$, so every variance in the ICC and the reliability, the error variance included, would be 4 times as large, and their ratios would not change.
-- *Why $\pi^2/3$.* It is the variance of the **standard logistic distribution**, the distribution in which the area below any value $x$ is $e^{x}/(1 + e^{x})$, the formula that turns log-odds into probabilities. With this error, $y^*_{ij}$ is above 0 when $e_{ij}$ is above $-(\gamma_0 + u_j + u_i)$. The distribution is symmetric around 0, so that probability equals the area below $\gamma_0 + u_j + u_i$, which is $e^{\gamma_0 + u_j + u_i}/(1 + e^{\gamma_0 + u_j + u_i})$: exactly m1's probability of a correct response, for every student and every item. So the two ways of writing the model agree, and $y^*_{ij}$ is in m1's units, log-odds. (With a normal error of variance 1 instead, the same idea gives the **probit** model, which has a similar S shape but coefficients on a different scale.) This is drawn for two items in @fig-cc-latent and for many students in @fig-cc-latentcurve.
+- *Why* $\pi^2/3$. It is the variance of the **standard logistic distribution**, the distribution in which the area below any value $x$ is $e^{x}/(1 + e^{x})$, the formula that turns log-odds into probabilities. With this error, $y^*_{ij}$ is above 0 when $e_{ij}$ is above $-(\gamma_0 + u_j + u_i)$. The distribution is symmetric around 0, so that probability equals the area below $\gamma_0 + u_j + u_i$, which is $e^{\gamma_0 + u_j + u_i}/(1 + e^{\gamma_0 + u_j + u_i})$: exactly m1's probability of a correct response, for every student and every item. So the two ways of writing the model agree, and $y^*_{ij}$ is in m1's units, log-odds. (With a normal error of variance 1 instead, the same idea gives the **probit** model, which has a similar S shape but coefficients on a different scale.) This is drawn for two items in @fig-cc-latent and for many students in @fig-cc-latentcurve.
 
 ![The latent response of a student of average proficiency ($u_j = 0$) to item 20 (left) and to item 34 (right): a logistic distribution with variance 3.29, centered at the student's log-odds for the item (dotted line). The dashed red line is at 0, and the shaded area is the part of the distribution above 0.](images/08/fig06_latent_response.png){#fig-cc-latent width="72%"}
 
@@ -409,13 +409,13 @@ So differences between items change the level of the scores, not the order. If s
 
 ### Cronbach's alpha {#sec-cc-alpha}
 
-@sec-cc-latent to @sec-cc-item-var are about latent responses, which are never observed. The score usually reported for a test is observed, such as the number-correct score (out of 36), and its reliability is usually reported as **Cronbach's $\boldsymbol{\alpha}$** ($\alpha$ is the Greek letter alpha).
+@sec-cc-latent to @sec-cc-item-var are about latent responses, which are never observed. The score usually reported for a test is observed, such as the number-correct score (out of 36), and its reliability is usually reported as **Cronbach's** $\boldsymbol{\alpha}$ ($\alpha$ is the Greek letter alpha).
 
-**What is Cronbach's $\boldsymbol{\alpha}$?** Cronbach's $\alpha$ is a reliability for a score that is the sum or the average of item scores, such as the number-correct score. It is computed from the observed item scores, without fitting a model: from the variance of the students' total scores and the variances of the single items. It is high when students who answer one item correctly tend to answer the other items correctly too. For the 1,895 students who answered all 36 items, $\alpha = 0.90$.
+**What is Cronbach's** $\boldsymbol{\alpha}$? Cronbach's $\alpha$ is a reliability for a score that is the sum or the average of item scores, such as the number-correct score. It is computed from the observed item scores, without fitting a model: from the variance of the students' total scores and the variances of the single items. It is high when students who answer one item correctly tend to answer the other items correctly too. For the 1,895 students who answered all 36 items, $\alpha = 0.90$.
 
 *Interpretation.* Among these students, 90% of the variance in the number-correct score is true-score variance and 10% is measurement error. Equivalently, their number-correct scores on two 36-item versions of the test would be correlated about 0.90.
 
-**Cronbach's $\boldsymbol{\alpha}$ is the reliability formula with a linear model.** The same two random intercepts can be fitted with a linear model for the 0/1 response, which has a residual $e_{ij}$ with an estimated variance $\sigma^2$:
+**Cronbach's** $\boldsymbol{\alpha}$ is the reliability formula with a linear model. The same two random intercepts can be fitted with a linear model for the 0/1 response, which has a residual $e_{ij}$ with an estimated variance $\sigma^2$:
 
 ``` r
 # the 1,895 students who answered all 36 items
@@ -445,7 +445,7 @@ The reliability of students' scores, $\tau^2_j/(\tau^2_j + 3.29/I)$, is higher w
 
 **Reading @fig-cc-rel (left).** For our students, one item has reliability 0.30, 10 items 0.81 and 36 items 0.94. The curve increases steeply at first and then slowly: by 0.51 from 1 to 10 items, and by 0.13 from 10 to 36. For students who differ half as much ($\tau_j = 0.60$), the reliability is 0.10 with one item and only 0.80 with the same 36 items.
 
-**How many items are needed for a reliability of 0.80, with $\widehat{\tau_j} = 1.2$ (1.1869 rounded)?** Set the reliability to 0.80 and solve for $I$:
+**How many items are needed for a reliability of 0.80, with** $\widehat{\tau_j} = 1.2$ (1.1869 rounded)? Set the reliability to 0.80 and solve for $I$:
 
 $$\begin{aligned}
 0.80 &= \frac{1.44}{1.44 + 3.29/I} \\
@@ -511,18 +511,18 @@ glmer(resp ~ 1 + cov_lep + cov_ses_med + cov_ses_high + (1 | id) + (1 | item),
 The 16 students with no SES value are left out, so m2 is fitted to 1,898 students and their 67,997 responses.
 
 | Term | Estimate | SE | $Z$ |
-|:-----------------------------------|----------:|-------:|---------:|
+|:---|---:|---:|---:|
 | $\widehat{\gamma_0}$ `(Intercept)` | 0.1782 | 0.1913 | 0.93 |
 | $\widehat{\gamma_1}$ `cov_lep` | $-0.7951$ | 0.0606 | $-13.11$ |
 | $\widehat{\gamma_2}$ `cov_ses_med` | 0.2823 | 0.0594 | 4.75 |
 | $\widehat{\gamma_3}$ `cov_ses_high` | 1.0572 | 0.0675 | 15.67 |
-| $\widehat{\tau_j}$ `sd__(Intercept)`, group `id` | 1.0295 | | |
-| $\widehat{\tau_i}$ `sd__(Intercept)`, group `item` | 1.1134 | | |
+| $\widehat{\tau_j}$ `sd__(Intercept)`, group `id` | 1.0295 |  |  |
+| $\widehat{\tau_i}$ `sd__(Intercept)`, group `item` | 1.1134 |  |  |
 
 **Predictions for the six groups.** In every row of the table, the item is an item of average easiness ($u_i = 0$) and the student is exactly at the prediction for the student's group ($u_j = 0$); only the group changes.
 
 | Group | Log-odds | Probability |
-|:------------------------------------|:------------------------------------|---------:|
+|:---------------------------|:---------------------------|--------------:|
 | Low SES, not an English learner | $\widehat{\gamma_0} = 0.178$ | 54.4% |
 | Low SES, English learner | $\widehat{\gamma_0} + \widehat{\gamma_1} = -0.617$ | 35.0% |
 | Middle SES, not an English learner | $\widehat{\gamma_0} + \widehat{\gamma_2} = 0.461$ | 61.3% |
@@ -654,17 +654,17 @@ glmer(resp ~ 1 + c_ln_rt + (1 | id) + (1 | item), data = vocab, family = binomia
 `c_ln_rt` is $\beta_1$; the rest is as in m1.
 
 | Term | Estimate | SE | $Z$ |
-|:-----------------------------------|----------:|-------:|---------:|
+|:---|---:|---:|---:|
 | $\widehat{\gamma_0}$ `(Intercept)` | 0.3549 | 0.1879 | 1.89 |
 | $\widehat{\beta_1}$ `c_ln_rt` | $-0.1550$ | 0.0122 | $-12.75$ |
-| $\widehat{\tau_j}$ `sd__(Intercept)`, group `id` | 1.2019 | | |
-| $\widehat{\tau_i}$ `sd__(Intercept)`, group `item` | 1.1137 | | |
+| $\widehat{\tau_j}$ `sd__(Intercept)`, group `id` | 1.2019 |  |  |
+| $\widehat{\tau_i}$ `sd__(Intercept)`, group `item` | 1.1137 |  |  |
 
 $\widehat{\gamma_0} = 0.35$. *Interpretation.* For a student of average proficiency on an item of average easiness, a response of 12.3 seconds has predicted log-odds of a correct response 0.35, a probability of $e^{0.3549}/(1 + e^{0.3549}) = 0.588$: a 58.8% chance.
 
 $\widehat{\beta_1} = -0.155$. *Interpretation.* Comparing a response with one that took 2.72 times as long, for the same $u_j$ and the same $u_i$, the longer response has log-odds of a correct response 0.155 lower. For a student of average proficiency on an item of average easiness, that is 55.0% for a response of 33.5 seconds against 58.8% for a response of 12.3 seconds, 3.8 percentage points lower. With $Z = -12.75$, the slope is clearly distinguishable from zero.
 
-**What is $\beta_1$ a slope for?** Responses differ in log(RT) for three reasons (@fig-cc-rtbox): some students are slower than others, some items take longer than others, and a response can take longer or shorter than expected for its student and item. m3 has one slope for all three, so m3 assumes that the association is the same for each. Holding $u_j$ and $u_i$ the same does not make $-0.155$ a comparison within one student only: if the three associations differ, $-0.155$ is a combination of them and need not equal any of them (@sec-cc-double). $\widehat{\beta_1}$ also differs from the slope of the red curve in @fig-cc-rtacc, $-0.045$, which has no student or item terms.
+**What is** $\beta_1$ a slope for? Responses differ in log(RT) for three reasons (@fig-cc-rtbox): some students are slower than others, some items take longer than others, and a response can take longer or shorter than expected for its student and item. m3 has one slope for all three, so m3 assumes that the association is the same for each. Holding $u_j$ and $u_i$ the same does not make $-0.155$ a comparison within one student only: if the three associations differ, $-0.155$ is a combination of them and need not equal any of them (@sec-cc-double). $\widehat{\beta_1}$ also differs from the slope of the red curve in @fig-cc-rtacc, $-0.045$, which has no student or item terms.
 
 $\widehat{\tau_j} = 1.20$ **and** $\widehat{\tau_i} = 1.11$. *Interpretation.* For responses with the same log(RT), students' log-odds on any item differ by about 1.20 in SD terms, and items' by about 1.11 for any student. Neither SD is smaller than in m1 (1.19 and 1.11); @sec-cc-m4 explains why $\widehat{\tau_j}$ is slightly larger.
 
@@ -749,7 +749,7 @@ vocab <- vocab %>%
 **Student 909, two responses.** Student 909's mean centered log(RT) is $\overline{\text{RT}}_{909} = 0.1955$: this student's responses took slightly longer than the average response, $e^{0.1955} = 1.22$ times as long. In the table, `rt` is the response time in seconds, and $\text{RT}_{ij}$ is the response's centered log(RT), its log(RT) minus the grand mean, 2.51 (@sec-cc-log-rt): $\log(78.40) - 2.51 = 4.36 - 2.51 = 1.85$ for item 0, a response much longer than 12.3 seconds, and $\log(7.62) - 2.51 = 2.03 - 2.51 = -0.48$ for item 2, a response shorter than 12.3 seconds. "Expected" is the student's mean plus the item's mean, and $\text{drt}_{ij}$ is $\text{RT}_{ij}$ minus "Expected".
 
 | Item | `rt` (s) | $\text{RT}_{ij}$ | $\overline{\text{RT}}_j$ | $\overline{\text{RT}}_i$ | Expected, $\overline{\text{RT}}_j + \overline{\text{RT}}_i$ | $\text{drt}_{ij}$ |
-|:-----|------:|-------:|-------:|-------:|-------:|-------:|
+|:----------|----------:|----------:|----------:|----------:|----------:|----------:|
 | 0 | 78.40 | 1.8494 | 0.19546 | 2.11536 | 2.3108 | $-0.4614$ |
 | 2 | 7.62 | $-0.4818$ | 0.19546 | 0.15733 | 0.3528 | $-0.8346$ |
 
@@ -768,12 +768,12 @@ The three pieces, the double-centered value and the student's and the item's mea
 
 **How much of the variation in log(RT) is in each piece?** Every response has three numbers: its double-centered value, its student's mean and its item's mean. Each piece's variance is computed over the 68,538 responses. Because the pieces are unrelated, the three variances add up to almost exactly the variance of centered log(RT), and each piece's share of the total is how much of the variation in log(RT) is of that kind:
 
-| Piece | Variance | Share of the total |
-|:-----------------------------------|---------:|---------:|
-| Double-centered (within students and items) | 0.544 | 52.3% |
-| Student means (between students) | 0.326 | 31.3% |
-| Item means (between items) | 0.170 | 16.4% |
-| Total | 1.040 | 100% |
+| Piece                                       | Variance | Share of the total |
+|:--------------------------------------------|---------:|-------------------:|
+| Double-centered (within students and items) |    0.544 |              52.3% |
+| Student means (between students)            |    0.326 |              31.3% |
+| Item means (between items)                  |    0.170 |              16.4% |
+| Total                                       |    1.040 |               100% |
 
 The total, 1.040, is close to the variance of centered log(RT), 1.038; the two differ slightly because the pieces are almost, not exactly, uncorrelated. *Interpretation.* About 52% of the variation in log(RT) is within students and items: a response is faster or slower than expected for its student and item. About 31% is between students, because some students are slower than others, and about 16% between items. Most of the item share is from one item. Over the 68,538 responses, the item means average to 0, so their variance is the average of the squared item means, with each item's mean counted once for each of its responses. Item 0's mean, 2.12, is far from 0 (its responses take much longer than responses to any other item, @sec-cc-rt-by), so its 1,914 responses contribute 0.125 of the 0.170. The other 35 items together contribute only 0.045, because their means are all close to 0 (between $-0.44$ and 0.30).
 
@@ -822,13 +822,13 @@ glmer(resp ~ 1 + d_rt + p_ln_rt + i_ln_rt + (1 | id) + (1 | item),
 `d_rt`, `p_ln_rt` and `i_ln_rt` are $\beta_W$, $\beta_P$ and $\beta_I$; the rest is as in m1.
 
 | Term | Estimate | SE | $Z$ |
-|:-----------------------------------|----------:|-------:|---------:|
+|:---|---:|---:|---:|
 | $\widehat{\gamma_0}$ `(Intercept)` | 0.3534 | 0.1876 | 1.88 |
 | $\widehat{\beta_W}$ `d_rt` | $-0.1744$ | 0.0126 | $-13.89$ |
 | $\widehat{\beta_P}$ `p_ln_rt` | 0.1572 | 0.0499 | 3.15 |
 | $\widehat{\beta_I}$ `i_ln_rt` | $-0.2586$ | 0.4508 | $-0.57$ |
-| $\widehat{\tau_j}$ `sd__(Intercept)`, group `id` | 1.1871 | | |
-| $\widehat{\tau_i}$ `sd__(Intercept)`, group `item` | 1.1124 | | |
+| $\widehat{\tau_j}$ `sd__(Intercept)`, group `id` | 1.1871 |  |  |
+| $\widehat{\tau_i}$ `sd__(Intercept)`, group `item` | 1.1124 |  |  |
 
 $\widehat{\gamma_0} = 0.35$. *Interpretation.* For a student of average proficiency on an item of average easiness, with the student's and the item's mean log(RT) both at the grand mean, a response at the expected time has predicted log-odds of a correct response 0.35, a probability of $e^{0.3534}/(1 + e^{0.3534}) = 0.587$: a 58.7% chance. Each probability below is for this case with one piece changed.
 
@@ -844,7 +844,7 @@ $\widehat{\beta_I} = -0.26$. *Interpretation.* Comparing two items whose mean lo
 
 $\widehat{\tau_j} = 1.19$ **and** $\widehat{\tau_i} = 1.11$. *Interpretation.* For students with the same mean log(RT), on any item, students' log-odds of a correct response differ from those of a student of average proficiency by about 1.19 in SD terms. For items with the same mean log(RT), for any student, items' log-odds differ by about 1.11. Both are the same as in m1, so the three response-time pieces account for almost none of the differences between students or between items.
 
-**Why was $\widehat{\tau_j}$ larger in m3?** In m3, $\widehat{\tau_j}$ was 1.20, against 1.19 in m1 and m4. With one negative slope for log(RT), $-0.155$, slower students have lower predicted log-odds under m3. But slower students are more accurate ($\widehat{\beta_P} = 0.16$), so their log-odds are higher than m3's fixed part predicts, and the difference is part of their $u_j$. So under m3, the students' EB estimates of $u_j$ vary more and are correlated 0.14 with their mean log(RT), against $-0.003$ under m4: in m3, the random effects assumption for $u_j$ does not hold.
+**Why was** $\widehat{\tau_j}$ larger in m3? In m3, $\widehat{\tau_j}$ was 1.20, against 1.19 in m1 and m4. With one negative slope for log(RT), $-0.155$, slower students have lower predicted log-odds under m3. But slower students are more accurate ($\widehat{\beta_P} = 0.16$), so their log-odds are higher than m3's fixed part predicts, and the difference is part of their $u_j$. So under m3, the students' EB estimates of $u_j$ vary more and are correlated 0.14 with their mean log(RT), against $-0.003$ under m4: in m3, the random effects assumption for $u_j$ does not hold.
 
 ### Opposite signs: Simpson's paradox {#sec-cc-simpson}
 
@@ -952,11 +952,11 @@ Line one is the Mundlak model. Line two replaces $\text{RT}_{ij}$ with the sum o
 
 2.  **Reading an item's random effect as its difficulty.** $u_i$ is **easiness**: item 28, at 1.58, was answered correctly by 83% of students, and item 34, at $-2.71$, by 12%.
 
-3.  **Reading $\widehat{\gamma_0}$ as the percent of responses that were correct.** $e^{0.3493}/(1 + e^{0.3493}) = 58.6\%$ is the chance for a student of average proficiency on an item of average easiness; 56.6% of all responses were correct.
+3.  **Reading** $\widehat{\gamma_0}$ as the percent of responses that were correct. $e^{0.3493}/(1 + e^{0.3493}) = 58.6\%$ is the chance for a student of average proficiency on an item of average easiness; 56.6% of all responses were correct.
 
 4.  **Reading the cutoff of the latent response, 0, as a probability.** 0 is a cutoff on the log-odds scale. The probability of a correct response is the area of the latent response's curve above 0: 58.0% for a student of average proficiency on item 20, whose curve is centered at 0.32.
 
-5.  **Including $\tau^2_i$ in a student's reliability.** Every student answers the same items, so a hard item lowers every student's log-odds by the same amount and does not change the students' order. With $\widehat{\tau_i}^2 = 1.2412$ added to the denominator, $1.4087/(1.4087 + 1.2412 + 0.0914) = 0.51$ instead of 0.94.
+5.  **Including** $\tau^2_i$ in a student's reliability. Every student answers the same items, so a hard item lowers every student's log-odds by the same amount and does not change the students' order. With $\widehat{\tau_i}^2 = 1.2412$ added to the denominator, $1.4087/(1.4087 + 1.2412 + 0.0914) = 0.51$ instead of 0.94.
 
 6.  **Dividing by the wrong count for item reliability.** For an item, the error variance is divided by the number of students, $P = 1{,}914$, not by the number of items: $1.2412/(1.2412 + 3.29/36) = 0.93$ instead of 0.9986.
 
@@ -966,7 +966,7 @@ Line one is the Mundlak model. Line two replaces $\text{RT}_{ij}$ with the sum o
 
 9.  **Reading m3's slope as the association within students.** $-0.155$ is one slope for the within, student and item associations; in m4, the within slope is $-0.17$ and the between-student slope is $+0.16$.
 
-10. **Concluding from $\widehat{\beta_P} > 0$ that there is a speed–accuracy tradeoff.** $\widehat{\beta_P} = 0.16$ is a comparison of students. For the same student, a response slower than expected is less likely to be correct ($\widehat{\beta_W} = -0.17$).
+10. **Concluding from** $\widehat{\beta_P} > 0$ that there is a speed–accuracy tradeoff. $\widehat{\beta_P} = 0.16$ is a comparison of students. For the same student, a response slower than expected is less likely to be correct ($\widehat{\beta_W} = -0.17$).
 
 11. **Reading a between-item slope that is not distinguishable from zero as no item-level association.** Items whose responses take 2.72 times as long on average have log-odds 0.26 lower. With $Z = -0.57$, the slope is not distinguishable from zero, but its 95% confidence interval, $-1.14$ to 0.62, includes large negative and large positive values.
 
@@ -1070,7 +1070,7 @@ glmer(resp ~ 1 + d_rt + p_ln_rt + i_ln_rt +
 
 ### Example 1: our students and items
 
-*Use m1 (@sec-cc-m1): $\widehat{\gamma_0} = 0.3493$, $\widehat{\tau_j} = 1.1869$, $\widehat{\tau_i} = 1.1141$; the hardest item, item 34, has estimated $u_i = -2.7116$. And m4 (@sec-cc-m4): $\widehat{\gamma_0} = 0.3534$, $\widehat{\beta_W} = -0.1744$.*
+*Use m1 (@sec-cc-m1):* $\widehat{\gamma_0} = 0.3493$, $\widehat{\tau_j} = 1.1869$, $\widehat{\tau_i} = 1.1141$; the hardest item, item 34, has estimated $u_i = -2.7116$. And m4 (@sec-cc-m4): $\widehat{\gamma_0} = 0.3534$, $\widehat{\beta_W} = -0.1744$.
 
 **(a) What is the probability that a student 1 SD above average proficiency answers item 34 correctly?**
 
@@ -1088,7 +1088,7 @@ With $u_j = 1.1869$: log-odds $0.3493 + 1.1869 + (-2.7116) = -1.1754$, probabili
 $\widehat{\tau_j}^2 = 1.4087$. With 20 items, $1.4087/(1.4087 + 3.29/20) = 1.4087/(1.4087 + 0.1645) = 0.895$. *Interpretation.* With 20 items, students' average latent responses on two 20-item versions of the test would be correlated about 0.895, and 89.5% of their variance would be true-score variance.
 :::
 
-**(c) Interpret $\widehat{\beta_W}$ for a response that took twice the expected time.**
+**(c) Interpret** $\widehat{\beta_W}$ for a response that took twice the expected time.
 
 ::: {.callout-tip collapse="true" icon="false"}
 ## Show solution
@@ -1098,7 +1098,7 @@ Twice as long is $\log(2) = 0.69$ in log(RT): $-0.1744 \times 0.69 = -0.12$ in l
 
 ### Example 2: a new setting
 
-*A state scores 400 student essays as proficient (1) or not (0). Each essay is scored by the same 12 trained raters, so there are $400 \times 12 = 4{,}800$ scores. A cross-classified logit model has $\widehat{\gamma_0} = 0.20$, an essay SD $\widehat{\tau}_{\text{essay}} = 1.5$ and a rater SD $\widehat{\tau}_{\text{rater}} = 0.6$.*
+*A state scores 400 student essays as proficient (1) or not (0). Each essay is scored by the same 12 trained raters, so there are* $400 \times 12 = 4{,}800$ scores. A cross-classified logit model has $\widehat{\gamma_0} = 0.20$, an essay SD $\widehat{\tau}_{\text{essay}} = 1.5$ and a rater SD $\widehat{\tau}_{\text{rater}} = 0.6$.
 
 **(a) Are scores nested in essays, in raters, or in their cross-classification? Write the model and the `glmer` call.**
 
@@ -1142,7 +1142,7 @@ $1.5^2/(1.5^2 + 3.29/12) = 2.25/(2.25 + 0.2742) = 0.89$. For 0.80 with $R$ rater
 
 Try each one before opening the answer. The section reference points to the fuller explanation.
 
-:::::::::::::: self-check
+:::::::::::::::: self-check
 ::: {.callout-note collapse="true" icon="false"}
 ## Tell nested from crossed data, and name the three sample sizes.
 
@@ -1220,7 +1220,7 @@ Adding zero twice: m3's $-0.155$ is the same coefficient on the within, student 
 
 $-0.17$ within (no tradeoff), 0.16 between students (slower students more accurate), $-0.26$ between items (items that take longer, lower log-odds; not distinguishable from zero). SEs 0.0126, 0.0499 and 0.4508 from 68,538 responses, 1,914 students and 36 items. *See @sec-cc-m4 to @sec-cc-se.*
 :::
-::::::::::::::
+::::::::::::::::
 
 ## Going deeper {#sec-cc-deeper}
 
@@ -1231,7 +1231,7 @@ From Luke Miratrix's online MLM handouts:
 - [Within vs Between / Contextual Effects Visualization](https://lmiratrix.github.io/MLM/rewb_viz.html) — an interactive app of within, between and contextual slopes.
 - [Easy viz for multilevel models with ggeffects](https://lmiratrix.github.io/MLM/ggeffects.html) — `ggeffect()` predictions, a quick way to draw curves like @fig-cc-m3pred.
 
-**An empirical application.** Gilbert, J. B., Kim, J. S., & Miratrix, L. W. (2023). Modeling item-level heterogeneous treatment effects with the explanatory item response model: Leveraging large-scale online assessments to pinpoint the impact of educational interventions. *Journal of Educational and Behavioral Statistics, 48*(6), 889–913. The paper's **explanatory item response model** is m1 with predictors (@sec-cc-predictors), including a treatment indicator with a random slope across items, so the treatment effect can differ from item to item. In another trial of the MORE intervention, the average effect on a 29-item reading comprehension test, 0.06 in log-odds (SE 0.09), was not distinguishable from zero, but the effects were largest on the items of the passage closest in topic to the treatment lessons.
+**An empirical application.** Gilbert, J. B., Kim, J. S., & Miratrix, L. W. ([2023](https://journals.sagepub.com/doi/pdf/10.3102/10769986231171710?casa_token=x3jNXUGSOLcAAAAA:zaf5NeBKTwW6o0bXHueUS4Tak0FzZDBJVcDXUAE8txGAUDeCRyNhOhqsPLQb-q220kcrwRsOz2WS)). Modeling item-level heterogeneous treatment effects with the explanatory item response model: Leveraging large-scale online assessments to pinpoint the impact of educational interventions. *Journal of Educational and Behavioral Statistics, 48*(6), 889–913. The paper's **explanatory item response model** is m1 with predictors (@sec-cc-predictors), including a treatment indicator with a random slope across items, so the treatment effect can differ from item to item. In another trial of the MORE intervention, the average effect on a 29-item reading comprehension test, 0.06 in log-odds (SE 0.09), was not distinguishable from zero, but the effects were largest on the items of the passage closest in topic to the treatment lessons.
 
 ## Code for this chapter's figures {#sec-cc-code}
 
