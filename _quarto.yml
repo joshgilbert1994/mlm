@@ -18,6 +18,8 @@ book:
   page-navigation: true
   sidebar:
     style: floating
+  page-footer:
+    center: "Text and figures © 2026 Josh Gilbert and Bill Young, [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/). Code [MIT](https://github.com/joshgilbert1994/mlm/blob/main/LICENSE-CODE)."
   chapters:
     - index.qmd
     - part: "Clustered data and cross-sectional models"
