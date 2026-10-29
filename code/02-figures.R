@@ -95,7 +95,7 @@ p4 <- ggplot(cat_d, aes(level, estimate, ymin = lb, ymax = ub, colour = flag)) +
        subtitle = "Red is school 62, blue is school 12. Both intervals are 95%.\nSchool 62 goes from worst in the sample to exactly average; school 12 gives up most of its lead.")
 ggsave(paste0(OUT, "fig04_caterpillar_compare.png"), p4, width = 8.6, height = 4.6, dpi = 200, bg = "white")
 
-# ---- FIG: Lecture 1's caterpillar plot, reproduced -----------------------
+# ---- FIG: Chapter 1's caterpillar plot, reproduced -----------------------
 cat_vc <- tidy(mlm0, effects = "ran_vals") |>
   mutate(lb = estimate - 1.96*std.error, ub = estimate + 1.96*std.error,
          flag = case_when(level == "62" ~ "62", level == "12" ~ "12", TRUE ~ "other"),
@@ -106,7 +106,7 @@ pcat <- ggplot(cat_vc, aes(level, estimate, ymin = lb, ymax = ub, colour = flag)
   geom_point(size = 3) +
   scale_colour_manual(values = c("62" = CRIM, "12" = BLUE, "other" = INK), guide = "none") +
   labs(x = "School ID", y = expression("Empirical Bayes estimate  "*hat(u)[j]),
-       title = "Lecture 1's caterpillar plot, from the variance components model",
+       title = "Chapter 1's caterpillar plot, from the variance components model",
        subtitle = "Ten schools sorted from lowest to highest, each with a 95% interval.\nSchool 62 (red) is lowest, at the far left; school 12 (blue) is highest, at the far right.")
 ggsave(paste0(OUT, "fig_caterpillar_vc.png"), pcat, width = 7.7, height = 4.6, dpi = 200, bg = "white")
 
