@@ -33,6 +33,7 @@ book:
     - part: "Generalized and cross-classified models"
       chapters:
         - chapters/07-binary-outcomes.qmd
+        - chapters/08-cross-classified.qmd
 
 format:
   html:

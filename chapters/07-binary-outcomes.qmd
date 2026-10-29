@@ -1069,4 +1069,4 @@ Every figure in this chapter is computed live from the data by one R script. It 
 
 ## What comes next {.unnumbered}
 
-This is the last chapter for now. A natural next step for the multilevel logit model is **cross-classified** data: when each student answers the same set of test items, each response belongs to one student and one item, and students and items are **crossed** (neither is nested in the other). The same `glmer` machinery handles it, with a random effect for students and another for items.
+@sec-cross-classified takes the multilevel logit model to **cross-classified** data: when each student answers the same set of test items, each response belongs to one student and one item, and students and items are **crossed** (neither is nested in the other). The same `glmer` machinery handles it, with a random effect for students and another for items.
