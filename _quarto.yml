@@ -36,6 +36,9 @@ book:
       chapters:
         - chapters/07-binary-outcomes.qmd
         - chapters/08-cross-classified.qmd
+    - part: "Three-level models and meta-analysis"
+      chapters:
+        - chapters/09-higher-level.qmd
 
 format:
   html:
