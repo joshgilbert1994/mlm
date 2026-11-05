@@ -33,7 +33,7 @@ First, the level-1 slope. In @sec-within-between we called it $\beta_{RI}$ to ma
 ### Our data {#sec-rs-data}
 
 | Feature | Value |
-|:---|:---|
+|:-----------------------------------|:-----------------------------------|
 | Students | 7,797 |
 | Schools | 110 |
 | Students per school | 1 to 151, averaging about 71 |
@@ -231,7 +231,7 @@ That is a substantive finding about who a program helps, and it is not available
 
 Our own model is not of that kind — the predictor is a student's BOY score rather than a randomly assigned treatment, so its $\rho$ describes an association rather than a distribution of program impacts. The reading in @sec-rs-rho-ours remains correct, but it is the weaker, observational version of this idea.
 
-### The trap: the correlation is not the covariance {#sec-rs-rho-cov}
+### Correlation vs. covariance {#sec-rs-rho-cov}
 
 The correlation and the covariance describe the same relationship, and substituting one where the other belongs produces a wrong number rather than a slightly-off one.
 
@@ -271,7 +271,7 @@ In the bottom row the schools have between 86 and 151 students, and the separate
 The effect of shrinkage on the collection as a whole is to remove most of the apparent spread, because most of that spread was noise:
 
 |                                    | Range of slopes    |    SD | Negative slopes |
-|:-----------------------------------|:-------------------|------:|----------------:|
+|:---------------------------|:--------------|--------------:|--------------:|
 | Separate regressions (106 schools) | $-4.62$ to $11.14$ | 2.451 |               4 |
 | Random slopes model (110 schools)  | 2.07 to 8.68       | 0.880 |               0 |
 
@@ -296,7 +296,7 @@ anova(ri, rs)
 ```
 
 | Model             | Parameters |     $\ell$ | $\chi^2$ |  df | p                       |
-|:------------------|-----------:|-----------:|---------:|----:|:------------------------|
+|:-----------|-----------:|-----------:|-----------:|-----------:|:--------------|
 | Random intercepts |          4 | $-25356.0$ |          |     |                         |
 | Random slopes     |          6 | $-25305.6$ |    100.8 |   2 | $< 2.2 \times 10^{-16}$ |
 
@@ -353,7 +353,7 @@ $\tau_0^2$ is defined as the variance of the school departures *at a predictor v
 Refitting the model with zero moved confirms it:
 
 | Where zero is | $\widehat{\tau_0}$ | $\widehat{\tau_1}$ | $\widehat{\rho}$ | $\widehat{\sigma}$ |
-|:---|---:|---:|---:|---:|
+|:--------------|--------------:|--------------:|--------------:|--------------:|
 | At BOY $= -1$ | 3.348 | 1.130 | $-0.618$ | 6.063 |
 | At BOY $=0$ (fitted) | 2.795 | 1.130 | $-0.336$ | 6.063 |
 | At BOY $= +1$ | 2.640 | 1.130 | $+0.072$ | 6.063 |
@@ -397,7 +397,7 @@ lmer(read_comp ~ demeaned_map  + sch_map + (demeaned_map  | cluster_id), jebs)  
 ![The within and between slopes from both parameterizations, under random intercepts and under random slopes, with 95% confidence intervals. The 0.249 gap in the between slope is small next to either interval, so the two parameterizations are not giving significantly different answers about the fixed part. What differs is the random part, and the fit.](images/04/fig09_mundlak_rewb.png){#fig-rs-mundlak-rewb width="86%"}
 
 |   | Within slope | Between slope |
-|:---|---:|---:|
+|:-----------------------|-----------------------:|-----------------------:|
 | **Random intercepts** — Mundlak | 6.957 | 8.716 (as $\beta_W + \beta_C$) |
 | **Random intercepts** — REWB | 6.957 | 8.716 |
 | **Random slopes** — Mundlak | 6.899 | 9.427 (as $\beta_W + \beta_C$) |
@@ -503,7 +503,7 @@ The practical point of this section is the diagnostic. **A reported correlation 
 ## Vocabulary decoder {#sec-rs-vocab}
 
 | Term | What it means here |
-|:---|:---|
+|:-----------------------------------|:-----------------------------------|
 | Random slopes model | A model in which each cluster gets its own intercept and its own slope, both drawn from a shared distribution |
 | $\gamma_0$ | The average intercept across clusters: the predicted outcome at a predictor value of 0 in an average cluster |
 | $\gamma_1$ | The average slope across clusters |
@@ -612,7 +612,7 @@ $$\gamma_1 \pm 1.96\,\tau_1$$
 **Our numbers on the full data (7,797 students, 110 schools)**
 
 | Quantity                                          |                  Value |
-|:--------------------------------------------------|-----------------------:|
+|:-----------------------------------------------|----------------------:|
 | Average intercept, $\widehat{\gamma_0}$           |     49.554 (SE 0.2867) |
 | Average slope, $\widehat{\gamma_1}$               |      6.949 (SE 0.1402) |
 | SD of school intercepts, $\widehat{\tau_0}$       |                  2.795 |
