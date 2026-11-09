@@ -36,9 +36,10 @@ book:
       chapters:
         - chapters/07-binary-outcomes.qmd
         - chapters/08-cross-classified.qmd
-    - part: "Three-level models and meta-analysis"
+    - part: "Advanced models and extensions"
       chapters:
         - chapters/09-higher-level.qmd
+        - chapters/10-bayesian.qmd
 
 format:
   html:
