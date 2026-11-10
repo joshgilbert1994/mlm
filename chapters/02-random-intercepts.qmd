@@ -5,7 +5,7 @@
 The chapter in one paragraph
 :::
 
-@sec-variance-components's model had no predictors. This chapter adds one — `std_baseline`, each student's **beginning-of-year (BOY)** Measures of Academic Progress (MAP) reading score — and that changes the meaning of many things we built in the last chapter. Our outcome, `read_comp`, is the **end-of-year (EOY)** reading comprehension score, so the whole chapter is about predicting EOY from BOY. The model is now the **random intercepts model**: every school gets its own intercept, all schools share one slope on MAP. Four things move at once. First, $\tau^2$ and $\sigma^2$ become **residual** variances, what is left after adjusting for MAP. Second, $\gamma_0$ becomes a conditional prediction, the expected score at MAP $= 0$ in the average school. Third, $\widehat{u_j}$ stops meaning "how far above or below average this school scored" and starts meaning **value-added**: how far above or below average it scored *given where its students started*. The ten schools reorder. Fourth, **inference** — testing a variance is not the same move as testing a slope, because a variance cannot be negative and the null sits at the very edge of what is possible. That asymmetry is why the second half of the chapter uses likelihood ratio tests and profile intervals instead of $z$-statistics.
+@sec-variance-components's model had no predictors. This chapter adds one — `std_baseline`, each student's **beginning-of-year (BOY)** Measures of Academic Progress (MAP) reading score — and that changes the meaning of many things we built in the last chapter. Our outcome, `read_comp`, is the **end-of-year (EOY)** reading comprehension score, so the whole chapter is about predicting EOY from BOY. The model is now the **random intercepts model**: every school gets its own intercept, all schools share one slope on MAP. As a result, three things change. First, $\tau^2$ and $\sigma^2$ become **residual** variances, what is left after adjusting for MAP. Second, $\gamma_0$ becomes a conditional prediction, the expected score at MAP $= 0$ in the average school. Third, $\widehat{u_j}$ stops meaning "how far above or below average this school scored" and starts meaning **value-added**: how far above or below average it scored *given where its students started*. In the second half of the chapter, we focus on **statistical** **inference** — testing a variance is not the same move as testing a slope, because a variance cannot be negative and the null sits at the very edge of what is possible. This asymmetry is why the second half of the chapter uses likelihood ratio tests and profile intervals instead of $z$-statistics.
 ::::
 
 ## Where we left off, and what changes {#sec-ri-recap}
@@ -18,9 +18,9 @@ Fit to our 780 students in 10 schools it gave $\widehat{\gamma_0} = 48.43$, $\wi
 
 $$\text{ICC} \;=\; \frac{\widehat{\tau}^2}{\widehat{\tau}^2 + \widehat{\sigma}^2} \;=\; \frac{16.68}{16.68 + 79.44} \;=\; \frac{16.68}{96.12} \;=\; 0.174$$
 
-About 17% of the variation in EOY reading scores sat between schools rather than within them. Read the other way, the same 0.174 says two students drawn at random from the same school have an expected correlation of about 0.17 in their EOY reading scores. We also took each school's raw departure from the grand mean and shrank it toward zero by that school's **shrinkage factor**, $R_j = \tau^2 / (\tau^2 + \sigma^2/n_j)$. That factor is a number between 0 and 1 indicating what share of the raw departure we keep, where $n_j$ is the number of students in school $j$, so bigger schools keep more of theirs (@sec-ri-smaller-r works one through). The result is $\widehat{u_j}$; we computed a standard error for each and plotted the ten in a caterpillar plot.
+About 17% of the variation in EOY reading scores lies between schools rather than within them. Read the other way, the same 0.174 says two students drawn at random from the same school have an expected correlation of about 0.17 in their EOY reading scores. We also took each school's raw departure from the grand mean and shrank it toward zero by that school's **shrinkage factor**, $R_j = \tau^2 / (\tau^2 + \sigma^2/n_j)$. The shrinkage factor is a number between 0 and 1 indicating what share of the raw departure we keep, where $n_j$ is the number of students in school $j$, so bigger schools keep more of theirs (@sec-ri-smaller-r works one through). The result is $\widehat{u_j}$; we computed a standard error for each and plotted the ten in a caterpillar plot.
 
-All of that still holds. We are adding **one covariate** to a structure that is already built — and the covariate changes what the old pieces *mean*, on top of which we now have to say how sure we are about them.
+All of that still holds. In this chapter, we add **one continuous covariate** to this structure. The covariate changes what the old pieces *mean*, and we will soon be able to say how sure we are about them.
 
 ## Why the school residuals are not causal effects {#sec-ri-not-causal}
 
@@ -105,7 +105,7 @@ $$\begin{aligned}
 Every symbol, in plain language:
 
 | Symbol | Name | In words |
-|------------------|------------------|-------------------------------------|
+|------------------|------------------|------------------------------------|
 | $Y_{ij}$ | Outcome | End-of-year reading score for student $i$ in school $j$ |
 | $\beta_{0j}$ | School intercept | School $j$'s **true** predicted score at $\text{MAP} = 0$ |
 | $\text{MAP}_{ij}$ | Level-1 predictor | That student's BOY MAP score, in standard deviation units |
