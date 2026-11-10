@@ -30,7 +30,7 @@ Here is @sec-variance-components's caterpillar plot from the variance components
 
 A natural next question: **which of these ten schools is best?**
 
-We want to rank the schools from this plot, but the plot cannot support that ranking. Students are **not randomly assigned to schools**. Families choose neighborhoods and districts draw attendance zones, so the school a third grader attends has been correlated with their home, their prior schooling, and their reading skill for years. A school sitting low may be teaching badly, or may simply enroll students who started lower.
+We want to rank the schools from this plot, but the plot cannot support that ranking. Students are **not randomly assigned to schools**. Families choose neighborhoods and districts draw attendance zones, so the school a third grader attends has been correlated with their home, their prior schooling, and their reading skill for years. A school with low average achievement may be teaching poorly, or may simply enroll students who started lower.
 
 **Some terminology**:
 
@@ -38,27 +38,27 @@ We want to rank the schools from this plot, but the plot cannot support that ran
 - A **school residual** is that raw residual after shrinkage — the $\widehat{u_j}$ the model actually reports, $-5.95$ for school 62. It is the raw residual pulled toward zero, and it still describes an **outcome**: how far this school's students ended up from average.
 - A **causal effect** is a claim about a **contribution**: how much attending this school moved its students. Nothing on the caterpillar plot estimates that.
 
-**School 62 is a good example.** It sits at the far left, and with 67 students its position is not a small-sample artifact. The $-5.95$ is real: those 67 students did finish that far below the average. But *real* is not the same as *caused by the school*, and it is the second one we would need before calling school 62 a "bad school." One question remains: **what were these students' reading levels at the beginning of the year?** Starting the year behind and finishing the year behind is what we should have predicted. Starting where everyone else did and still finishing last is a different result. A raw residual cannot tell those two apart, because it does not use where students started.
+**School 62 is a good example:** it sits at the far left, and with 67 students its low mean is not a small-sample artifact. The $-5.95$ is real: those 67 students did finish that far below the average. But *real* is not the same as *caused by the school*, and it is the second one we would need before calling school 62 a "bad school." The low average score raises a natural question: **what were these students' reading levels at the beginning of the year?** Starting the year behind and finishing the year behind is what we should have predicted. Starting where everyone else did and still finishing last is a different result. A raw residual cannot tell those two apart, because it does not use where students started.
 
 ## Value-added models {#sec-ri-vam}
 
-A **value-added model** (VAM) is the standard policy response: measure students on the way in, put that measurement into the model as a covariate, and read whatever school differences are left over as the school's contribution. VAMs underlie school accountability systems in many states.
+A **value-added model** (VAM) is the standard policy response: measure students on the way in, put that measurement into the model as a covariate, and interpret whatever school differences are left over as the school's contribution. Many US states use VAMs in school accountability systems.
 
 Our baseline measure is `std_baseline`, the **Measures of Academic Progress (MAP)**, a standardized reading test used widely across the US, taken here at the **beginning of the year (BOY)**. It is reported as a Z-score, so one unit is one standard deviation and $\text{MAP} = 0$ is an average student in the full study our ten schools were drawn from — 7,797 students in 110 schools. Our outcome, `read_comp`, is reading comprehension measured at the **end of the year (EOY)**.
 
-**They are two different tests, not the same test twice.** BOY is the MAP test, reported as a Z-score, so an average student sits at 0 and our 780 students run from $-2.2$ to $+2.5$. EOY is a *researcher-designed* reading comprehension test on a rescaled points scale: our students average 47.92 on it, with a standard deviation of 9.54, running from 28.2 to 68.9. Both scales were fixed on that same full study — MAP was Z-scored across all 7,797 students, and the EOY points scale was set to average 50 with a standard deviation of 10 there — which is why our ten schools sit a little under both marks, at $-0.09$ on BOY and 47.92 on EOY. Whenever you interpret a regression coefficient of EOY on BOY, remember the units on either side: one SD on the BOY test predicts $\widehat{\beta_1}$ points on the EOY test.
+**The EOY and BOY are two different tests.** BOY is the MAP test, reported as a Z-score, so an average student (in the full sample) has a score of 0 and our 780 students range from $-2.2$ to $+2.5$. EOY is a *researcher-designed* reading comprehension test on a different scale: our students average 47.92 on it, with a standard deviation of 9.54, running from 28.2 to 68.9. Both scales were fixed on that same full study — MAP was Z-scored across all 7,797 students, and the EOY points scale was set to average 50 with a standard deviation of 10 there — which is why our ten schools sit a little under both marks, at $-0.09$ on BOY and 47.92 on EOY. Whenever you interpret a regression coefficient of EOY on BOY, remember the units on either side: one SD on the BOY test predicts $\widehat{\beta_1}$ points on the EOY test.
 
 ::: callout-warning
 ## Closer to causal, but not there yet
 
-Conditioning on a BOY test score makes $\widehat{u_j}$ a much more plausible estimate of a school's contribution than the raw residual was — the raw residual being what a school scored minus what the model expected, with no adjustment at all for who enrolled. It is "a much more plausible estimate of a school's causal effect," and the operative word is *more*. This is not a randomized experiment. What is left to worry about is narrower than it first appears. A confounder has to affect how much students *grow* during the year, over and above what the BOY score already records. Prior instruction, for instance, certainly raised these students' scores — but that is already in the BOY test, so it does not bias the estimate on its own. It only matters if it keeps helping them *through* the year we are measuring. Family resources, attendance and peers qualify on the same terms. The more accurate description is "the school's average outcome, adjusted for the one baseline test we measured."
+Conditioning on a BOY test score makes $\widehat{u_j}$ a much more plausible estimate of a school's contribution than the raw residual was — the raw residual being what a school scored minus what the model expected, with no adjustment at all for who enrolled. It is a much more plausible estimate of a school's causal effect, and the operative word is *more*. This is not a randomized experiment. What is left to worry about is narrower than it first appears. A confounder has to affect how much students *grow* during the year, over and above what the BOY score already captures. Prior instruction, for instance, certainly raised these students' scores — but that is already in the BOY test, so it does not bias the estimate on its own. It only matters if it keeps helping them *through* the year we are measuring. Family resources, attendance and peers would matter in the same way. The most principled interpretation of a school VAM ranking is the school's average outcome, *adjusted for* the one baseline test we measured.
 :::
 
 The chapter explores three questions, on the same 780 students in 10 schools:
 
 1.  Which schools are most effective at improving grade 3 reading comprehension?
 2.  To what extent do students who do well on the BOY MAP test do well on the EOY test?
-3.  How can we model this relationship under **complete pooling** (one line for all 780 students, school ignored), **partial pooling** (each school gets its own intercept, and the ten intercepts are treated as related to one another), and **no pooling** (ten completely separate regressions)? @sec-ri-three-ways sets all three side by side.
+3.  How can we model this relationship under **complete pooling** (one line for all 780 students, school ignored), **partial pooling** (each school gets its own intercept, and the ten intercepts are treated as related to one another), and **no pooling** (ten completely separate regressions)? @sec-ri-three-ways explores all three side by side.
 
 ## Complete pooling: what ordinary regression assumes {#sec-ri-complete-pooling}
 
@@ -105,7 +105,7 @@ $$\begin{aligned}
 Every symbol, in plain language:
 
 | Symbol | Name | In words |
-|------------------|------------------|------------------------------------|
+|-------------------|-------------------|------------------------------------|
 | $Y_{ij}$ | Outcome | End-of-year reading score for student $i$ in school $j$ |
 | $\beta_{0j}$ | School intercept | School $j$'s **true** predicted score at $\text{MAP} = 0$ |
 | $\text{MAP}_{ij}$ | Level-1 predictor | That student's BOY MAP score, in standard deviation units |
