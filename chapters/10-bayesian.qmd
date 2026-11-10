@@ -26,7 +26,7 @@ The BOY and EOY scores come from two different tests, so a 1-point difference in
 The table below shows the two samples used in this chapter.
 
 | Feature | 10-school sample (first part) | Full data (second part) |
-|:-----------------------|:-----------------------|:-----------------------|
+|:---|:---|:---|
 | Students | 780 | 7,797 |
 | Schools | 10, with 13 to 116 students | 110, with 1 to 151 students (median 74.5) |
 | `read_comp` | mean 47.92, SD 9.54, from 28.18 to 68.93 | mean 50, SD 10, from 28.18 to 68.93 |
@@ -306,7 +306,7 @@ The table below shows the `brms` output, from `tidy(m1)`. Each row is one parame
 - `conf.low` and `conf.high`: the 2.5th and 97.5th percentiles of the draws, the limits of the 95% **credible interval**.
 
 | Term | `estimate` | `std.error` | `conf.low` | `conf.high` |
-|:-------------------------|-----------:|-----------:|-----------:|-----------:|
+|:---|---:|---:|---:|---:|
 | $\widehat{\gamma_0}$ `(Intercept)` | 48.85 | 0.74 | 47.50 | 50.40 |
 | $\widehat{\beta_1}$ `std_baseline` | 7.17 | 0.24 | 6.71 | 7.65 |
 | $\widehat{\tau}$ `sd__(Intercept)`, group `cluster_id` | 2.09 | 0.67 | 1.10 | 3.72 |
@@ -323,7 +323,7 @@ $\widehat{\sigma} = 6.17$. *Interpretation.* A student's EOY score is typically 
 **Comparing with `lmer`.** We fit the same model with `lmer` in @sec-random-intercepts to @sec-random-slopes. In the table below, the `lmer` intervals are 95% confidence intervals, computed with `confint()`.
 
 | Parameter | `brms`: posterior mean \[95% credible interval\] | `lmer`: estimate \[95% confidence interval\] |
-|:------------------------|:----------------------:|:----------------------:|
+|:---|:--:|:--:|
 | $\gamma_0$ | 48.85 \[47.50, 50.40\] | 48.82 \[47.57, 50.12\] |
 | $\beta_1$ | 7.17 \[6.71, 7.65\] | 7.21 \[6.73, 7.69\] |
 | $\tau$ | 2.09 \[1.10, 3.72\] | 1.79 \[0.95, 3.05\] |
@@ -555,7 +555,7 @@ m3 <- brm(mod, data = jebs, prior = priors_mels,
 The table below shows the output of `m3`. The `sigma_` rows are the scale equation.
 
 | Term | Estimate | Est.Error | l-95% CI | u-95% CI | Rhat | Bulk_ESS | Tail_ESS |
-|:------------|--------:|--------:|--------:|--------:|--------:|--------:|--------:|
+|:---|---:|---:|---:|---:|---:|---:|---:|
 | $\widehat{\gamma_0}$ `Intercept` | 49.40 | 0.40 | 48.66 | 50.20 | 1.01 | 189 | 430 |
 | $\widehat{\gamma_1}$ `treat` | 0.43 | 0.55 | $-0.67$ | 1.46 | 1.01 | 173 | 277 |
 | $\widehat{\beta_1}$ `std_baseline` | 7.13 | 0.08 | 6.96 | 7.29 | 1.00 | 2018 | 1441 |
@@ -665,7 +665,7 @@ brms's summary output, such as m3's table in @sec-bm-m3, has three columns that 
 ## Vocabulary decoder {#sec-bm-vocab}
 
 | Term | What it means here |
-|:-------------------------|:--------------------------------------------|
+|:---|:---|
 | m0, m1, m2, m3 | m1: random intercepts model of EOY on BOY MAP, 780 students in 10 schools, fitted with brms; m0: m1 with the priors only (`sample_prior = "only"`); m3: MELS model, all 7,797 students in 110 schools; m2: m3 with the priors only |
 | Frequentist; Bayesian | Probability as long-run frequency, a parameter as one fixed number (@sec-variance-components to @sec-higher-level); probability as degree of belief, uncertainty about a parameter as a distribution (this chapter) |
 | Prior; likelihood; posterior | The distribution of a parameter before the data are used, such as $\beta_1 \sim N(5, 2)$; how probable the data are under each parameter value; the distribution after the data are used |
@@ -774,7 +774,7 @@ m3 <- brm(bf(read_comp ~ 1 + treat + std_baseline + (1 | cluster_id),
 **Our numbers (m1: 780 students in 10 schools; m3: 7,797 students in 110 schools)**
 
 | Quantity | Value |
-|:------------------------------------------------|----------------------:|
+|:---|---:|
 | MAP slope: prior and data precisions; weight on the data | 0.25 and 16.8; 98.5% |
 | m1: $\widehat{\gamma_0}$, $\widehat{\beta_1}$ \[95% credible interval\] | 48.85; 7.17 \[6.71, 7.65\] |
 | m1: $\widehat{\tau}$ \[interval\]; `lmer`'s $\widehat{\tau}$ | 2.09 \[1.10, 3.72\]; 1.79 |
