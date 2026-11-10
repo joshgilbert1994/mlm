@@ -5,7 +5,7 @@
 The chapter in one paragraph
 :::
 
-This chapter returns to the reading data of @sec-variance-components to @sec-random-slopes and fits familiar models in a new way: **Bayesian inference**, with the R package **brms** in place of `lmer`. In the **frequentist** approach of @sec-variance-components to @sec-higher-level, a parameter, such as the slope on the BOY MAP score, is one fixed but unknown number, and an SE describes how much its estimate would vary from sample to sample. In the Bayesian approach, the uncertainty about a parameter is described by a **probability distribution**. The **prior** is a distribution of the values that are plausible before the data are used; the **likelihood** is how probable the observed scores are under each value; and the **posterior**, proportional to the likelihood times the prior (**Bayes' theorem**), is a combination of the prior and the data. The priors here are **weakly informative**: essentially impossible values have almost no probability under them, and the priors are wide, so that the posterior depends mostly on the data. In a **prior predictive check**, fake data are simulated from the priors alone, to check that the priors lead to scores on a believable scale. The posterior is computed by **Hamiltonian Monte Carlo** (HMC) as a set of 2,000 **draws**, each a complete set of plausible parameter values; the estimates and intervals in the output are summaries of the draws. In the random intercepts model fitted to 780 students in 10 schools (m1), the MAP slope is 7.17, almost the same as `lmer`'s 7.21, because 780 students contain far more information than the prior. There is a 95% probability that the slope is between 6.71 and 7.65: a **credible interval**. This probability reading is correct for a credible interval but not for a confidence interval. In a **posterior predictive check**, fake data simulated from the fitted model are compared with the real scores. The second part is about **distributional models**. Every earlier model had one residual SD for all students. A **mixed effects location scale (MELS) model** has a second equation, for the log of the residual SD, so that a program can be tested for an effect on how spread out scores are, not only on their mean. With all 7,797 students in 110 schools (m3), the program is estimated to raise EOY scores by 0.43 points, with a credible interval from $-0.67$ to 1.46, so there is no clear effect on the mean. There is no clear effect on the spread either: the residual SD of treated students is estimated to be about 1% smaller. Each 1 SD higher BOY MAP score is associated with a residual SD about 7% smaller, so students with higher BOY scores have EOY scores closer to their predicted scores. A difference in spread can have other causes, such as an effect of the program on the mean of one group of students when the model has no term for that group. A final section describes the sampler's chains and warmup, and the Rhat and ESS checks of its draws.
+This chapter returns to the reading data of @sec-variance-components to @sec-random-slopes and fits familiar models in a new way: **Bayesian inference**, with the R package `brms` in place of `lmer`. In the **frequentist** approach of @sec-variance-components to @sec-higher-level, a parameter, such as the slope on the BOY MAP score, is one fixed but unknown number, and an SE describes how much its estimate would vary from sample to sample. In the Bayesian approach, the uncertainty about a parameter is described by a **probability distribution**. The **prior** is a distribution of the values that are plausible before the data are used; the **likelihood** is how probable the observed scores are under each value; and the **posterior**, proportional to the likelihood times the prior (**Bayes' theorem**), is a combination of the prior and the data. The priors here are **weakly informative**: essentially impossible values have almost no probability under them, and the priors are wide, so that the posterior depends mostly on the data. In a **prior predictive check**, simulated data are generated from the priors alone, to check that the priors lead to scores on a believable scale. The posterior is computed by **Hamiltonian Monte Carlo** (HMC) as a set of 2,000 **draws**, each a complete set of plausible parameter values; the estimates and intervals in the output are summaries of the draws. In the random intercepts model fitted to 780 students in 10 schools (m1), the MAP slope is 7.17, almost the same as `lmer`'s 7.21, because 780 students contain far more information than the prior. There is a 95% probability that the slope is between 6.71 and 7.65: a **credible interval**. This probability reading is correct for a credible interval but not for a confidence interval. In a **posterior predictive check**, simulated data generated from the fitted model are compared with the real scores. The second part is about **distributional models**. Every earlier model had one residual SD for all students. A **mixed effects location scale (MELS) model** has a second equation, for the log of the residual SD, so that a program can be tested for an effect on how spread out scores are, not only on their mean. With all 7,797 students in 110 schools (m3), the program is estimated to raise EOY scores by 0.43 points, with a credible interval from $-0.67$ to 1.46, so there is no clear effect on the mean. There is no clear effect on the spread either: the residual SD of treated students is estimated to be about 1% smaller. Each 1 SD higher BOY MAP score is associated with a residual SD about 7% smaller, so students with higher BOY scores have EOY scores closer to their predicted scores. A difference in spread can have other causes, such as an effect of the program on the mean of one group of students when the model has no term for that group. A final section describes the sampler's chains and warmup, and the Rhat and ESS checks of its draws.
 ::::
 
 ## The reading data, again {#sec-bm-data}
@@ -23,7 +23,7 @@ The data come from a study of a reading program for third graders, available as 
 
 The BOY and EOY scores come from two different tests, so a 1-point difference in `read_comp` and a 1-unit difference in `std_baseline` are on different scales: 10 EOY points is 1 SD of EOY scores, and 1 unit of BOY MAP is 1 SD of BOY scores.
 
-The table below holds the two samples used in this chapter.
+The table below shows the two samples used in this chapter.
 
 | Feature | 10-school sample (first part) | Full data (second part) |
 |:-----------------------|:-----------------------|:-----------------------|
@@ -80,10 +80,10 @@ So in a frequentist analysis, the answer for $\beta_1$ is one estimate with an S
 
 Bayesian multilevel models have six advantages.
 
-1.  **Scientific information can be included.** What is known before the data, such as the scale of a test, is written into the priors.
+1.  **Scientific information can be included.** What is known before the data, such as the scale of a test, is encoded in the priors.
 2.  **Overfitting can be avoided with priors.** An estimate is **overfitted** when it fits the chance features of one sample and would not hold in a new sample. With a prior, extreme estimates are pulled toward plausible values, in the same way that a small school's estimated mean is shrunk toward the average: priors are partial pooling for every parameter, not only for the random effects (@sec-bm-map-slope).
 3.  **Uncertainty has a more direct reading.** "There is a 95% probability that the MAP slope is between 6.71 and 7.65", from the Bayesian model of @sec-bm-m1, is a correct sentence about a Bayesian interval (@sec-bm-intervals).
-4.  **Small samples.** With few clusters, such as the 10 schools here, the frequentist SEs and tests are based on approximations meant for large samples, and an estimate from little data can be far from believable, such as an SD estimated at exactly 0. Under a prior, values that are not believable have little probability, so the estimates are within a believable range even when the data contain little information.
+4.  **Better performance in small samples.** With few clusters, such as the 10 schools here, the frequentist SEs and tests are based on approximations meant for large samples, and an estimate from little data can be far from believable, such as an SD estimated at exactly 0. Under a prior, values that are not believable have little probability, so the estimates are within a believable range even when the data contain little information.
 5.  **Uncertainty for variance components.** `lmer` prints the estimated SDs $\widehat{\tau}$ and $\widehat{\sigma}$ with no SE. In brms, every parameter, the SDs included, has a posterior with an interval.
 6.  **Distributional models.** Models for the spread of the scores, not only their mean, are straightforward to fit (@sec-bm-spread and @sec-bm-mels).
 
@@ -110,7 +110,7 @@ Each piece:
 - $\Pr(A \mid B)$ is read "the probability of $A$ given $B$": the probability of $A$ if $B$ is known.
 - $\Pr(\text{Parameters})$ is the **prior**: a probability distribution for the parameters, chosen **before** the data are used. In the reading model (@sec-bm-reading-priors), the parameters are the intercept $\gamma_0$, the MAP slope $\beta_1$, the SD of the school intercepts $\tau$ and the residual SD $\sigma$.
 - $\Pr(\text{Data} \mid \text{Parameters})$ is the **likelihood**: for each possible set of parameter values, how probable the observed EOY scores would be if those values were true. It is the likelihood of @sec-variance-components to @sec-higher-level: maximum likelihood estimates are the parameter values at its highest point.
-- $\Pr(\text{Parameters} \mid \text{Data})$ is the **posterior**: the distribution of the parameters after the data are used. The estimates and intervals in a brms output table are summaries of the posterior.
+- $\Pr(\text{Parameters} \mid \text{Data})$ is the **posterior**: the distribution of the parameters after the data are used. The estimates and intervals in a `brms` output table are summaries of the posterior.
 - $\propto$ means "is proportional to": equal up to a constant multiplier. In the full theorem, the right-hand side is divided by $\Pr(\text{Data})$, one number that is the same for every set of parameter values. Dividing by it scales the curve of likelihood $\times$ prior so that its total area is 1, without changing its shape. So the shape of the posterior is the shape of the likelihood times the prior.
 
 *Interpretation.* Values of a parameter are plausible under the posterior when they were plausible under the prior and also make the observed data probable. Values that make the data improbable are implausible under the posterior, however plausible they were under the prior, and so are values that are essentially impossible under the prior.
@@ -167,7 +167,7 @@ In Bayes' theorem (@sec-bm-bayes-rule), every parameter has a prior, chosen befo
 
 Choosing a prior can look unscientific, as if the analyst could pick any answer. This objection is answered with three principles.
 
-- **Justify and report the priors.** A prior is an assumption of the model, like normal residuals or a straight-line association with BOY MAP. Like any assumption, it is stated, explained and open to criticism.
+- **Justify and report the priors.** A prior is an assumption of the model, like normal residuals or a straight-line association with BOY MAP. Like any assumption, it is stated, justified, and open to criticism.
 - **Exclude essentially impossible values.** A value that cannot be true, such as a negative SD, has no probability under a half-normal prior. Under a normal prior, every value has some probability. But essentially impossible values have almost none: for example, a slope of 50 EOY points per SD of BOY MAP, on a test whose SD is 10.
 - **Keep the priors wide.** Within the possible values, a prior is wide enough that the posterior depends mostly on the data.
 
@@ -195,7 +195,7 @@ $$Y_{ij} = \gamma_0 + \beta_1\,\text{MAP}_{ij} + u_j + e_{ij}$$
 - $e_{ij}$ is the **residual**: how far the student's EOY score is from the score predicted for the student.
 - $u_j$ and $e_{ij}$ are **assumed** normal, with mean 0 and variances $\tau^2$ and $\sigma^2$, and independent of each other. So $\tau$ is the SD of the school departures and $\sigma$ the SD of the residuals.
 
-A prior is chosen for each of the model's four parameters: $\gamma_0$, $\beta_1$, $\tau$ and $\sigma$. The priors come from what is known about the variables before the data are used. EOY scores are scaled to mean 50 and SD 10 over all 7,797 students, and BOY MAP is a z-score.
+We choose a prior for each of the model's four parameters: $\gamma_0$, $\beta_1$, $\tau$ and $\sigma$. The priors come from what we know about the variables before we use the data. We know, for example, that EOY scores are scaled to mean 50 and SD 10 over all 7,797 students, and BOY MAP is a z-score.
 
 $$\begin{aligned}
 \gamma_0 &\sim N(50, 10) \\
@@ -218,13 +218,13 @@ Priors can be easier to set when the variables are standardized; the EOY scores 
 
 ### The prior predictive check {#sec-bm-prior-pc}
 
-Are these priors reasonable? In a **prior predictive check**, fake data are simulated from the priors alone, with no data used, and the fake data are compared with what is known about real scores. As it is sometimes put, the minimum sample size in Bayesian inference is zero. With no data, the posterior is the prior, and fake data can still be simulated from it.
+Are these priors reasonable? In a **prior predictive check**, simulated data are generated from the priors alone, with no real data used, and the simulated data are compared with what we know about real scores. That its, the minimum sample size in Bayesian inference is **zero**. With no data, the posterior is the prior, and simulated data can still be generated from it.
 
-In brms, the model is fitted with `sample_prior = "only"` (called **m0**): the observed scores are ignored, and each **draw**, one simulated value of every parameter, comes from the priors alone. Each simulated data set is made in two steps: draw one value of each parameter from its prior, then simulate 780 EOY scores from the model with those values.
+In `brms`, the model is fitted with `sample_prior = "only"` (called **m0**): the observed scores are ignored, and each **draw**, one simulated value of every parameter, comes from the priors alone. Each simulated data set is made in two steps: draw one value of each parameter from its prior, then simulate 780 EOY scores from the model with those values.
 
-![Prior predictive check. Dark line: the distribution of the 780 real EOY scores. Light lines: the distributions of 50 fake data sets of 780 scores, each simulated from one draw of the priors (m0). Scores below 0 or above 100 are left out of the plot.](images/10/fig04_prior_pc.png){#fig-bm-prior-pc width="70%"}
+![Prior predictive check. Dark line: the distribution of the 780 real EOY scores. Light lines: the distributions of 50 simulated data sets of 780 scores, each simulated from one draw of the priors (m0). Scores below 0 or above 100 are left out of the plot.](images/10/fig04_prior_pc.png){#fig-bm-prior-pc width="70%"}
 
-**Reading @fig-bm-prior-pc.** The horizontal axis is the EOY score, and each curve is a **density**: a smoothed histogram, high where many scores are. The dark line is the real scores, $Y$, and each light line is one fake data set, $Y_{\text{rep}}$ ("replicated $Y$"). In the legend of R's `pp_check()` plots, $Y$ and $Y_{\text{rep}}$ are labeled y and yrep. The question is not whether the light lines match the dark line; before the data are used, they are not expected to. The question is whether the fake scores are on a believable scale. Most light lines are centered between about 25 and 70 and are within 0 to 100, 5 SDs below and above the mean EOY score of 50. Some are very narrow (a draw with small $\tau$ and $\sigma$) and some very wide (large $\tau$ and $\sigma$). Over 2,000 fake data sets, the middle 95% of the fake scores is from about 24 to 76, and about 0.1% are below 0 or above 100. So the priors are wider than the real data, as weakly informative priors are meant to be, without being absurd.
+**Reading @fig-bm-prior-pc.** The horizontal axis is the EOY score, and each curve is a **density**: a smoothed histogram, high where many scores are. The dark line is the real scores, $Y$, and each light line is one simulated data set, $Y_{\text{rep}}$ ("replicated $Y$"). In the legend of R's `pp_check()` plots, $Y$ and $Y_{\text{rep}}$ are labeled y and yrep. The question is not whether the light lines match the dark line; before the data are used; they are not expected to. The question is whether the simulated scores are on a believable scale. Most light lines are centered between about 25 and 70 and are within 0 to 100, 5 SDs below and above the mean EOY score of 50. Some are very narrow (a draw with small $\tau$ and $\sigma$) and some very wide (large $\tau$ and $\sigma$). Over 2,000 simulated data sets, the middle 95% of the simulated scores is from about 24 to 76, and about 0.1% are below 0 or above 100. So the priors are wider than the real data, as weakly informative priors are meant to be, without being absurd.
 
 The prior predictive check can also be drawn as regression lines. For each of 50 draws from the priors, the predicted EOY score of each of the 10 schools is drawn against the BOY MAP score.
 
@@ -232,17 +232,17 @@ The prior predictive check can also be drawn as regression lines. For each of 50
 
 **Reading @fig-bm-prior-lines.** The horizontal axis is the BOY MAP score, and the vertical axis is the predicted EOY score. Every line slopes upward, because almost all of the prior probability for $\beta_1$ is on positive slopes. The lines differ in intercept (from $\gamma_0$ and $u_j$) and in slope (from $\beta_1$). The lines range from about $-3.5$ to 92: almost all are between 0 and 100, and a few are just below 0 at the lowest BOY scores. So under the priors, the predicted scores are on a believable scale, but they are much more spread out than the real scores, which range from 28.18 to 68.93.
 
-**Why check the priors before fitting?** In a prior predictive check, the priors are judged by the fake data simulated from them, which is easier than judging the priors themselves. A prior for an SD written as $HN(0, 5)$ is hard to judge; fake scores of $-40$ or 140, 9 SDs below and above the mean of 50, are easy to recognize as absurd. If most of the fake data were absurd, the priors would be revised before the model is fitted to the real data.
+**Why check the priors before fitting?** In a prior predictive check, the priors are judged by the simulated data generated from them, which can be easier than judging the priors themselves. A prior for an SD written as $HN(0, 5)$ is hard to judge; simulated scores of $-40$ or 140, 9 SDs below and above the mean of 50, are easy to recognize as absurd. If most of the simulated data were absurd, the priors would be revised before the model is fit to the real data.
 
 ::: callout-important
-## Priors are stated, justified and checked
+## Priors are stated, justified, and checked
 
-Each prior comes from what is known before the data: EOY scores have mean 50 and SD 10, BOY MAP is a z-score, and an SD cannot be negative. So $\gamma_0 \sim N(50, 10)$, $\beta_1 \sim N(5, 2)$, and $\tau$ and $\sigma$ have the half-normal prior $HN(0, 5)$. Under these weakly informative priors, essentially impossible values have almost no probability, and the priors are wide, so that the posterior depends mostly on the data. In a prior predictive check, fake data simulated from the priors alone are mostly on a believable scale: the middle 95% of fake scores is from about 24 to 76.
+Each prior comes from what is known before the data: EOY scores have mean 50 and SD 10, BOY MAP is a z-score, and an SD cannot be negative. So $\gamma_0 \sim N(50, 10)$, $\beta_1 \sim N(5, 2)$, and $\tau$ and $\sigma$ have the half-normal prior $HN(0, 5)$. Under these weakly informative priors, essentially impossible values have almost no probability, and the priors are wide, so that the posterior depends mostly on the data. In a prior predictive check, simulated data generated from the priors alone are mostly on a believable scale: the middle 95% of simulated scores is from about 24 to 76.
 :::
 
 ## How the posterior is computed {#sec-bm-computing}
 
-With the priors chosen, the next step is to compute the posterior. For a model with many parameters, the posterior cannot be worked out by hand, as it was for one coefficient in @sec-bm-map-slope. This section describes how brms computes it: as a large set of draws.
+With the priors chosen, the next step is to compute the posterior. For a model with many parameters, the posterior cannot be worked out by hand, as it was for one coefficient in @sec-bm-map-slope. This section describes how `brms` computes it: as a large set of draws.
 
 ### From the peak of the likelihood to a set of draws {#sec-bm-draws}
 
@@ -256,11 +256,11 @@ With the priors chosen, the next step is to compute the posterior. For a model w
 2.  simulate its path in the bowl for a short time;
 3.  record where it ends: one **draw**, a complete set of values for every parameter.
 
-Because of the simulated gravity, the marble is more often near the bottom of the bowl, where the posterior is high, and less often on the sides, where the posterior is low. So values with high posterior probability appear in many draws, and values with low posterior probability in few. A histogram of the draws of a parameter is therefore a picture of its posterior. HMC is a kind of **Markov chain Monte Carlo** (MCMC) method: each draw starts where the previous one ended (a **Markov chain**), and the method is based on random numbers (**Monte Carlo**). Stan, the software that brms uses, runs HMC. An interactive version of this simulation is at <https://chi-feng.github.io/mcmc-demo/app.html>.
+Because of the simulated gravity, the marble is more often near the bottom of the bowl, where the posterior is high, and less often on the sides, where the posterior is low. So values with high posterior probability appear in many draws, and values with low posterior probability in few. A histogram of the draws of a parameter is therefore a picture of its posterior. HMC is a kind of **Markov chain Monte Carlo** (MCMC) method: each draw starts where the previous one ended (a **Markov chain**), and the method is based on random numbers (**Monte Carlo**). Stan, the software that `brms` uses, runs HMC. An interactive version of this simulation is available at <https://chi-feng.github.io/mcmc-demo/app.html>.
 
 ### From draws to the output {#sec-bm-output-draws}
 
-How do the draws become the numbers in brms's output? In this chapter's code, the sampler, HMC, is run four times, as four **chains**, and 2,000 draws are kept. @sec-bm-appendix describes the chains and the first steps of each chain, which are discarded. Each of the 2,000 draws is one complete set of values: $\gamma_0$, $\beta_1$, $\tau$, $\sigma$ and the 10 school departures $u_j$. The estimates and intervals in brms's output are summaries of the 2,000 draws of one parameter: the **posterior mean** is their mean, the **posterior SD** their SD, and the 95% **credible interval** is from their 2.5th to their 97.5th percentile. The sampler is based on random numbers, so the draws of a rerun of the same model are slightly different, and the summaries can differ slightly, for some parameters in the first decimal.
+How do the draws become the numbers in `brms`'s output? In this chapter's code, the sampler, HMC, is run four times, as four **chains**, and 2,000 draws are kept. @sec-bm-appendix describes the chains and the first steps of each chain, which are discarded. Each of the 2,000 draws is one complete set of values: $\gamma_0$, $\beta_1$, $\tau$, $\sigma$ and the 10 school departures $u_j$. The estimates and intervals in brms's output are summaries of the 2,000 draws of one parameter: the **posterior mean** is their mean, the **posterior SD** their SD, and the 95% **credible interval** is from their 2.5th to their 97.5th percentile. The sampler is based on random numbers, so the draws of a rerun of the same model are slightly different, and the summaries can differ slightly, for some parameters in the first decimal.
 
 ![Histogram of the 2,000 draws of the MAP slope $\beta_1$ in m1. Solid line: their mean; dashed lines: their 2.5th and 97.5th percentiles.](images/10/fig06_draws.png){#fig-bm-draws width="66%"}
 
@@ -276,7 +276,7 @@ Hamiltonian Monte Carlo is a simulation of a marble in a bowl, the negative log 
 
 The priors (@sec-bm-priors) and the sampler (@sec-bm-computing) are combined in **m1**, the random intercepts model fitted to the 780 students. This section is about the code, the output, a comparison with `lmer`'s output, a check of the fit, and two plots of the posterior.
 
-### From lmer to brms {#sec-bm-brms}
+### From `lmer` to `brms` {#sec-bm-brms}
 
 The model formula is the same as in `lmer`:
 
@@ -291,7 +291,7 @@ m1 <- brm(read_comp ~ 1 + std_baseline + (1 | cluster_id), data = jebs_sub,
 ```
 
 - The formula is `lmer`'s: the `1` is $\gamma_0$, `std_baseline` is $\beta_1$, and `(1 | cluster_id)` is $u_j$. The residual $e_{ij}$ is included by default, as in `lmer`.
-- `prior = priors` is where the priors are set: `class = "b"` is the prior for the slopes ($\beta_1$), `class = "Intercept"` for $\gamma_0$, `class = "sd"` for the SD of the random effects ($\tau$), and `class = "sigma"` for the residual SD ($\sigma$). brms cuts a `normal(0, 5)` prior for an SD off at 0, which makes it the half-normal $HN(0, 5)$.
+- `prior = priors` is where the priors are set: `class = "b"` is the prior for the slopes ($\beta_1$), `class = "Intercept"` for $\gamma_0$, `class = "sd"` for the SD of the random effects ($\tau$), and `class = "sigma"` for the residual SD ($\sigma$). `brms` cuts a `normal(0, 5)` prior for an SD off at 0, which makes it the half-normal $HN(0, 5)$.
 - `chains = 4` and `iter = 1000` are the sampler settings: four chains of 1,000 steps each. The first 500 steps of each chain are discarded (@sec-bm-appendix explains why) and the other 500 are kept, so there are $4 \times 500 = 2{,}000$ draws. With `cores = 4`, the four chains run at the same time.
 - m0, the prior-only model of @sec-bm-prior-pc, is the same call with `sample_prior = "only"` added.
 
@@ -299,7 +299,7 @@ Adding `backend = "cmdstanr"` runs Stan through the R package `cmdstanr` instead
 
 ### The output {#sec-bm-m1-output}
 
-The table below holds brms's output, from `tidy(m1)`. Each row is one parameter, and each column is a summary of its 2,000 draws:
+The table below shows the `brms` output, from `tidy(m1)`. Each row is one parameter, and each column is a summary of its 2,000 draws:
 
 - `estimate`: the **posterior mean**, the mean of the draws;
 - `std.error`: the **posterior SD**, the SD of the draws, although R labels it `std.error`. It describes the uncertainty about the parameter, as an SE does in `lmer`;
@@ -312,7 +312,7 @@ The table below holds brms's output, from `tidy(m1)`. Each row is one parameter,
 | $\widehat{\tau}$ `sd__(Intercept)`, group `cluster_id` | 2.09 | 0.67 | 1.10 | 3.72 |
 | $\widehat{\sigma}$ `sd__Observation`, group `Residual` | 6.17 | 0.16 | 5.88 | 6.47 |
 
-$\widehat{\beta_1} = 7.17$. *Interpretation.* Students whose BOY MAP scores differ by 1 SD are predicted to differ by 7.17 points at EOY. There is a 95% probability that the slope is between 6.71 and 7.65 points, given the model, the priors and the data. As in @sec-random-intercepts to @sec-random-slopes, this slope is a combination of the within-school and between-school associations. The slope equals the within-school association only if the random effects assumption holds: that the school departures $u_j$ are unrelated to the schools' mean BOY MAP scores. This assumption is needed with Bayesian estimation, as with `lmer`. With the school's mean BOY MAP score added as a predictor (the Mundlak model of @sec-within-between), the within-school and between-school associations are estimated separately, in brms too.
+$\widehat{\beta_1} = 7.17$. *Interpretation.* Students whose BOY MAP scores differ by 1 SD are predicted to differ by 7.17 points at EOY. There is a 95% probability that the slope is between 6.71 and 7.65 points, given the model, the priors, and the data. As in @sec-random-intercepts to @sec-random-slopes, this slope is a combination of the within-school and between-school associations. The slope equals the within-school association only if the random effects assumption holds: that the school departures $u_j$ are unrelated to the schools' mean BOY MAP scores. This assumption is needed with Bayesian estimation, as with `lmer`. With the school's mean BOY MAP score added as a predictor (the Mundlak model of @sec-within-between), the within-school and between-school associations are estimated separately, in `brms` too.
 
 $\widehat{\gamma_0} = 48.85$. *Interpretation.* For a student with a BOY MAP score of 0, the average of all 7,797 students, in a school with $u_j = 0$, the predicted EOY score is 48.85. There is a 95% probability that $\gamma_0$ is between 47.50 and 50.40.
 
@@ -320,16 +320,16 @@ $\widehat{\tau} = 2.09$. *Interpretation.* For students with the same BOY MAP sc
 
 $\widehat{\sigma} = 6.17$. *Interpretation.* A student's EOY score is typically about 6.17 points above or below the score predicted for the student from the school and the BOY MAP score. There is a 95% probability that $\sigma$ is between 5.88 and 6.47. This interval is narrow and almost symmetric, 0.29 below 6.17 and 0.30 above, because $\sigma$ is estimated from the differences among 780 students, while $\tau$ is estimated from only 10 schools.
 
-**Comparing with lmer.** The same model was fitted with `lmer` in @sec-random-intercepts to @sec-random-slopes. In the table below, the `lmer` intervals are 95% confidence intervals, computed with `confint()`.
+**Comparing with `lmer`.** We fit the same model with `lmer` in @sec-random-intercepts to @sec-random-slopes. In the table below, the `lmer` intervals are 95% confidence intervals, computed with `confint()`.
 
-| Parameter | brms: posterior mean \[95% credible interval\] | `lmer`: estimate \[95% confidence interval\] |
+| Parameter | `brms`: posterior mean \[95% credible interval\] | `lmer`: estimate \[95% confidence interval\] |
 |:------------------------|:----------------------:|:----------------------:|
 | $\gamma_0$ | 48.85 \[47.50, 50.40\] | 48.82 \[47.57, 50.12\] |
 | $\beta_1$ | 7.17 \[6.71, 7.65\] | 7.21 \[6.73, 7.69\] |
 | $\tau$ | 2.09 \[1.10, 3.72\] | 1.79 \[0.95, 3.05\] |
 | $\sigma$ | 6.17 \[5.88, 6.47\] | 6.16 \[5.86, 6.48\] |
 
-*Interpretation.* For $\gamma_0$, $\beta_1$ and $\sigma$, the two fits are almost the same: the 780 students contain far more information than the weakly informative priors. The one clear difference is $\tau$, 2.09 in brms against 1.79 in `lmer`.
+*Interpretation.* For $\gamma_0$, $\beta_1$ and $\sigma$, the two fits are almost the same: the 780 students contain far more information than the weakly informative priors. The one clear difference is $\tau$, 2.09 in `brms` against 1.79 in `lmer`.
 
 ### Why is the school SD larger in brms? {#sec-bm-tau}
 
@@ -343,11 +343,11 @@ So 1.79 and 2.09 are different summaries of similar information about $\tau$: `l
 
 ### Checking the fit: the posterior predictive check {#sec-bm-ppc}
 
-The prior predictive check (@sec-bm-prior-pc) was run before the data were used. A **posterior predictive check** is the same plot with the fake data simulated from the posterior: each fake data set is simulated with one of m1's 2,000 draws. If the model fits, the fake data look like the real data.
+The prior predictive check (@sec-bm-prior-pc) was run before the data were used. A **posterior predictive check** is the same plot with the simulated data generated from the posterior: each simulated data set is generated with one of m1's 2,000 draws. If the model fits, the simulated data should look like the real data.
 
-![Left: the prior predictive check of @sec-bm-prior-pc. Right: the posterior predictive check of m1. Dark line: the 780 real EOY scores; light lines: 50 fake data sets, each simulated from one draw of the prior (left) or of the posterior (right). Both plots have the same horizontal axis.](images/10/fig08_ppc.png){#fig-bm-ppc width="82%"}
+![Left: the prior predictive check of @sec-bm-prior-pc. Right: the posterior predictive check of m1. Dark line: the 780 real EOY scores; light lines: 50 simulated data sets, each simulated from one draw of the prior (left) or of the posterior (right). Both plots have the same horizontal axis.](images/10/fig08_ppc.png){#fig-bm-ppc width="82%"}
 
-**Reading @fig-bm-ppc.** On the left, before the data, the fake data sets differ widely in center and spread. On the right, after the data, the 50 fake data sets are close to each other, with about the same center and spread as the real scores. But their shape differs from the real scores. The real scores have a tall peak near 40 and a lower, flatter part from about 50 to 62. The fake data sets have one smooth hump, highest near 48. So the fake data have too many scores in the middle: over 2,000 fake data sets, about 38% of the fake scores are between 45 and 55, against 24% of the real scores. And about 3% of the fake scores are below 28.18 or above 68.93, the lowest and highest scores among all 7,797 students. The model fits the center and the spread of the scores, but not their shape. With all 110 schools, the fake data also have one hump, while the real scores have two peaks (@sec-bm-mels-ppc).
+**Reading @fig-bm-ppc.** On the left, before the data, the simulated data sets differ widely in center and spread. On the right, after the data, the 50 simulated data sets are close to each other, with about the same center and spread as the real scores. But their shape differs from the real scores. The real scores have a tall peak near 40 and a lower, flatter part from about 50 to 62. The simulated data sets have one smooth hump, highest near 48. So the simulated data have too many scores in the middle: over 2,000 simulated data sets, about 38% of the simulated scores are between 45 and 55, against 24% of the real scores. And about 3% of the simulated scores are below 28.18 or above 68.93, the lowest and highest scores among all 7,797 students. The model fits the center and the spread of the scores, but not their shape. With all 110 schools, the simulated data also have one hump, while the real scores have two peaks (@sec-bm-mels-ppc).
 
 ### Posterior school lines {#sec-bm-post-lines}
 
@@ -366,9 +366,9 @@ Each draw also contains each school's departure $u_j$, so each draw has a predic
 **Reading @fig-bm-prior-post.** In every panel, the posterior is much narrower and taller than the prior. For $\beta_1$, the prior has SD 2 and the posterior SD 0.24, so the range of plausible slopes is from about 1 to 9 under the prior and from about 6.7 to 7.7 under the posterior. For $\sigma$, estimated from 780 students, the posterior is the narrowest of the four relative to its prior. For $\tau$, estimated from only 10 schools, the posterior is the widest of the four relative to its prior: 95% of the posterior is between about 1 and 4.
 
 ::: callout-important
-## m1: almost the same estimates as lmer, with a distribution for every parameter
+## m1: almost the same estimates as `lmer`, with a distribution for every parameter
 
-With 780 students, the posterior mean of the MAP slope is 7.17, with a 95% credible interval from 6.71 to 7.65, against lmer's 7.21. The intercept and the residual SD are also almost the same. The school SD is 2.09 in brms and 1.79 in lmer, because its posterior, from only 10 schools, has a long right tail: its mean is larger than its peak. In the posterior predictive check, fake data simulated from m1 have the right center and spread, but one smooth hump, while the real scores have a tall peak near 40.
+With 780 students, the posterior mean of the MAP slope is 7.17, with a 95% credible interval from 6.71 to 7.65, against `lmer`'s 7.21. The intercept and the residual SD are also almost the same. The school SD is 2.09 in `brms` and 1.79 in `lmer`, because its posterior, from only 10 schools, has a long right tail: its mean is larger than its peak. In the posterior predictive check, simulated data generated from m1 have the right center and spread, but one smooth hump, while the real scores have a tall peak near 40.
 :::
 
 ## Credible and confidence intervals {#sec-bm-intervals}
@@ -387,7 +387,7 @@ So "there is a 95% probability that the parameter is in the interval" is not a c
 - **Left.** Each row is one simulated repetition of the study: 780 new EOY scores for the same students and schools, simulated from the `lmer` fit, so the true slope is known, 7.21. Each row has its estimate (dot) and its 95% confidence interval (line). 19 of the 20 intervals contain the true slope and 1, in red, does not. In 400 such samples, 95.25% of the intervals contained it. A real study has only one interval, and there is no way to tell whether that interval contains the true slope.
 - **Right.** The horizontal axis is the MAP slope, and the curve is m1's posterior, from our one sample. The shaded area, from 6.71 to 7.65, has 95% of the posterior's area: the credible interval.
 
-**Why are the two intervals so close here?** With weakly informative priors and 780 students, the posterior depends almost only on the data (@sec-bm-map-slope). With fewer data or more informative priors, the two intervals can differ, as they do for $\tau$ with only 10 schools: 1.10 to 3.72 in brms against 0.95 to 3.05 in `lmer` (@sec-bm-m1-output). A credible interval's 95% is a probability given the model and the priors, so if the model or the priors are wrong, the 95% can be wrong too. The fake data in @fig-bm-ppc do not have the shape of the real scores, so the model is a simplification of the data.
+**Why are the two intervals so close here?** With weakly informative priors and 780 students, the posterior depends almost entirely on the data (@sec-bm-map-slope). With fewer data or more informative priors, the two intervals can differ, as they do for $\tau$ with only 10 schools: 1.10 to 3.72 in brms against 0.95 to 3.05 in `lmer` (@sec-bm-m1-output). A credible interval's 95% is a probability given the model and the priors, so if the model or the priors are wrong, the 95% can be wrong too. The simulated data in @fig-bm-ppc do not have the shape of the real scores, so the model is a simplification of the data.
 
 ::: callout-important
 ## The same numbers, read in two ways
@@ -401,7 +401,7 @@ A 95% confidence interval comes from a procedure whose intervals contain the tru
 
 ### Beyond the mean {#sec-bm-beyond-mean}
 
-Every treatment effect in @sec-variance-components to @sec-higher-level was an effect on a mean: does the program raise the average score? Wiedermann et al. (2024) point out that, statistically, there is no reason to look only at the mean. The mean is one of many features of the distribution of scores that a program can change, and the effect of a program can be described as a **distributional causal effect**: an effect on the whole distribution.
+Every treatment effect in @sec-variance-components to @sec-higher-level was an effect on a mean: does the program raise the average score? Wiedermann et al. ([2024](https://psycnet.apa.org/doiLanding?doi=10.1037%2Fmet0000533)) point out that, statistically, there is no reason to look only at the mean. The mean is one of many features of the distribution of scores that a program can change, and the effect of a program can be described as a **distributional causal effect**: an effect on the whole distribution.
 
 **Why would the spread matter?** A program can leave the mean unchanged and still change the spread. If it helps struggling readers most, the gaps between students become smaller and the spread decreases. If it helps strong readers most, the gaps become larger. So two programs with the same mean effect can have very different consequences for the students with the lowest BOY scores. A principal who cares only about the mean would not see this difference. A smaller spread can also mean more consistent results: if every student gains about the same amount, a school can be more confident about what the program will do for any one student.
 
@@ -429,7 +429,7 @@ Before any model, do the EOY scores of treated and control students differ in sp
 
 **Reading @fig-bm-boxplot.** The two boxes are almost the same: in both groups the median is 49.9, the middle 50% of the scores is between 40.4 and 59.4, and the scores range from 28.18 to 68.93.
 
-The table below holds, for each group, the number of students and the mean, variance and SD of the EOY scores.
+The table below shows, for each group, the number of students and the mean, variance and SD of the EOY scores.
 
 | `treat`     | Students |  Mean | Variance |    SD |
 |:------------|---------:|------:|---------:|------:|
@@ -448,7 +448,7 @@ A program that helps struggling readers most can make scores closer together, wi
 
 ## Mixed effects location scale (MELS) models {#sec-bm-mels}
 
-Two of the research questions of @sec-bm-spread are about the spread of the scores: does the program make EOY scores more consistent, and do students with higher BOY scores have more consistent EOY scores? This section is about a model for the spread with the BOY MAP score held fixed and with a random intercept for each school: the **mixed effects location scale (MELS)** model, fitted with brms.
+Two of the research questions of @sec-bm-spread are about the spread of the scores: does the program make EOY scores more consistent, and do students with higher BOY scores have more consistent EOY scores? This section is about a model for the spread with the BOY MAP score held fixed and with a random intercept for each school: the **mixed effects location scale (MELS)** model, fit with `brms`.
 
 ### The standard random intercepts model {#sec-bm-ri}
 
@@ -496,9 +496,9 @@ Each piece:
   - $\delta_2$ is the difference in $\log \sigma_{ij}$ per 1 SD difference in BOY MAP score, for students with the same treatment status.
 - There is no residual in the scale equation: the residual SD of a student is fully determined by the student's treatment status and BOY MAP score.
 
-The same equation can be written for the log of the residual **variance**: $\log \sigma_{ij}^2 = 2 \log \sigma_{ij}$, so each coefficient for the log variance is twice the coefficient for the log SD. brms's equation for `sigma`, and its output, are for the log SD.
+The same equation can be written for the log of the residual **variance**: $\log \sigma_{ij}^2 = 2 \log \sigma_{ij}$, so each coefficient for the log variance is twice the coefficient for the log SD. `brms`'s equation for `sigma`, and its output, are for the log SD.
 
-**Reading a coefficient on the log scale.** The log is undone with $\exp$. A difference of $\delta$ in $\log \sigma$ multiplies the SD by $\exp(\delta)$. The table below holds three values of $\delta$, their $\exp(\delta)$ and the change in the residual SD.
+**Reading a coefficient on the log scale.** The log is undone with $\exp$. A difference of $\delta$ in $\log \sigma$ multiplies the SD by $\exp(\delta)$. The table below shows three values of $\delta$, their $\exp(\delta)$ and the change in the residual SD.
 
 | $\delta$ | $\exp(\delta)$ | The residual SD is                     |
 |---------:|---------------:|:---------------------------------------|
@@ -525,9 +525,9 @@ $$\begin{aligned}
 - $\delta_1, \delta_2 \sim N(0, 0.5)$: 95% of each prior is between $-1.96 \times 0.5 = -0.98$ and 0.98, so a factor between $\exp(-0.98) = 0.38$ and $\exp(0.98) = 2.66$ on the residual SD. Before the data are used, the program could make the residual SD anything from 0.38 times to 2.66 times as large.
 - There is no prior for $\sigma$, as there was in m1: in the MELS model, $\sigma_{ij}$ is computed from the $\delta$'s, so its prior comes from the priors on $\delta_0$, $\delta_1$ and $\delta_2$.
 
-![Prior predictive check of the MELS model (m2, priors only). Dark line: the 7,797 real EOY scores; light lines: 50 fake data sets, each simulated from one draw of the priors. Scores below 0 or above 100 are left out of the plot.](images/10/fig15_prior_pc_mels.png){#fig-bm-prior-pc-mels width="70%"}
+![Prior predictive check of the MELS model (m2, priors only). Dark line: the 7,797 real EOY scores; light lines: 50 simulated data sets, each generated from one draw of the priors. Scores below 0 or above 100 are left out of the plot.](images/10/fig15_prior_pc_mels.png){#fig-bm-prior-pc-mels width="70%"}
 
-**Reading @fig-bm-prior-pc-mels.** As in @sec-bm-prior-pc, the question is whether the fake scores are on a believable scale. Most fake data sets are centered between about 30 and 70, and over 500 fake data sets, the middle 95% of the fake scores is from about 23 to 75, with 0.2% below 0 or above 100. So the priors are wider than the data but believable.
+**Reading @fig-bm-prior-pc-mels.** As in @sec-bm-prior-pc, the question is whether the simulated scores are on a believable scale. Most simulated data sets are centered between about 30 and 70, and over 500 simulated data sets, the middle 95% of the simulated scores is from about 23 to 75, with 0.2% below 0 or above 100. So the priors are wider than the data but believable.
 
 ### The fitted MELS model (m3) {#sec-bm-m3}
 
@@ -552,7 +552,7 @@ m3 <- brm(mod, data = jebs, prior = priors_mels,
 - `sigma ~ 1 + treat + std_baseline` is the scale equation, for $\log \sigma_{ij}$: the `1` is $\delta_0$, `treat` is $\delta_1$ and `std_baseline` is $\delta_2$. brms models the log of `sigma` by default. In `priors_mels`, the two priors with `dpar = "sigma"` are for the scale equation: `class = "Intercept"` is the prior for the sigma intercept, $\delta_0$, and `class = "b"` the prior for $\delta_1$ and $\delta_2$.
 - m2, the prior-only version used for the prior predictive check, is the same call with `sample_prior = "only"`.
 
-The table below holds the output of `m3`. The `sigma_` rows are the scale equation.
+The table below shows the output of `m3`. The `sigma_` rows are the scale equation.
 
 | Term | Estimate | Est.Error | l-95% CI | u-95% CI | Rhat | Bulk_ESS | Tail_ESS |
 |:------------|--------:|--------:|--------:|--------:|--------:|--------:|--------:|
@@ -602,11 +602,11 @@ $\widehat{\delta_2} = -0.07$, so $\exp(-0.07) = 0.93$. *Interpretation.* For stu
 
 ### Checking the fit {#sec-bm-mels-ppc}
 
-Does m3 fit the scores of all 7,797 students? As for m1 in @sec-bm-ppc, fake data sets are simulated from m3's posterior and compared with the real scores. If the model fits, the fake data look like the real data.
+Does m3 fit the scores of all 7,797 students? As for m1 in @sec-bm-ppc, simulated data sets are simulated from m3's posterior and compared with the real scores. If the model fits, the simulated data should look like the real data.
 
-![Posterior predictive check of m3. Dark line: the 7,797 real EOY scores; light lines: 50 fake data sets, each simulated from one draw of m3's posterior.](images/10/fig16_ppc_mels.png){#fig-bm-ppc-mels width="70%"}
+![Posterior predictive check of m3. Dark line: the 7,797 real EOY scores; light lines: 50 simulated data sets, each simulated from one draw of m3's posterior.](images/10/fig16_ppc_mels.png){#fig-bm-ppc-mels width="70%"}
 
-**Reading @fig-bm-ppc-mels.** The real scores have two peaks, near 39.5 and 60.2, with fewer scores in between, near 50. The fake data sets have one hump, highest near the middle, about 50. So, as with m1 in the 10 schools (@sec-bm-ppc), the model fits the center and the spread of the scores but not their shape. A lot has been learned, but the model is perhaps too simple for the data.
+**Reading @fig-bm-ppc-mels.** The real scores have two peaks, near 39.5 and 60.2, with fewer scores in between, near 50. The simulated data sets have one hump, highest near the middle, about 50. So, as with m1 in the 10 schools (@sec-bm-ppc), the model fits the center and the spread of the scores but not their shape. A lot has been learned, but the model is perhaps too simple for the data.
 
 ### Residual SD and the BOY MAP score {#sec-bm-sigma-map}
 
@@ -620,7 +620,7 @@ How does m3's predicted residual SD differ across BOY MAP scores, for treated an
 
 How else can distributional models be used? Two extensions:
 
-- **Value-added models for variances.** A random effect for each school can be added to the scale equation, so that each school has its own residual SD. Then schools can be compared on how consistent their students' scores are, not only on their mean scores (Leckie et al., 2024).
+- **Value-added models for variances.** A random effect for each school can be added to the scale equation, so that each school has its own residual SD. Then schools can be compared on how consistent their students' scores are, not only on their mean scores (Leckie et al., [2024](https://journals.sagepub.com/doi/10.3102/10769986231210808)).
 - **Other parameters.** Predictors can be added to other parameters of a model, such as the parameters of an item response model that describe how strongly each item is related to proficiency.
 
 ### A warning about interpreting differences in spread {#sec-bm-warning}
@@ -673,7 +673,7 @@ brms's summary output, such as m3's table in @sec-bm-m3, has three columns that 
 | Precision | 1/SD$^2$; for the MAP slope, 0.25 for the prior and 16.8 for the data, so weights of 1.5% and 98.5% in the posterior mean |
 | Weakly informative prior | A prior under which essentially impossible values have almost no probability, and which is wide, so that the posterior depends mostly on the data |
 | Half-normal, $HN(0, 5)$ | A normal curve with mean 0 and SD 5 with its negative half removed; the prior for $\tau$ and $\sigma$ in m1 |
-| Prior / posterior predictive check | Fake data simulated from the priors alone / from the posterior, compared with the real scores ($Y$ against $Y_{\text{rep}}$) |
+| Prior / posterior predictive check | Simulated data generated from the priors alone / from the posterior, compared with the real scores ($Y$ against $Y_{\text{rep}}$) |
 | HMC; MCMC | Hamiltonian Monte Carlo, the sampler Stan runs (a simulated marble in a bowl); the family of methods it belongs to |
 | Draw; chain; warmup | One complete set of parameter values; one run of the sampler; its first 500 steps, discarded. 4 chains $\times$ 500 = 2,000 draws (@sec-bm-appendix) |
 | Posterior mean; posterior SD | The mean and the SD of a parameter's draws (`estimate`, `std.error` in `tidy()`; `Estimate`, `Est.Error` in brms's summary) |
@@ -693,11 +693,11 @@ brms's summary output, such as m3's table in @sec-bm-m3, has three columns that 
 
 2.  **Reading the second number in a prior as a variance.** $\beta_1 \sim N(5, 2)$ has SD 2, as in brms's `normal(5, 2)`, so 95% of the prior is between 1.08 and 8.92. In $u_j \sim N(0, \tau^2)$, the second entry is a variance.
 
-3.  **Expecting the prior predictive check to match the data.** It is run before the data are used, only to check that the fake scores are believable: from about 24 to 76 for the middle 95% of fake scores. In the posterior predictive check, the fitted model is compared with the data.
+3.  **Expecting the prior predictive check to match the data.** It is run before the data are used, only to check that the simulated scores are believable: from about 24 to 76 for the middle 95% of simulated scores. In the posterior predictive check, the fitted model is compared with the data.
 
 4.  **Calling a credible interval a confidence interval, or the posterior SD an SE.** brms's `std.error` and `conf.low`/`conf.high` columns are the SD and percentiles of the 2,000 draws. Only the credible interval is read as "a 95% probability that the parameter is in the interval".
 
-5.  **Leaving out "given the model and the priors".** The 95% probability of a credible interval holds under the model and the priors. m1's fake data do not have the shape of the real scores (@sec-bm-ppc), so the model is a simplification.
+5.  **Leaving out "given the model and the priors".** The 95% probability of a credible interval holds under the model and the priors. m1's simulated data do not have the shape of the real scores (@sec-bm-ppc), so the model is a simplification.
 
 6.  **Thinking that the prior is the reason the school SD is larger in brms.** brms's 2.09 is the mean of a posterior with a long right tail; `lmer`'s 1.79 is the value at the peak of the likelihood. With flat priors, the posterior mean is about 2.15.
 
@@ -903,7 +903,7 @@ Justified and reported; essentially impossible values have almost no prior proba
 ::: {.callout-note collapse="true" icon="false"}
 ## Explain a prior predictive check and why it is run before fitting.
 
-Fake data from the priors alone; the question is whether they are on a believable scale (middle 95% from about 24 to 76), not whether they match the data. *See @sec-bm-prior-pc.*
+Simulated data from the priors alone; the question is whether they are on a believable scale (middle 95% from about 24 to 76), not whether they match the data. *See @sec-bm-prior-pc.*
 :::
 
 ::: {.callout-note collapse="true" icon="false"}
@@ -921,7 +921,7 @@ Posterior mean, posterior SD, credible interval. Slope 7.17 \[6.71, 7.65\] again
 ::: {.callout-note collapse="true" icon="false"}
 ## Read a posterior predictive check.
 
-Fake data from the posterior: right center and spread, but one hump, while the real scores have a tall peak near 40 (two peaks in all 110 schools). *See @sec-bm-ppc and @sec-bm-mels-ppc.*
+Simulated data from the posterior: right center and spread, but one hump, while the real scores have a tall peak near 40 (two peaks in all 110 schools). *See @sec-bm-ppc and @sec-bm-mels-ppc.*
 :::
 
 ::: {.callout-note collapse="true" icon="false"}
