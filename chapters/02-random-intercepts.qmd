@@ -62,11 +62,11 @@ The chapter explores three questions, on the same 780 students in 10 schools:
 
 ## Complete pooling: what ordinary regression assumes {#sec-ri-complete-pooling}
 
-Before anything multilevel, fit the model most people would: regress end-of-year reading on beginning-of-year reading, saying nothing about schools.
+Before fitting a multilevel model, we begin with a conventional, single-level regression model for comparison. That is, we regress end-of-year reading scores on beginning-of-year reading scores, saying nothing about schools:
 
-$$Y_{i} = \beta_0 + \beta_1 \text{MAP}_{i} + e_i, \qquad e_i \sim N(0, \sigma^2)$$
+$$Y_{i} = \beta_0 + \beta_1 \text{MAP}_{i} + e_i, \qquad e_i \sim N(0, \sigma^2).$$
 
-Look at the subscripts: only $i$, over all 780 students, with no $j$. That absence *is* complete pooling — the model has no term for the fact that these students came from ten different schools.
+Look at the subscripts: only $i$, over all 780 students, with no $j$. The absence of the $j$ subscript *is* complete pooling; the model has no term for the fact that these students come from ten different schools.
 
 ``` r
 lm(read_comp ~ std_baseline, data = jebs)
@@ -77,17 +77,17 @@ lm(read_comp ~ std_baseline, data = jebs)
 | `(Intercept)`  |  48.6033 | 0.2286 | 212.65 |
 | `std_baseline` |   7.3120 | 0.2340 |  31.25 |
 
-The residual SD is $\widehat{\sigma} = 6.35$ — in ordinary regression this is the **root mean squared error**, the typical size of a residual — and $R^2 = 0.557$, on three parameters: $\beta_0$, $\beta_1$, $\sigma^2$. One unit of the predictor is one standard deviation on the BOY test.
+The residual SD is $\widehat{\sigma} = 6.35$ — in ordinary regression this is the **root mean squared error** (RMSE), the typical size of a residual — and $R^2 = 0.557$, on three parameters: $\beta_0$, $\beta_1$, $\sigma^2$. One unit of the predictor is one standard deviation on the BOY test.
 
 > Two students differing by one standard deviation on the BOY MAP test are predicted to differ by 7.31 points at EOY, and a student with an average BOY score is predicted to score 48.60 at EOY.
 
-**What** $\widehat{\sigma} = 6.35$ means. Without MAP, your best guess for any student is the overall average, and you would typically miss by about **9.54 points** — that number is simply the standard deviation of `read_comp` across all 780 students. With MAP in the model you guess off the line instead, and you typically miss by about **6.35 points** — that is $\widehat{\sigma}$, the standard deviation of the residuals. One BOY test score cuts the typical miss by a third, which makes MAP a strong predictor by any standard in education research. It is tempting to stop with this model.
+**What** $\widehat{\sigma} = 6.35$ **means**. Without MAP, your best guess for any student is the overall average, and you would typically miss by about **9.54 points** — that number is simply the standard deviation of `read_comp` across all 780 students. With MAP in the model you guess off the line instead, and you typically miss by about **6.35 points** — that is $\widehat{\sigma}$, the standard deviation of the residuals. One BOY test score cuts the typical miss by a third, which makes MAP a strong predictor by any standard in education research. It is tempting to stop with this model.
 
-**The assumption we are violating.** Ordinary regression assumes the residuals $e_i$ are **conditionally independent**: once we account for MAP, one student's residual should tell us nothing about another's. But classmates share teachers, curriculum, peers, and leadership. Adding MAP only changes the question to "are they still correlated *after* adjusting for BOY scores?" They are, and you can check it directly: take this model's 780 residuals, average them within each school, and those ten school averages have a standard deviation of about **2.1 points**. That is real school-to-school variation. Pooled OLS has no term for it, so all of it goes into $e_i$ and is treated as student-level noise.
+**The assumption we are violating.** Ordinary regression assumes the residuals $e_i$ are **conditionally independent**: once we account for MAP, one student's residual should tell us nothing about another's. But classmates share teachers, curriculum, peers, and school leadership. Adding MAP only changes the question to "are they still correlated *after* adjusting for BOY scores?" They are, and you can check it directly: take this model's 780 residuals, average them within each school, and those ten school averages have a standard deviation of about **2.1 points**. That is real school-to-school variation. Pooled OLS has no term for it, so all of it goes into $e_i$ and is treated as student-level noise.
 
 ![All 780 students against their BOY MAP score, with the single pooled OLS line running through them. The colors mark the ten schools, and their spread is far too small to see against the student-level scatter. The next figure splits the same data by school.](images/02/fig01_pooled_ols.png){#fig-ri-pooled-ols}
 
-**What that costs us depends on the predictor.** For anything that varies mostly *between* schools — the intercept, or any school-level variable — pooled OLS treats 780 observations as independent when it effectively has closer to 10. Its standard errors come out **too small**, its confidence intervals **too narrow**, and its $p$-values **too small**, so we claim more certainty than is warranted. For a predictor that varies mostly *within* schools, like MAP, the distortion is much milder and can even run the other way, with OLS standard errors slightly too large. @sec-ri-clustering-se puts both numbers on the table. Either way, the repair is to put schools into the equation.
+**The costs of complete pooling depend on the predictor.** For anything that varies mostly *between* schools — the intercept, or any school-level variable — pooled OLS treats 780 observations as independent when it effectively has closer to 10. Its standard errors come out **too small**, its confidence intervals **too narrow**, and its $p$-values **too small**, so we claim more certainty than is warranted. For a predictor that varies mostly *within* schools, like MAP, the distortion is much milder and can even run the other way, with OLS standard errors slightly too large. @sec-ri-clustering-se puts both numbers on the table. Either way, the fix is to put schools into the equation.
 
 ## The random intercepts model {#sec-ri-model}
 
@@ -105,7 +105,7 @@ $$\begin{aligned}
 Every symbol, in plain language:
 
 | Symbol | Name | In words |
-|-------------------|-------------------|------------------------------------|
+|-------------------|-------------------|-----------------------------------|
 | $Y_{ij}$ | Outcome | End-of-year reading score for student $i$ in school $j$ |
 | $\beta_{0j}$ | School intercept | School $j$'s **true** predicted score at $\text{MAP} = 0$ |
 | $\text{MAP}_{ij}$ | Level-1 predictor | That student's BOY MAP score, in standard deviation units |
@@ -122,13 +122,13 @@ The two distributional assumptions are the last two lines of the equation above:
 
 ### Reduced form {#sec-ri-reduced}
 
-Substitute the level-2 equation into the level-1 equation:
+Substituting the level-2 equation into the level-1 equation gives the reduced form:
 
 $$Y_{ij} = \gamma_{0} + \beta_1 \text{MAP}_{ij} + u_j + e_{ij}$$
 
 In words: **a student's score is the average school's prediction at MAP = 0, plus the amount their own MAP score predicts on top of that, plus their school's departure from the average school, plus their own departure from their school's line.**
 
-### The same model in R {#sec-ri-r}
+### The random intercepts model in R {#sec-ri-r}
 
 ``` r
 lmer(read_comp ~ 1 + std_baseline + (1 | cluster_id), data = jebs)
@@ -174,7 +174,7 @@ The random intercepts model estimates four parameters — $\gamma_0$, $\beta_1$,
 
 ### Where each parameter appears on the graph {#sec-ri-graph}
 
-Overlay the ten fitted lines on one set of axes. This is the **spaghetti plot**.
+If we overlay the ten fitted lines on one set of axes, we get the **spaghetti plot** (@fig-ri-parameters).
 
 ![The ten fitted school lines from `lmer(read_comp ~ 1 + std_baseline + (1 | cluster_id))`, with each parameter estimate marked where it appears. $\widehat{\gamma_0}$ is the height of the average school's line at MAP $= 0$. $\widehat{\beta_1}$ is the slope, and it is the *same* slope on every line. $\widehat{\tau}$ is the **vertical spread of the whole bundle**, which is why the double-headed arrow is drawn as one SD up and one SD down from the middle line rather than between any two lines. The two curves are those spreads drawn as distributions on a shared scale, placed at different points along the line. The blue one, low on the left, is the normal the ten school intercepts are treated as draws from, with $\widehat{\tau} = 1.79$ as its standard deviation. The much taller gray one is the normal students are treated as scattering around their own school's line, with $\widehat{\sigma} = 6.16$; it is drawn on school 74's line, the lowest of the ten, and the ring marks its center. Because the ten lines are parallel, each spread is identical at every value of MAP, so either curve could be drawn anywhere along the line. The size difference between them is the ICC.](images/02/fig11_parameters_on_plot.png){#fig-ri-parameters}
 
@@ -190,11 +190,11 @@ $\widehat{\sigma} = 6.16$ is on the plot too, as the tall gray curve drawn on sc
 
 ### What changes when you add a covariate {#sec-ri-changes}
 
-Four meanings change.
+Four meanings change:
 
 **1.** $\tau^2$ and $\sigma^2$ are now *residual* variances. In the variance components model they were unconditional. Now they are what is **left over** after adjusting for MAP: $\widehat{\tau}^2 = 3.20$ is how much schools differ *among schools serving students who started at the same place*, and $\widehat{\sigma}^2 = 37.94$ is how much classmates differ *beyond what their BOY scores already told us*. Every variance in a model with predictors is conditional on those predictors.
 
-**2.** $\gamma_0$ is a conditional prediction, not the average outcome. It is the predicted EOY score for a student with $\text{MAP} = 0$ — an average BOY score — sitting in a school with $u_j = 0$ (i.e., an average school). It is not the average score in our data. Our 780 students averaged 47.92, while $\widehat{\gamma_0} = 48.82$. Two things separate those numbers. First, our students average slightly below zero on MAP, at $-0.09$, so the model is predicting for someone a touch stronger than our typical student. Second, $\widehat{\gamma_0}$ weights the ten schools closer to equally rather than weighting each of the 780 students equally, so it lands nearer the average of the ten school means than the average of the students.
+**2.** $\gamma_0$ is a conditional prediction, not the average outcome. It is the predicted EOY score for a student with $\text{MAP} = 0$ — an average BOY score — in a school with $u_j = 0$ (i.e., an average school). It is not the average score in our data. Our 780 students averaged 47.92, while $\widehat{\gamma_0} = 48.82$. Two things separate those numbers. First, our students average slightly below zero on MAP, at $-0.09$, so the model is predicting for someone a touch stronger than our typical student. Second, $\widehat{\gamma_0}$ weights the ten schools closer to equally rather than weighting each of the 780 students equally, so it lands nearer the average of the ten school means than the average of the students.
 
 **3.** $\beta_1$ is the predicted difference in $Y$ per one-SD difference in MAP. A one-SD difference in BOY MAP scores predicts a difference of $\widehat{\beta_1} = 7.21$ points in EOY reading. One caution about that sentence: it is comparing students *within* schools and *across* schools at the same time, and the model assumes those two comparisons give the same answer. @sec-within-between takes them apart.
 
@@ -202,14 +202,14 @@ Four meanings change.
 
 ### What adding MAP does to the variance components {#sec-ri-variance}
 
-Put the two models side by side. Both were fit to the same 780 students in 10 schools; only one term differs.
+The table below shows the two models side by side. Both were fit to the same 780 students in 10 schools; only one term differs.
 
-|                           | VC model (Chapter 1) | VAM (this chapter) |
-|:--------------------------|---------------------:|-------------------:|
-| $\widehat{\tau}^2$        |                16.68 |               3.20 |
-| $\widehat{\sigma}^2$      |                79.44 |              37.94 |
-| ICC                       |                0.174 |              0.078 |
-| SD of the $\widehat{u_j}$ |                 3.92 |               1.63 |
+|   | VC model (Chapter 1) | Random Intercepts / VAM (this chapter) |
+|:----------------|---------------------:|------------------------------:|
+| $\widehat{\tau}^2$ | 16.68 | 3.20 |
+| $\widehat{\sigma}^2$ | 79.44 | 37.94 |
+| ICC | 0.174 | 0.078 |
+| SD of the $\widehat{u_j}$ | 3.92 | 1.63 |
 
 **The** $\sigma^2$ drop, from 79.44 to 37.94, is 52.2%. Among students in the *same* school, their BOY MAP scores account for 52.2% of the variance in how much they differ from one another at EOY. The 37.94 that is left is how much classmates still differ once we compare only students who arrived at the same BOY score.
 
