@@ -53,7 +53,7 @@ The occasion itself — wave 2, say — is not a separate level in the hierarchy
 The algebra from the first four chapters is unchanged. What changes is what the letters refer to. In $\text{MDD}_{ij}$, the $j$ is the **patient** and the $i$ is the **measurement** — the $i$-th measurement of patient $j$. A level-2 variable is one that is the same for every session of a patient, like `treat`; a level-1 variable can change from session to session, like `wave`.
 
 |   | Reading data (Chapters 1–4) | Depression data (this chapter) |
-|:-----------------|:--------------------------|:--------------------------|
+|:------------------|:--------------------------|:--------------------------|
 | Cluster (level 2), $j$ | a school | a patient |
 | Observation (level 1), $i$ | a student | one measurement: one session's score |
 | Within-cluster variation | how students in the same school differ | how one patient's score changes from session to session |
@@ -893,7 +893,7 @@ Average intercept 4.26, average rate $-0.081$ per week, SD of intercepts at wave
 :::
 
 ::: {.callout-note collapse="true" icon="false"}
-## Use $\tau_1$ in a sentence and say why it matters that the interval includes zero.
+## Use the prediction interval in a sentence and say why it matters that the interval includes zero.
 
 About 95% of patients are expected to have a rate between $-0.23$ and $0.06$ per week. Most improve, but some are expected to get slightly worse; the average describes the typical patient. *See @sec-lg-tau1.*
 :::
