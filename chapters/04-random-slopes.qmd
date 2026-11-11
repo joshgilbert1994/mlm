@@ -5,7 +5,7 @@
 The chapter in one paragraph
 :::
 
-Every model so far has given each school its own intercept and then required every school to have the same slope. Schools could differ in their average end-of-year score, but the association between a student's beginning-of-year reading score and their end-of-year score had to be the same number in every school. This chapter removes that restriction. In a **random slopes model** each school gets its own intercept *and* its own slope, and the pair is drawn from a single distribution described by three numbers: the variance of the intercepts, the variance of the slopes, and the relationship between them. The new variance is $\tau_1^2$, the variance of the school slopes, and the new quantity is $\rho$, the **intercept–slope correlation** — whether schools with higher/lower intercepts also have steeper/flatter slopes. Everything else in the chapter follows from those two additions. Letting the slope vary makes the standard error on the average slope much larger, because a new sample of schools would have new slopes as well as new intercepts. It makes each school's own slope an estimate that is **shrunk** toward the average, heavily for a school with three students and hardly at all for a school with 151. It introduces **scale dependence**: once the fitted lines are no longer parallel, the variance between schools depends on *where along the predictor you measure it*, so the intercept variance and the correlation both change if you move the zero point of the predictor. And the Mundlak and REWB models, which were two ways of writing one model when only the intercept varied, stop being the same model once the slope varies too.
+Every model so far has given each school its own intercept and then required every school to have the same slope. Schools could differ in their average end-of-year score, but the association between a student's beginning-of-year reading score and their end-of-year score had to be the same number in every school. This chapter removes that restriction. In a **random slopes model** each school gets its own intercept *and* its own slope, and the pair is drawn from a single distribution described by three numbers: the variance of the intercepts, the variance of the slopes, and the relationship between them. The new variance is $\tau_1^2$, the variance of the school slopes, and the new quantity is $\rho$, the **intercept–slope correlation** — whether schools with higher/lower intercepts also have steeper/flatter slopes. Everything else in the chapter follows from those two additions. Letting the slope vary makes the standard error on the average slope much larger, because a new sample of schools would have new slopes as well as new intercepts. It makes each school's own slope an estimate that is **shrunken** toward the average, heavily for a school with three students and hardly at all for a school with 151. It introduces **scale dependence**: once the fitted lines are no longer parallel, the variance between schools depends on *where along the predictor you measure it*, so the intercept variance and the correlation both change if you move the zero point of the predictor. And the Mundlak and REWB models, which were two ways of writing one model when only the intercept varied, stop being the same model once the slope varies too.
 ::::
 
 ## Where we left off {#sec-rs-recap}
@@ -27,13 +27,13 @@ Fitted to our data, $\widehat{\gamma_0} = 49.63$, $\widehat{\beta_{RI}} = 6.99$,
 ::: callout-note
 ## Two notational changes
 
-First, the level-1 slope. In @sec-within-between we called it $\beta_{RI}$ to mark which model it came from. This chapter calls the average slope $\gamma_1$, so that the intercept and the slope get matching names: $\gamma_0$ is the average intercept and $\gamma_1$ is the average slope. Earlier chapters called $\gamma_0$ the grand intercept; it is the same quantity. Second, the school departure. Until now there was only one, written $u_j$ with variance $\tau^2$. Now there are two, so they get numbered: $u_{0j}$ is the departure in the *intercept* (the 0 refers to the intercept) with variance $\tau_0^2$, and $u_{1j}$ is the departure in the *slope* (the 1 refers to the slope) with variance $\tau_1^2$. Wherever you read $\tau^2$ in earlier material, read $\tau_0^2$ here. No model has changed; only the labels have.
+First, the level-1 slope. In @sec-within-between we called it $\beta_{RI}$ to mark which model it came from. This chapter calls the average slope $\gamma_1$, so that the intercept and the slope get matching names: $\gamma_0$ is the average intercept and $\gamma_1$ is the average slope. Earlier chapters called $\gamma_0$ the grand intercept; it is the same quantity. Second, the school departure. Until now there was only one, written $u_j$ with variance $\tau^2$. Now there are two, so they get numbered: $u_{0j}$ is the departure in the *intercept* (the 0 refers to the intercept) with variance $\tau_0^2$, and $u_{1j}$ is the departure in the *slope* (the 1 refers to the slope) with variance $\tau_1^2$. Wherever you read $\tau^2$ in earlier material, read $\tau_0^2$ here.
 :::
 
 ### Our data {#sec-rs-data}
 
 | Feature | Value |
-|:---|:---|
+|:-----------------------------------|:-----------------------------------|
 | Students | 7,797 |
 | Schools | 110 |
 | Students per school | 1 to 151, averaging about 71 |
@@ -47,15 +47,15 @@ These are the same 7,797 students as in @sec-within-between, available as [`jebs
 
 ## Why one slope is not enough {#sec-rs-why}
 
-The random intercepts model assumes that the association between BOY and EOY scores is the same in every school. That is an assumption, not a finding. There are two alternatives to it.
+The random intercepts model assumes that the association between BOY and EOY scores is the same in every school. That is an assumption, not a finding. We reviewed two alternatives to it in @sec-random-intercepts.
 
-At one extreme, **complete pooling**: ignore schools entirely and fit one line to all 7,797 students. At the other extreme, **no pooling**: fit a completely separate regression inside each school, each one using only its own students. That gives 108 lines rather than 110, because two schools have a single student and a single point has no line through it. The random intercepts model is between the two on the intercept — it lets intercepts vary but pools them toward the overall average — while pooling the slope completely.
+At one extreme, **complete pooling**: ignore schools entirely and fit one line to all 7,797 students. At the other extreme, **no pooling**: fit a completely separate regression to each school, each one using only its own students. (Separate regressions give us 108 lines rather than 110, because two schools have a single student and a single point has no line through it.) The random intercepts model is between the two on the intercept — it lets intercepts vary but partially pools them toward the overall average — while pooling the slope completely. The random slopes partially pools **both** the intercepts and slopes.
 
 ![Three ways to handle the same data. Each line is one school's fitted line. Left: the random intercepts model, where the lines are parallel by construction. Middle: the random slopes model of this chapter. Right: a separate regression inside each school. Two of the 110 schools have a single student and produce no line, so 108 are drawn.](images/04/fig01_three_models.png){#fig-rs-three-models width="100%"}
 
 Look at the right panel. Some of those lines have a **negative slope**: they say that in that school, students who arrived reading better finished the year reading worse. A slope carries information only when a school has at least three students: two of our schools have one student and two have two, and a line through two points fits them perfectly whatever their scores. That leaves 106 schools with a usable estimate. Across those 106 the slopes run from $-4.62$ to $11.14$, and four are negative.
 
-That spread is not mostly real. A separate regression uses only the students in one school, and some of our schools are very small. **School 2 has three students.** All three arrived below average on BOY MAP, and the one with the highest BOY score happened to have the lowest EOY score, so the line through those three points slopes down: a slope of $-4.62$ with a standard error of $6.76$. A standard error that large means the estimate is almost uninformative — the data are consistent with almost any slope. The negative slope is noise, not a finding about that school.
+**The spread of slopes is contaminated by noise**. A separate regression uses only the students in one school, and some of our schools are very small. **School 2 has three students.** All three arrived below average on BOY MAP, and the one with the highest BOY score happened to have the lowest EOY score, so the line through those three points slopes down: a slope of $-4.62$ with a standard error of $6.76$. A standard error that large means the estimate is uninformative — the data are consistent with almost any slope. The negative slope is noise, not a finding about that school.
 
 This is the failure of the no-pooling approach: each school is estimated in isolation, so its estimate draws on no information from the other 109 schools. A model that let the slopes vary *and* pooled them toward the overall average would keep the real variation and discard most of the noise. That is the random slopes model.
 
@@ -63,7 +63,7 @@ This is the failure of the no-pooling approach: each school is estimated in isol
 
 ### Hierarchical form {#sec-rs-hier}
 
-Write the model in two levels. At **level 1**, inside a school, a student's EOY score depends on their own BOY score through an intercept and a slope that both carry a $j$ subscript, meaning both belong to that school:
+As before, we can write the model in two levels. At **level 1**, inside a school, a student's EOY score depends on their own BOY score through an intercept and a slope that both carry a $j$ subscript, meaning both belong to that school:
 
 $$Y_{ij} = \beta_{0j} + \beta_{1j}\,\text{MAP}_{ij} + e_{ij}, \qquad e_{ij} \sim N(0, \sigma^2)$$
 
@@ -82,9 +82,9 @@ That is the whole model.
 
 ![The two departures, for one school. School 1's line is higher than the average line at a BOY score of 0, and less steep. The red bar measures its intercept departure; each dotted run of one BOY unit, with the arrow beside it, measures that line's slope.](images/04/fig02_anatomy.png){#fig-rs-anatomy width="80%"}
 
-School 1 makes both departures concrete. Its intercept is 52.667 against an average of 49.554, so $\widehat{u_{01}} = +3.113$: at a BOY score of 0, school 1 is predicted to be 3.113 EOY points above the average school. Its slope is 4.914 against an average of 6.949, so $\widehat{u_{11}} = -2.035$: school 1's own fitted line rises 4.914 EOY points per BOY unit, against 6.949 for the average school, which is 2.035 points less. That 4.914 is the model's estimate for school 1, already shrunk toward the average — a separate regression on school 1's own students alone gives 4.07.
+School 1 makes both departures concrete. Its intercept is 52.667 against an average of 49.554, so $\widehat{u_{01}} = +3.113$: at a BOY score of 0, school 1 is predicted to be 3.113 EOY points above the average school. Its slope is 4.914 against an average of 6.949, so $\widehat{u_{11}} = -2.035$: school 1's own fitted line rises 4.914 EOY points per BOY unit, against 6.949 for the average school, which is 2.035 points less. That 4.914 is the model's estimate for school 1, shrunken toward the average — a separate regression on school 1's own students alone gives 4.07.
 
-### The distribution the two departures come from {#sec-rs-dist}
+### The two departures require a joint distribution {#sec-rs-dist}
 
 A random intercepts model needs one distribution, $u_j \sim N(0, \tau^2)$. A random slopes model needs a distribution over **pairs**, because each school contributes an intercept departure and a slope departure together, and those two may be related. The pair is drawn from a **multivariate normal** distribution — the two-dimensional version of the bell curve, which is described by the variance of each piece plus the relationship between them:
 
@@ -95,8 +95,6 @@ $\Sigma$ (capital sigma) is called the **covariance matrix** of the random effec
 - $\tau_0^2$, the variance of the intercept departures: how much school intercepts differ from one another.
 - $\tau_1^2$, the variance of the slope departures: how much schools differ in steepness.
 - $\tau_{01}$, the **covariance** between the two: whether a school with a higher-than-average intercept also tends to have a higher-than-average slope.
-
-**A note on notation.** Some presentations write $\rho$ in that off-diagonal slot rather than $\tau_{01}$, so $\rho$ there means the covariance. This book writes $\tau_{01}$ throughout wherever the covariance is meant, and reserves $\rho$ for the correlation that software prints. The two are different numbers related by $\tau_{01} = \rho\,\tau_0\,\tau_1$, and @sec-rs-rho-cov works through why the distinction matters when you put one into a formula.
 
 Both means are zero, which is simply a statement that the departures are measured *from* the average — a school with no departure at all is exactly on the average line.
 
@@ -271,7 +269,7 @@ In the bottom row the schools have between 86 and 151 students, and the separate
 The effect of shrinkage on the collection as a whole is to remove most of the apparent spread, because most of that spread was noise:
 
 |                                    | Range of slopes    |    SD | Negative slopes |
-|:-----------------------------------|:-------------------|------:|----------------:|
+|:---------------------------|:--------------|--------------:|--------------:|
 | Separate regressions (106 schools) | $-4.62$ to $11.14$ | 2.451 |               4 |
 | Random slopes model (110 schools)  | 2.07 to 8.68       | 0.880 |               0 |
 
@@ -296,7 +294,7 @@ anova(ri, rs)
 ```
 
 | Model             | Parameters |     $\ell$ | $\chi^2$ |  df | p                       |
-|:------------------|-----------:|-----------:|---------:|----:|:------------------------|
+|:-----------|-----------:|-----------:|-----------:|-----------:|:--------------|
 | Random intercepts |          4 | $-25356.0$ |          |     |                         |
 | Random slopes     |          6 | $-25305.6$ |    100.8 |   2 | $< 2.2 \times 10^{-16}$ |
 
@@ -353,7 +351,7 @@ $\tau_0^2$ is defined as the variance of the school departures *at a predictor v
 Refitting the model with zero moved confirms it:
 
 | Where zero is | $\widehat{\tau_0}$ | $\widehat{\tau_1}$ | $\widehat{\rho}$ | $\widehat{\sigma}$ |
-|:---|---:|---:|---:|---:|
+|:--------------|--------------:|--------------:|--------------:|--------------:|
 | At BOY $= -1$ | 3.348 | 1.130 | $-0.618$ | 6.063 |
 | At BOY $=0$ (fitted) | 2.795 | 1.130 | $-0.336$ | 6.063 |
 | At BOY $= +1$ | 2.640 | 1.130 | $+0.072$ | 6.063 |
@@ -397,7 +395,7 @@ lmer(read_comp ~ demeaned_map  + sch_map + (demeaned_map  | cluster_id), jebs)  
 ![The within and between slopes from both parameterizations, under random intercepts and under random slopes, with 95% confidence intervals. The 0.249 gap in the between slope is small next to either interval, so the two parameterizations are not giving significantly different answers about the fixed part. What differs is the random part, and the fit.](images/04/fig09_mundlak_rewb.png){#fig-rs-mundlak-rewb width="86%"}
 
 |   | Within slope | Between slope |
-|:---|---:|---:|
+|:-----------------------|-----------------------:|-----------------------:|
 | **Random intercepts** — Mundlak | 6.957 | 8.716 (as $\beta_W + \beta_C$) |
 | **Random intercepts** — REWB | 6.957 | 8.716 |
 | **Random slopes** — Mundlak | 6.899 | 9.427 (as $\beta_W + \beta_C$) |
@@ -503,7 +501,7 @@ The practical point of this section is the diagnostic. **A reported correlation 
 ## Vocabulary decoder {#sec-rs-vocab}
 
 | Term | What it means here |
-|:---|:---|
+|:-----------------------------------|:-----------------------------------|
 | Random slopes model | A model in which each cluster gets its own intercept and its own slope, both drawn from a shared distribution |
 | $\gamma_0$ | The average intercept across clusters: the predicted outcome at a predictor value of 0 in an average cluster |
 | $\gamma_1$ | The average slope across clusters |
@@ -612,7 +610,7 @@ $$\gamma_1 \pm 1.96\,\tau_1$$
 **Our numbers on the full data (7,797 students, 110 schools)**
 
 | Quantity                                          |                  Value |
-|:--------------------------------------------------|-----------------------:|
+|:-----------------------------------------------|-----------------------:|
 | Average intercept, $\widehat{\gamma_0}$           |     49.554 (SE 0.2867) |
 | Average slope, $\widehat{\gamma_1}$               |      6.949 (SE 0.1402) |
 | SD of school intercepts, $\widehat{\tau_0}$       |                  2.795 |
