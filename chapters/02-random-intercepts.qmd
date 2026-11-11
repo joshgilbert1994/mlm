@@ -105,7 +105,7 @@ $$\begin{aligned}
 Every symbol, in plain language:
 
 | Symbol | Name | In words |
-|-------------------|-------------------|-----------------------------------|
+|-------------------|-------------------|----------------------------------|
 | $Y_{ij}$ | Outcome | End-of-year reading score for student $i$ in school $j$ |
 | $\beta_{0j}$ | School intercept | School $j$'s **true** predicted score at $\text{MAP} = 0$ |
 | $\text{MAP}_{ij}$ | Level-1 predictor | That student's BOY MAP score, in standard deviation units |
@@ -205,7 +205,7 @@ Four meanings change:
 The table below shows the two models side by side. Both were fit to the same 780 students in 10 schools; only one term differs.
 
 |   | VC model (Chapter 1) | Random Intercepts / VAM (this chapter) |
-|:----------------|---------------------:|------------------------------:|
+|:-----------------|----------------------:|------------------------------:|
 | $\widehat{\tau}^2$ | 16.68 | 3.20 |
 | $\widehat{\sigma}^2$ | 79.44 | 37.94 |
 | ICC | 0.174 | 0.078 |
@@ -261,7 +261,7 @@ The 780 students' scores are identical under both models. Only the expectation t
 
 "Better" and "worse" in a value-added model never mean *higher scores* and *lower scores*. They mean **higher or lower than the model predicted for a school whose students started where these students started**.
 
-So a school whose students arrive far behind is *expected* to finish behind, and a school that finishes exactly where it was predicted to finish has a $\widehat{u_j}$ of zero — not a negative one. Starting lower does not make a school look worse. It lowers the standard it is measured against, which is the purpose of the adjustment: to stop measuring schools by who enrolled in them.
+So a school whose students arrive far behind is *expected* to finish behind, and a school that finishes exactly where it was predicted to finish has a $\widehat{u_j}$ of zero — not a negative one. Starting lower does not make a school look worse, it simply changes the standard it is measured against.
 :::
 
 ### The ten schools, before and after {#sec-ri-ten-schools}
@@ -332,7 +332,7 @@ Read the reduced form's right-hand side as three answers to "why did this studen
 
 $$Y_{ij} \;=\; \gamma_0 \;+\; \underbrace{\beta_1 \text{MAP}_{ij}}_{\substack{\text{what their BOY MAP} \\ \text{score predicts}}} \;+\; \underbrace{u_j}_{\substack{\text{how far their } \textbf{school} \\ \text{sits from the average school}}} \;+\; \underbrace{e_{ij}}_{\substack{\text{how far the } \textbf{student} \\ \text{sits from their own school}}}$$
 
-The school residual is the middle term, and *residual* does exactly the work it does in ordinary regression: **what is left after the model has explained what it can.** The only thing that changed between the two chapters is how much the model can explain before that middle term begins. Under the VC model it explained nothing, so $u_j$ held both the school's contribution and its students' baseline advantage. With MAP in the model, baseline differences go to $\beta_1$ and $u_j$ is what remains. The same term now has a narrower meaning.
+The school residual is the middle term, and *residual* does exactly the work it does in ordinary regression: **what is left after the model has explained what it can.** The only thing that changed between the two chapters is how much the model can explain before that middle term begins. Under the VC model it explained nothing, so $u_j$ included both the school's contribution and its students' baseline advantage. With MAP in the model, baseline differences go to $\beta_1$ and $u_j$ is what remains. The same term now has a narrower meaning.
 
 ### School 12, the mirror image (and school 47, which stays negative) {#sec-ri-school-12}
 
@@ -367,19 +367,19 @@ That difference is what moves $R_j$. Compare the two denominators for school 11.
 
 $$R_{11} = \frac{16.68}{16.68 + \frac{79.44}{13}} = 0.732, \qquad\qquad R_{11} = \frac{3.20}{3.20 + \frac{37.94}{13}} = 0.523$$
 
-**Two things to be clear about here.** First, **this could have gone the other way.** Had MAP explained proportionally more of the *within*-school variance than of the between-school variance, every $R_j$ would have *risen*. A better model does not automatically shrink more. What settles the direction is which of the two variances falls by the larger percentage, and in this data set it was $\widehat{\tau}^2$.
+**Note that** **this could have gone the other way.** Had MAP explained proportionally more of the *within*-school variance than of the between-school variance, every $R_j$ would have *risen*. A better model does not automatically shrink more. What settles the direction is which of the two variances falls by the larger percentage, and in this data set it was $\widehat{\tau}^2$.
 
-Second, **this does not contradict @sec-ri-clustering-se**, and the box in @sec-ri-variance puts numbers on why. @sec-ri-clustering-se says MAP is mostly a *within*-school variable — 81% of MAP's own variation is between students inside the same school. Those are two different questions. The first asks where a predictor's own variation sits; the second asks how much of the outcome's variance it explains. A predictor can vary mostly within schools and still explain much of the variation between schools. Put more plainly, even relatively small between-school differences in BOY MAP can explain a large share of why schools differ in EOY reading scores.
+**This result does not contradict @sec-ri-clustering-se**, and the box in @sec-ri-variance puts numbers on why. @sec-ri-clustering-se says MAP is mostly a *within*-school variable — 81% of MAP's own variation is between students inside the same school. Those are two different questions. The first asks where a predictor's own variation sits; the second asks how much of the outcome's variance it explains. A predictor can vary mostly within schools and still explain much of the variation between schools. Put more plainly, even relatively small between-school differences in BOY MAP can explain a large share of why schools differ in EOY reading scores.
 
-**Does a smaller** $R_j$ mean we know less about school 11? No — its standard error went *down*, from 2.11 to 1.24. But the smaller $R_j$ is not the reason for that, and the distinction matters, because on its own it works the other way. The formula from @sec-variance-components:
+**Does a smaller** $R_j$ mean we know less about school 11? No — its standard error went *down*, from 2.11 to 1.24. But the smaller $R_j$ is not the reason for that, as we can see with the formula from @sec-variance-components:
 
 $$\text{SE}(\widehat{u_j}) \;=\; \widehat{\tau}\sqrt{1 - R_j}, \qquad 4.08\sqrt{1 - 0.732} = 2.11 \;\longrightarrow\; 1.79\sqrt{1 - 0.523} = 1.24$$
 
-**Two things in that formula changed, and they move it in opposite directions.** $\widehat{\tau}$ fell from 4.08 to 1.79, which more than halves the standard error. The $\sqrt{1 - R_j}$ factor moved the other way, from $0.52$ to $0.69$, because a smaller $R_j$ leaves a larger $1 - R_j$ — that alone would raise the standard error by about a third. The fall in $\widehat{\tau}$ is much the larger of the two, so the estimate came out more precise **despite** the smaller shrinkage factor, not because of it.
+**Two things in that formula changed, and they move it in opposite directions.** $\widehat{\tau}$ fell from 4.08 to 1.79, which more than halves the standard error. The $\sqrt{1 - R_j}$ factor moved the other way, from $0.52$ to $0.69$, because a smaller $R_j$ leaves a larger $1 - R_j$ — that alone would raise the standard error by about a third. Because the fall in $\widehat{\tau}$ is much larger, the estimate came out more precise **despite** the smaller $R_j$.
 
 ## Three ways to handle groups {#sec-ri-three-ways}
 
-Three things can be done with the grouping, and the random intercepts model is the middle one. All three appear below for comparison.
+We can address the grouping of students within schools in three ways, detailed below.
 
 **Complete pooling.** Ignore school entirely: one intercept, one slope, one regression for all 780 students.
 
@@ -393,9 +393,9 @@ $$Y_{ij} = \alpha_{0j} + \alpha_{1j} \text{MAP}_{ij} + e_{ij}, \qquad e_{ij} \si
 
 $$Y_{ij} = \gamma_{0} + \beta_1 \text{MAP}_{ij} + u_j + e_{ij}, \qquad u_j \sim N(0, \tau^2), \qquad e_{ij} \sim N(0, \sigma^2)$$
 
-The single line separating partial pooling from no pooling is $u_j \sim N(0, \tau^2)$. That one assumption makes the ten schools related to one another rather than ten unrelated problems, and it is why a school with 13 students can borrow strength from the other nine schools.
+The single line separating partial pooling from no pooling is $u_j \sim N(0, \tau^2)$. That one assumption makes the ten schools related to one another, and it is why a school with 13 students can "borrow strength" from the other nine schools.
 
-![Complete pooling, partial pooling, and no pooling on the same data. Left: one line for all 780 students. Center: the spaghetti plot of ten parallel lines. Right: ten independent lines, free in both intercept and slope — the flattest is school 11, fitted from 13 students.](images/02/fig03_three_pooling.png){#fig-ri-three-pooling}
+![Complete pooling, partial pooling, and no pooling on the same data. Left: one line for all 780 students. Center: the spaghetti plot of ten parallel lines. Right: ten independent lines, free in both intercept and slope — the flattest is school 11, estimated from 13 students.](images/02/fig03_three_pooling.png){#fig-ri-three-pooling}
 
 ### The trade-offs
 
@@ -414,11 +414,9 @@ The parameter counts make the case. The MLM gets ten school-specific intercepts 
 
 ### Why not just fit separate regressions? School 11 {#sec-ri-school-11}
 
-One school shows the case against no pooling. School 11's separate-regression slope is **2.69**, with a standard error of **2.67** — almost as large as the estimate itself, so its confidence interval comfortably contains zero.
+One school shows the case against no pooling. School 11's separate-regression slope is **2.69**, with a standard error of **2.67** — almost as large as the estimate itself, so its confidence interval comfortably contains zero. However, School 11 contains only 13 students.
 
-> Thirteen students give a very imprecise slope.
-
-Take 2.69 at face value and you would conclude that BOY achievement barely predicts EOY outcomes at school 11 — a conclusion driven entirely by sample size. By assuming one common slope, the MLM uses all 780 students to estimate $\widehat{\beta_1} = 7.21$, with the schools differing only in height. We give up the possibility that schools differ in slope (@sec-random-slopes gives it back) in exchange for a far more precise slope.
+If you take 2.69 at face value, you would conclude that BOY achievement barely predicts EOY outcomes at school 11 — a conclusion likely driven by the chance result of a small sample size. By assuming one common slope, the MLM uses all 780 students to estimate $\widehat{\beta_1} = 7.21$, with the schools differing only in height. We give up the possibility that schools differ in slope (@sec-random-slopes gives it back) in exchange for a far more precise slope.
 
 #### Separate regressions, or one regression with school-by-MAP interactions? {.unnumbered}
 
@@ -430,11 +428,11 @@ lm(read_comp ~ std_baseline * factor(cluster_id), data = jebs)
 
 **The fitted lines are identical.** Every intercept and every slope comes out the same from both approaches — school 11's $55.53$ and $2.69$, school 62's $47.58$ and $5.73$, all ten pairs. That is not a coincidence. The interacted model gives each school its own intercept *and* its own slope, so its least-squares problem splits into ten separate within-school problems, which is exactly what running ten regressions does.
 
-**What differs is the residual variance, and so every standard error.** Ten separate regressions estimate ten separate $\sigma_j^2$, each one from its own school's residuals only — school 11's comes from 13 students, which is why its slope of 2.69 carries a standard error of 2.67. The interacted model estimates **one** $\sigma^2$ pooled across all 780 students, far more stable, at the cost of an assumption the separate regressions never make: that all ten schools scatter their students around their lines by the same amount. Count the parameters: $10 + 10 + 10 = 30$ against $10 + 10 + 1 = 21$.
+**What differs is the residual variance, and therefore every standard error.** Ten separate regressions estimate ten separate $\sigma_j^2$, each one from its own school's residuals only — school 11's comes from 13 students, which is why its slope of 2.69 carries a standard error of 2.67. The interacted model estimates **one** $\sigma^2$ pooled across all 780 students, far more stable, at the cost of an assumption the separate regressions do not make: that all ten schools scatter their students around their lines by the same amount. Count the parameters: $10 + 10 + 10 = 30$ against $10 + 10 + 1 = 21$.
 
-**Both fits, school by school.** @fig-ri-separate-vs-interaction plots every school's MAP slope twice, once from its own regression and once from the interacted model.
+@fig-ri-separate-vs-interaction plots every school's MAP slope twice, once from its own regression and once from the interacted model.
 
-![Every school's MAP slope, estimated both ways. Each pair of dots sits at exactly the same height, because the two approaches give identical estimates. What differs is the interval around them. School 11, on the far left, is fitted on its own 13 students, and its interval runs from about $-3.2$ to $+8.6$ — that is $2.69 \pm 2.20 \times 2.67$, using the 11-degrees-of-freedom cutoff from the degrees-of-freedom box in @sec-ri-z-vs-t. The interacted model, which borrows one pooled $\sigma^2$ from all 780 students, narrows that to about $-0.8$ to $+6.1$, more than 40% tighter, though still wide enough to contain zero.](images/02/fig_separate_vs_interaction.png){#fig-ri-separate-vs-interaction}
+![Every school's MAP slope, estimated both ways. Each pair of dots sits at exactly the same height, because the two approaches give identical point estimates. What differs is the interval around them. School 11, on the far left, is fitted on its own 13 students, and its interval runs from about $-3.2$ to $+8.6$ — that is $2.69 \pm 2.20 \times 2.67$, using the 11-degrees-of-freedom cutoff from the degrees-of-freedom box in @sec-ri-z-vs-t. The interacted model, which estimates one pooled $\sigma^2$ from all 780 students, narrows that to about $-0.8$ to $+6.1$, more than 40% tighter, though still wide enough to contain zero.](images/02/fig_separate_vs_interaction.png){#fig-ri-separate-vs-interaction}
 
 The lines match; the uncertainty differs. And *neither* is what our multilevel model does: both are no pooling on the coefficients, and only under the MLM does school 11's intercept borrow from the other nine.
 
@@ -443,14 +441,12 @@ The lines match; the uncertainty differs. And *neither* is what our multilevel m
 ::: callout-tip
 ## The short version
 
-Testing a fixed effect in a multilevel model is the same arithmetic you already know: divide the estimate by its standard error, and see whether the answer is bigger than 1.96. The only thing that changes is which distribution we compare that answer to — a normal instead of a $t$. This section explains why the swap happens and what it costs.
+Testing a fixed effect in a multilevel model is the same arithmetic you already know: divide the estimate by its standard error, and see whether the answer is bigger than 1.96. The only thing that changes is which distribution we compare that answer to — a normal instead of a $t$. This section explains why.
 :::
 
 We have an estimate, $\widehat{\beta_1} = 7.21$ points per SD of BOY MAP. Now the usual question: could a number that size arise if BOY MAP and EOY reading were unrelated?
 
 $$H_0: \beta_1 = 0 \qquad\qquad H_A: \beta_1 \neq 0$$
-
-Nothing there is new. What changes is the machinery underneath.
 
 ### Why we use $z$ where OLS uses $t$ {#sec-ri-z-vs-t}
 
@@ -476,8 +472,6 @@ The fewer degrees of freedom you have, the less certain you are about $\widehat{
 
 **Why the reference distribution changes.** In ordinary regression the standard error of a slope depends on $\widehat{\sigma}^2$ — **one** estimated variance — and it is precisely that fact that makes the ratio follow a $t$ distribution on $N - k$ degrees of freedom. A multilevel model does not meet that condition. The standard error of $\widehat{\beta_1}$ depends on $\widehat{\tau}^2$ **and** $\widehat{\sigma}^2$, tangled up with each other and with our unequal school sizes, so the ratio is not $t$ distributed and there is no degrees-of-freedom number that would make it so. We fall back on large-sample theory, treat $Z = \widehat{\beta_1}/\text{SE}$ as a standard normal, and reject at 5% when $|Z| \geq 1.96$. This is called a **Wald test**.
 
-> "In MLM, there are multiple variances, so the test statistics are not $t$ distributed. Instead, we pray that the normal approximation kicks in." — Josh Gilbert
-
 **What this costs.** The normal approximation is only good when the sample is large — and "large" here depends partly on the number of **groups**, not just the individuals. We have 780 students but only $J = 10$ schools. With ten groups the approximation is poor for predictors that mostly vary at the group level, which means a $Z$ of 1.9 or 2.1 is not something to take at face value: the true cutoff might not be 1.96 at all. A slope like ours, at $Z = 29.58$, is safe. It might be worth treating a borderline result from ten groups as a suggestion rather than a finding.
 
 ### The arithmetic for our model {#sec-ri-wald}
@@ -486,13 +480,13 @@ Our estimate is $\widehat{\beta_1} = 7.2097$ and its standard error is $0.2437$,
 
 $$Z \;=\; \frac{\widehat{\beta_1}}{\text{SE}(\widehat{\beta_1})} \;=\; \frac{7.2097}{0.2437} \;=\; 29.58$$
 
-Our slope sits 29.58 standard errors away from zero, against a threshold of 1.96. The 95% interval uses the same two numbers:
+Our slope is 29.58 standard errors away from zero, against a threshold of 1.96. The 95% interval uses the same two numbers:
 
 $$\widehat{\beta_1} \pm 1.96 \times \text{SE}(\widehat{\beta_1}) \;=\; 7.2097 \pm 1.96(0.2437) \;=\; (6.73,\; 7.69)$$
 
 > Our data are consistent with a difference of anywhere between about 6.73 and 7.69 points per standard deviation of BOY MAP. Zero is nowhere near that interval.
 
-The same machinery applied to the intercept gives $\widehat{\gamma_0} = 48.8154$ divided by its standard error of $0.6193$, or $Z \approx 78.8$. That test is of little interest. Its null hypothesis is $\gamma_0 = 0$, which would mean predicting a score of zero on a test whose scores average about 48 — an implausible value, so rejecting it tells us nothing. The **standard error** does matter: at 0.6193 it is nearly three times the OLS one, and @sec-ri-clustering-se is about why.
+The same machinery applied to the intercept gives $\widehat{\gamma_0} = 48.8154$ divided by its standard error of $0.6193$, or $Z \approx 78.8$. That test is of little interest. Its null hypothesis is $\gamma_0 = 0$, which would mean predicting a score of zero on a test whose scores average about 48 — an implausible value, so rejecting it tells us nothing. The **standard error** does matter: at 0.6193 it is nearly three times the OLS one, and @sec-ri-clustering-se explains why.
 
 ### Why `lme4` prints no $p$-values {#sec-ri-no-pvalues}
 
@@ -517,12 +511,12 @@ Both went up, but not by remotely the same amount. The intercept's standard erro
 
 **The intercept is a between-school quantity.** $\gamma_0$ describes where schools sit on average, so pinning it down means knowing how much schools vary — and we have only ten schools to learn that from. Pooled OLS treats that number as estimated from 780 independent observations. The multilevel model treats it as much closer to 10, and its standard error reflects that smaller effective sample.
 
-**MAP is mostly a within-school variable.** We can measure that directly by fitting a variance components model to MAP itself, `lmer(std_baseline ~ (1 | cluster_id))`, which gives MAP an ICC of **0.188**. So only about 19% of the variation in BOY MAP scores is between schools; the other 81% is between students sitting in the same school. (@sec-within-between makes this within/between split the main event.) So the slope is estimated mostly by comparing classmates to each other, and in any such comparison both students share the same school — whatever that school contributes cancels out. Clustering therefore costs the slope almost nothing.
+**MAP is mostly a within-school variable.** We can measure that directly by fitting a variance components model to MAP itself, `lmer(std_baseline ~ (1 | cluster_id))`, which gives MAP an ICC of **0.188**. So only about 19% of the variation in BOY MAP scores is between schools; the other 81% is between students in the same school. (@sec-within-between makes this within/between split the main event.) So the slope is estimated mostly by comparing classmates to each other, and in any such comparison both students share the same school — whatever that school contributes cancels out. Clustering therefore costs the slope almost nothing.
 
 ::: callout-tip
 ## Two implications
 
-First, "the MLM gives bigger standard errors" is a tendency, not a rule. For a predictor whose variation sits almost entirely within groups, the multilevel standard error can come out *smaller* than OLS's. Second, the quantity that tells you what will happen is the ICC of the **predictor**, not the ICC of the outcome. See Huang ([2018](https://psycnet.apa.org/record/2018-36388-001)) for more.
+First, "the MLM gives bigger standard errors" is a tendency, not a rule. For a predictor whose variation is almost entirely within groups, the multilevel standard error can come out *smaller* than OLS's. Second, the quantity that tells you what will happen is the ICC of the **predictor**, not the ICC of the outcome. See Huang ([2018](https://psycnet.apa.org/record/2018-36388-001)) for more.
 :::
 
 ## Inference for variance components {#sec-ri-inference-vc}
@@ -543,7 +537,7 @@ $$H_0: \tau^2 = 0 \qquad\qquad H_A: \tau^2 > 0$$
 
 **What the null distribution actually looks like.** Suppose $\tau^2$ really were zero and we drew sample after sample. About half the time the estimate would come back at exactly zero, because the fitting routine cannot return a negative variance. That carries through to the test: the null distribution of the likelihood ratio statistic is a **mixture**, half of its probability at exactly zero and the other half a $\chi^2$ on 1 degree of freedom.
 
-This is often called a **spike and slab** (which is sometimes used in Bayesian modeling). Both words are literal. The **spike** is the pile of probability sitting at exactly zero. The **slab** is what spreads out over the values above it.
+This is often called a **spike and slab** (which is sometimes used in Bayesian modeling). The **spike** is the pile of probability sitting at exactly zero. The **slab** is what spreads out over the values above it.
 
 ![The null distribution of the likelihood ratio statistic when $\tau^2 = 0$. The crimson spike at zero holds half the probability; the curve beside it is a $\chi^2$ on 1 degree of freedom, carrying the other half. The dashed line is 3.84, the ordinary 5% cutoff for a $\chi^2_1$ — but only 2.5% of this mixture lies beyond it, which is exactly why the $p$-value is halved.](images/02/fig07_null_spike_slab.png){#fig-ri-spike-slab}
 
@@ -586,11 +580,11 @@ anova(mlm_small, mlm_big)                      # two lmer fits
 
 Use `anova()` when both models are `lmer` fits, and `performance::test_likelihoodratio()` when one of them is an `lm`.
 
-**Does the halving matter here?** No. Both $p$-values sit far below 0.05, so schools do differ in value-added even after adjusting for BOY MAP. But an uncorrected $p$ of 0.08 halves to 0.04, turning a failure to reject into a rejection. Halve routinely.
+**Does the halving matter here?** No. Both $p$-values are far below 0.05, so schools do differ in value-added even after adjusting for BOY MAP. But an uncorrected $p$ of 0.08 halves to 0.04, turning a failure to reject into a rejection. Halve routinely.
 
 **Two limits on the halving rule.** It repairs the *edge* problem, so it applies only to variance components — an LR test on a fixed effect has no edge and must not be halved. And it repairs *one* edge at a time: a random slope adds both $\tau_1^2$ and an intercept–slope covariance, so its null becomes a mixture of $\chi^2_1$ and $\chi^2_2$ rather than a simple halving. @sec-random-slopes returns to this.
 
-**What rejecting actually tells you.** Something about the **data-generating process** — about the world, not about the model: two students from the same school resemble each other *beyond* what their BOY MAP scores account for, so their residuals are not independent. Pooled OLS assumes exactly that independence, which is why the standard errors in @sec-ri-complete-pooling are too small for anything measured mostly between schools. The reverse does not hold — with only ten schools this test has little power, so failing to reject would not have proved schools are alike. A related point: no variance is truly zero, so the test is really asking whether we have enough schools to detect the variance that is surely there, and with ten, often we do not.
+**What rejecting actually tells you.** Two students from the same school resemble each other *beyond* what their BOY MAP scores account for, so their residuals are not independent. Pooled OLS assumes exactly that independence, which is why the standard errors in @sec-ri-complete-pooling are too small for anything measured mostly between schools. The reverse does not hold — with only ten schools this test has little power, so failing to reject would not have proved schools are alike. A related point: almost no variance is truly zero, so the test is really asking whether we have enough schools to detect the variance that is surely there, and with ten, often we do not.
 
 ## Confidence intervals for variance components {#sec-ri-profile-ci}
 
@@ -602,9 +596,9 @@ A profile confidence interval is built by trying out lots of possible values for
 
 The LR test told us $\tau^2$ is not zero. The more useful question is which values of $\tau^2$ are actually plausible. Symmetric Wald intervals are out for the same reason a $z$-test was — the parameter cannot go below zero — so we use a **profile confidence interval** instead.
 
-**How it is built.** It takes five steps:
+The profile CI use a five-step process:
 
-1.  Fix $\tau^2$ at one specific value and hold it there.
+1.  Fix $\tau^2$ at one specific value.
 2.  Re-optimize everything else — the fixed effects, $\sigma^2$ — to fit as well as they possibly can *given* that fixed $\tau^2$.
 3.  Record how good the resulting fit is.
 4.  Repeat for a whole range of candidate values.
@@ -637,7 +631,7 @@ confint(mlm1, method = "profile")
 | `(Intercept)` ($\gamma_0$) | 47.57 | 50.12 |
 | `std_baseline` ($\beta_1$) |  6.73 |  7.69 |
 
-**Watch the naming.** These are unhelpfully labeled. `.sig01` is $\tau$, the standard deviation of the first random effect. `.sigma` is $\sigma$, the residual standard deviation. Neither one is a variance, so square them before reporting a variance or computing an ICC.
+**Watch the naming.** These are unhelpfully labeled in R. `.sig01` is $\tau$, the standard deviation of the first random effect. `.sigma` is $\sigma$, the residual standard deviation. Neither one is a variance, so square them before reporting a variance or computing an ICC.
 
 > The SD of school value-added is estimated at $\widehat{\tau} = 1.79$ points, and our data are consistent with values anywhere between about 0.95 and 3.05. Squaring both endpoints — using `confint`'s unrounded $0.9541$ and $3.0520$, since squaring the rounded pair falls a hundredth low — puts $\tau^2$ between 0.91 and 9.31.
 
@@ -645,7 +639,7 @@ Three things to read off it. The interval **excludes zero**, which is the same c
 
 Set the $\tau$ row against the $\sigma$ row, which is narrow, because $\sigma$ is estimated from 780 students while $\tau$ is estimated from 10 schools. The last row is a sanity check: the profile interval for $\beta_1$, $(6.73, 7.69)$, agrees with the Wald interval we computed in @sec-ri-wald.
 
-**A quick note.** Profiling refits the model many times, so it is slow on large datasets and rare in applied work — but when a reviewer asks how precisely you estimated $\tau^2$, this is the tool.
+**A quick note.** Profiling refits the model many times, so it is slow on large datasets and rare in applied work.
 
 ## Vocabulary decoder {#sec-ri-vocab}
 
@@ -681,9 +675,9 @@ One practical consequence: the dummy-variable approach never assumes a school's 
 
 ## Common mistakes {#sec-ri-mistakes}
 
-1.  **Reading** $\widehat{\gamma_0}$ as the average outcome. $\widehat{\gamma_0} = 48.82$ is a *prediction* — the expected EOY score for a student with an average BOY MAP score (i.e., MAP $= 0$) in an average school (i.e., in a school with $u_j = 0$). It is not the average score in the data, which is $47.92$. (@sec-ri-changes says why the two differ.)
+1.  **Interpreting** $\widehat{\gamma_0}$ as the average outcome. $\widehat{\gamma_0} = 48.82$ is a *prediction* — the expected EOY score for a student with an average BOY MAP score (i.e., MAP $= 0$) in an average school (i.e., in a school with $u_j = 0$). It is not the average score in the data, which is $47.92$. (@sec-ri-changes says why the two differ.)
 
-2.  **Reading the residual ICC as "clustering no longer matters."** The ICC fell from $0.174$ to $0.078$, but the clustering did not go away — it moved into the fixed part of the model, inside $\beta_1\text{MAP}_{ij}$. An ICC of $0.078$ across schools averaging 78 students — 780 students in ten schools, ranging from 13 to 116 — still badly biases standard errors that ignore it: our own intercept's SE went from $0.2286$ under OLS to $0.6193$ under the MLM, and every interval built on it widens to match.
+2.  **Interpreting the residual ICC as "clustering no longer matters."** The ICC fell from $0.174$ to $0.078$, but the clustering did not go away — it moved into the fixed part of the model, inside $\beta_1\text{MAP}_{ij}$. An ICC of $0.078$ across schools averaging 78 students — 780 students in ten schools, ranging from 13 to 116 — still badly biases standard errors that ignore it: our own intercept's SE went from $0.2286$ under OLS to $0.6193$ under the MLM, and every interval built on it widens to match.
 
 3.  **Calling value-added causal.** Conditioning on BOY MAP removes the part of the starting gap that **MAP measures**, not the part it misses — family resources, attendance, peers, and anything else that keeps helping students grow *during* the year (@sec-ri-vam).
 
