@@ -15,7 +15,7 @@ Chapters 1 and 2 used a subsample: 10 schools and 780 students. This chapter use
 This means **many numbers from the last two chapters change.** Pay close attention to the new variables; knowing them well helps interpretation later on.
 
 | Feature | Value |
-|:-----------------------------------|:-----------------------------------|
+|:---|:---|
 | Students | 7,797 |
 | Schools | 110 |
 | Students per school | 1 to 151, averaging about 71 |
@@ -394,7 +394,7 @@ The third line and the fourth are the same equation, because $\beta_C$ *is* $\be
 $$\widehat{\beta_W} + \widehat{\beta_C} = 6.9569 + 1.7595 = 8.7164 = \widehat{\beta_B}$$
 
 | To get this effect | From Mundlak: `std_baseline + sch_map` | From REWB: `demeaned_map + sch_map` |
-|:-----------------------|:-----------------------|:-----------------------|
+|:---|:---|:---|
 | Within, $\beta_W$ = 6.96 | read the coefficient on `std_baseline` | read the coefficient on `demeaned_map` |
 | Between, $\beta_B$ = 8.72 | add the two: $6.96 + 1.76$ | read the coefficient on `sch_map` |
 | Contextual, $\beta_C$ = 1.76 | read the coefficient on `sch_map` | subtract: $8.72 - 6.96$ |
@@ -413,7 +413,7 @@ With every school the same size the two would agree. Ours are very unequal, so t
 ### All five slopes, compared {#sec-wb-five}
 
 | Quantity | The comparison it makes | Which model reports it | Our value |
-|:-----------------|:-----------------|:-----------------|-----------------:|
+|:---|:---|:---|---:|
 | Total/pooled slope, $\beta_T$ | any two students in the study, sharing a school or not | `std_baseline` in a plain regression with no school terms | 7.46 |
 | Within slope, $\beta_W$ | two students in the **same school** who differ by one unit in BOY MAP | `std_baseline` in Mundlak; `demeaned_map` in REWB; the demeaned regression of @sec-wb-within | 6.96 |
 | Between slope, $\beta_B$ | two **schools** whose average BOY MAP differs by one unit | `sch_map` in REWB; or $\beta_W + \beta_C$ from Mundlak | 8.72 |
@@ -444,7 +444,7 @@ with $u_j \sim N(0, \tau^2)$ in the last three.
 Here are the trade-offs of the fixed and random approaches, adapted from Rabe-Hesketh and Skrondal.
 
 | Property | Fixed effects | Random effects |
-|:-----------------------|:-----------------------|:-----------------------|
+|:---|:---|:---|
 | Target of inference | these clusters | the population of clusters |
 | Minimum number of clusters | 2 | 10 or more |
 | Assumptions on cluster effects | none | normal, constant variance, uncorrelated with $X$ |
@@ -707,7 +707,7 @@ The coefficient on `sch_map` is 1.831 here rather than the 1.76 of @sec-wb-mundl
 ## Vocabulary decoder {#sec-wb-vocab}
 
 | Term | What it means here |
-|:-----------------------------------|:-----------------------------------|
+|:---|:---|
 | Total/pooled/OLS effect, $\beta_T$ | The slope from an ordinary regression that ignores the clustering: any two students in the study, whether or not they share a school |
 | Within effect, $\beta_W$ | The slope from comparing students inside the same school: two classmates who differ by one unit in BOY MAP |
 | Between effect, $\beta_B$ | The slope from comparing schools: two schools whose average BOY MAP differs by one unit |
