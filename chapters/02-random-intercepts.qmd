@@ -105,7 +105,7 @@ $$\begin{aligned}
 Every symbol, in plain language:
 
 | Symbol | Name | In words |
-|-------------------|-------------------|----------------------------------|
+|----|----|----|
 | $Y_{ij}$ | Outcome | End-of-year reading score for student $i$ in school $j$ |
 | $\beta_{0j}$ | School intercept | School $j$'s **true** predicted score at $\text{MAP} = 0$ |
 | $\text{MAP}_{ij}$ | Level-1 predictor | That student's BOY MAP score, in standard deviation units |
@@ -205,7 +205,7 @@ Four meanings change:
 The table below shows the two models side by side. Both were fit to the same 780 students in 10 schools; only one term differs.
 
 |   | VC model (Chapter 1) | Random Intercepts / VAM (this chapter) |
-|:-----------------|----------------------:|------------------------------:|
+|:---|---:|---:|
 | $\widehat{\tau}^2$ | 16.68 | 3.20 |
 | $\widehat{\sigma}^2$ | 79.44 | 37.94 |
 | ICC | 0.174 | 0.078 |
@@ -269,7 +269,7 @@ So a school whose students arrive far behind is *expected* to finish behind, and
 The table shows all ten schools, sorted by their @sec-variance-components estimate. **Mean BOY MAP** is the average BOY MAP score of that school's students, in SD units. **EOY average** is what its students actually averaged on the outcome. **VC model** is Chapter 1's $\widehat{u_j}$, with no predictors; **VAM** is this chapter's, adjusting for BOY MAP; **Change** is VAM minus VC model — how far each school's estimate moved when we went from the variance components model to the VAM. A negative Change means the school looked better before we adjusted for where its students started; a positive Change means it looks better after.
 
 | School | $n_j$ | Mean BOY MAP | EOY average | $\widehat{u_j}$ VC model | $\widehat{u_j}$ VAM | Change |
-|----------:|----------:|----------:|----------:|----------:|----------:|----------:|
+|---:|---:|---:|---:|---:|---:|---:|
 | 12 | 86 | $+0.666$ | $55.42$ | $+6.62$ | $+1.58$ | $-5.04$ |
 | 11 | 13 | $+0.593$ | $57.12$ | $+6.36$ | $+2.11$ | $-4.25$ |
 | 109 | 112 | $-0.085$ | $49.41$ | $+0.94$ | $+1.09$ | $+0.15$ |
@@ -308,7 +308,7 @@ $R_j$ is the share of the raw residual the model keeps. A big school with a lot 
 **One formula, both models.** "What the model expected" always means the model's prediction *before* using anything school-specific — the part of the equation that does not contain $u_j$, since $u_j$ is what we are solving for. Without a covariate, that prediction is just $\widehat{\gamma_0}$, the same 48.43 for every school. With MAP in the model it is $\widehat{\gamma_0} + \widehat{\beta_1}\overline{\text{MAP}_j}$, which is different for every school. That single change is what the two columns below are showing.
 
 |   | **No baseline in the model** | **Baseline in the model** |
-|:-----------------------|:-----------------------|:-----------------------|
+|:---|:---|:---|
 | The model | $Y_{ij} = \gamma_0 + u_j + e_{ij}$ | $Y_{ij} = \gamma_0 + \beta_1\text{MAP}_{ij} + u_j + e_{ij}$ |
 | Who does the model expect school 62 to look like? | Like any other school | Like *students who started where its students started* |
 | What it expects them to score | $48.43$, the grand mean | $41.87$, from $\widehat{\gamma_0} + \widehat{\beta_1}(-0.963) = 48.8154 + 7.2097(-0.963)$ |
@@ -400,7 +400,7 @@ The single line separating partial pooling from no pooling is $u_j \sim N(0, \ta
 ### The trade-offs
 
 | Metric | Pooled OLS | MLM (random intercepts) | Separate OLS |
-|------------------|------------------|------------------|------------------|
+|----|----|----|----|
 | *Complexity* | Simple | Moderate | High |
 | *Number of parameters* | 3 | 4 | 30 |
 | *Intercept / slope assumptions* | Common intercept **and** common slope | Common slope; intercept varies by school | Nothing in common |
@@ -607,7 +607,7 @@ The profile CI use a five-step process:
 In practice it amounts to running down a list like this one:
 
 | Force $\tau$ to be... | Could a model held at that value still have produced our data? |
-|:-----------------------------------|:-----------------------------------|
+|:---|:---|
 | $0.5$ | No — the fit gets much worse |
 | $0.9$ | Barely no; this is about where the bottom of the interval falls |
 | $1.3$ | Yes |
@@ -646,7 +646,7 @@ Set the $\tau$ row against the $\sigma$ row, which is narrow, because $\sigma$ i
 Same warning as in @sec-vocab: almost nothing below is a distinction, just different names for the same thing.
 
 | Term | Also called |
-|------------------------------------|------------------------------------|
+|----|----|
 | Random intercepts model **with** a predictor | Conditional model; covariate-adjusted model; mixed model |
 | Value-added model (VAM) | Covariate-adjustment model; conditional status model; adjusted school effects |
 | Complete pooling | Pooled OLS; `lm(y ~ x)`; one line for everybody |

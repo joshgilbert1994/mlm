@@ -27,7 +27,7 @@ This means **many numbers from the last two chapters change.** Pay close attenti
 
 Two notes on the variables. **The two tests are different instruments.** `std_baseline` is the MAP reading test given at the beginning of the year and reported as a Z-score, so a score of 0 means "average on the BOY test across the whole study." `read_comp` is a separate, researcher-designed reading comprehension test given at the end of the year. **Both are on convenient scales.** `read_comp` has mean 50 and SD 10, so a 10-point difference is one standard deviation of the outcome. `std_baseline` has mean 0 and SD 1, so "one unit of MAP" and "one standard deviation of MAP" are the same thing. Because `sch_map` is an average of `std_baseline` scores, it is on that same scale: one unit of `sch_map` is one point on the MAP Z-score scale.
 
-We begin with @sec-random-intercepts's random intercepts model. One note on notation first: in the last chapter we wrote this slope as $\beta_1$, and in this chapter we call it $\beta_{RI}$. Nothing about the model changes. The subscript stands for *random intercepts*, so that the name of a slope always tells you which model it came from — and that matters here, because by the end of @sec-wb-three there are three more slopes on this same predictor to keep apart. Written in one line:
+We begin with @sec-random-intercepts's random intercepts model. One note on notation first: in the last chapter we wrote this slope as $\beta_1$, and in this chapter we call it $\beta_{RI}$. The subscript stands for *random intercepts*, so that the name of a slope always tells you which model it came from — and that matters here, because by the end of @sec-wb-three there are three more slopes on this same predictor to keep apart. In reduced form:
 
 $$Y_{ij} = \gamma_0 + \beta_{RI} \text{MAP}_{ij} + u_j + e_{ij}, \qquad u_j \sim N(0, \tau^2), \qquad e_{ij} \sim N(0, \sigma^2)$$
 
@@ -35,7 +35,7 @@ $Y_{ij}$ is the EOY score of student $i$ in school $j$. $\gamma_0$ is the **gran
 
 $$\widehat{\gamma_0} = 49.63, \qquad \widehat{\beta_{RI}} = 6.99, \qquad \widehat{\tau} = 2.68, \qquad \widehat{\sigma} = 6.15$$
 
-Read the same way as in @sec-random-intercepts: in an average school, a student with an average BOY MAP score is predicted to score 49.63 at EOY; two students who differ by one unit in BOY MAP are predicted to differ by 6.99 points at EOY (within OR across schools). We come back to that 6.99.
+Read the same way as in @sec-random-intercepts: in an average school, a student with an average BOY MAP score is predicted to score 49.63 at EOY; two students who differ by one unit in BOY MAP are predicted to differ by 6.99 points at EOY (within OR across schools). We will unpack that 6.99 throughout this chapter.
 
 ## The assumption inside $u_j \sim N(0, \tau^2)$ {#sec-wb-assumption}
 
@@ -52,13 +52,13 @@ Writing $u_j \sim N(0, \tau^2)$ says more than "the school departures are normal
 
 $$\mathbb{E}[u_j \mid \text{MAP}_{ij}] = 0$$
 
-Read the pieces out loud: $\mathbb{E}[\,\cdot\,]$ means "the expected (average) value of," and the vertical bar means "among schools where." So the line says *the average school departure is zero among schools at any given level of MAP* — among low-MAP schools, among average-MAP schools, among high-MAP schools. Wherever you look, the school departures should scatter randomly around zero.
+$\mathbb{E}[\,\cdot\,]$ means "the expected (average) value of," and the vertical bar means "among schools where." So the line says *the average school departure is zero among schools at any given level of MAP* — among low-MAP schools, among average-MAP schools, among high-MAP schools. Wherever you look, the school departures should scatter randomly around zero.
 
 **A concrete picture of the assumption failing.** Suppose the schools whose students arrive with low BOY scores tend to have $u_j$ around $-2$, and the schools whose students arrive with high BOY scores tend to have $u_j$ around $+2$. Across all schools the departures still average to zero. But they are not unrelated to MAP: knowing a school's average BOY score tells you which sign its departure is likely to have. That is the pattern the assumption rules out.
 
 **Why it matters.** If high-MAP schools systematically carry an extra positive departure, then MAP and $u_j$ are correlated, and the model cannot separate "this part of the outcome is associated with MAP" from "this part is an unrelated school departure." The two get mixed into one slope. In plain terms: the model has assumed that a school's unmeasured advantage or disadvantage, $u_j$, is unrelated to its students' BOY scores, and in real data it usually is not. Schools that enroll higher-scoring students also tend to have other advantages — resources, experienced teachers, peers — and all of that ends up in $u_j$.
 
-**What it looks like in the data.** When the assumption fails, the relationship between BOY and EOY scores *across schools* comes out different from the relationship *within schools*. That is the whole first half of this chapter: the between-school slope and the within-school slope are not the same number.
+**What it looks like in the data.** When the assumption fails, the relationship between BOY and EOY scores *between schools* comes out different from the relationship *within schools*. That is the whole first half of this chapter: the between-school slope and the within-school slope are not the same number.
 
 **Two names.** This condition is called the **random effects assumption**. In econometrics its failure is called **level-2 endogeneity**. A predictor is *endogenous* when it is correlated with the error term of the model, and the "level 2" says which error term: the school-level one, $u_j$. Both names describe the same thing — $u_j$ is supposed to be unrelated to the predictors, and it often is not.
 
@@ -213,13 +213,13 @@ where $V(\cdot)$ is a squared standard error. The subscripts look backwards at f
 
 ![The two weights: 97.7% on the within comparison, 2.3% on the between comparison.](images/03/fig03_precision_weights.png){#fig-wb-weights width="66%"}
 
-There is a second way to read $\beta_{RI}$: it is the predicted difference in EOY score per one-unit difference in BOY MAP, comparing students **from the same school OR from different schools**. The total/complete-pooling OLS slope also reflects both the within-school and between-school relationships, but it does not estimate those two slopes separately and then average them. Instead, it fits one line through all students while ignoring school membership, so both the differences among students within schools and the differences between schools influence that one slope; larger schools also have more influence because they contribute more students. The random-intercepts slope also reflects both the within-school and between-school relationships, but it weights those sources of information by precision, which is why it falls much closer to the within-school slope here.
+There is a second way to interpret $\beta_{RI}$: it is the predicted difference in EOY score per one-unit difference in BOY MAP, comparing students **from the same school OR from different schools**. The total/complete-pooling OLS slope also reflects both the within-school and between-school relationships, but it does not estimate those two slopes separately and then average them. Instead, it fits one line through all students while ignoring school membership, so both the differences among students within schools and the differences between schools influence that one slope; larger schools also have more influence because they contribute more students. The random-intercepts slope also reflects both the within-school and between-school relationships, but it weights those sources of information by precision, which is why it falls much closer to the within-school slope here.
 
 **Put simply:** the random-intercepts model reported 6.99 because almost all of the weight falls on the within-school slope of 6.96, which is estimated much more precisely, and very little falls on the between-school slope of 7.96, which is estimated less precisely. That makes sense here: the within-school relationship is informed by differences among **7,797 students**, whereas the between-school relationship is informed by differences among only **110 schools**. A "precision-weighted average" therefore does not mean halfway between the two slopes — it means the more precise slope contributes much more, which is why 6.99 ends up so close to 6.96.
 
 ![All four slopes on the raw student data; the black dashed random-intercepts line (6.99) is drawn pretty much on top of the green within line (6.96), so the green shows through only in the gaps between dashes. The dotted blue total line (7.46) and the red between line (7.96) are visibly steeper.](images/03/fig02_three_slopes.png){#fig-wb-four-slopes width="72%"}
 
-**Then why fit the random intercepts model at all?** If the two slopes really are the same, the random-intercepts slope estimate is the most efficient thing to report: its standard error, 0.0790, is smaller than the standard error of either separate slope — the within-school slope or the between-school slope. The problem is what happens when the two slopes are not the same, as here. Then 6.99 is not the within slope and not the between slope, even though it happens to sit very close to the within slope of 6.96 in these data. It is still a blend of the two, so it does not cleanly describe either the within-school comparison or the between-school comparison. Call it "an uninterpretable mush of effects at different levels," or just a "mushy average."
+**Then why fit the random intercepts model at all?** If the two slopes really are the same, the random-intercepts slope estimate is the most efficient thing to report: its standard error, 0.0790, is smaller than the standard error of either separate slope — the within-school slope or the between-school slope. The problem is what happens when the two slopes are not the same, as here. Then 6.99 is not the within slope and not the between slope, even though it happens to sit very close to the within slope of 6.96 in these data. It is still a blend of the two, so it does not cleanly describe either the within-school comparison or the between-school comparison. Some call it "an uninterpretable mush of effects at different levels," or just a "mushy average."
 
 ### Where the blend comes from {#sec-wb-blend}
 
@@ -291,9 +291,7 @@ lmer(read_comp ~ std_baseline + sch_map + (1 | cluster_id), data = jebs)
 | $\widehat{\tau}$ `sd(Intercept)`     |   2.5066 |        |        |
 | $\widehat{\sigma}$ `sd(Observation)` |   6.1476 |        |        |
 
-*A note on the* $Z$ column. It is the estimate divided by its standard error, and an estimate more than about two standard errors from zero ($Z$ past 1.96) is one we would not attribute to chance. `lmer` labels the column `t value`, but for a coefficient in a multilevel model (`lmer` calls the coefficients "fixed effects" — a different use of the phrase from the fixed effects *model* of @sec-wb-fe) we compare it to a normal distribution rather than a $t$, so this book calls it $Z$. The last two rows are variance components, and `lmer` does not report standard errors for them; that is why those cells are blank.
-
-**Three numbers come out of this one table.**
+**Three numbers come out of this table.**
 
 - The within slope: $\widehat{\beta_W} = 6.9569$. This is **exactly** the within slope we fit by hand in @sec-wb-within. Adding `sch_map` to the model has recovered the within-school comparison on the student's own score.
 - The contextual effect: $\widehat{\beta_C} = 1.7595$.
@@ -487,7 +485,7 @@ $$Y_i = \beta_0 + \beta_1 \text{treat}_i + e_i$$
 | `(Intercept)` |   50.108 | 0.1601 |  312.96 |
 | `treat`       | $-0.216$ | 0.2265 | $-0.95$ |
 
-(Remember: an ordinary regression has one error variance, so its test statistic is a $t$; the multilevel tables below use $Z$ because a coefficient in a multilevel model is compared to a normal distribution rather than a $t$, as in @sec-wb-mundlak-fit.) Read the table and it says treated students scored 0.216 points *lower*, with a standard error of 0.227 — a small negative estimate that is not large relative to its standard error.
+(Remember: an ordinary regression has one error variance, so its test statistic is a $t$; the multilevel tables below use $Z$ because a coefficient in a multilevel model is compared to a normal distribution rather than a $t$, as in @sec-wb-mundlak-fit.) The table suggests treated students scored 0.216 points *lower*, with a standard error of 0.227 — a small negative estimate that is not large relative to its standard error.
 
 ![Control and treated EOY scores, as points (left) and boxplots (right). Both panels show two distributions sitting almost exactly on top of one another.](images/03/fig05_treatment.png){#fig-wb-treatment width="80%"}
 
@@ -524,7 +522,7 @@ lmer(read_comp ~ 1 + treat + (1 | cluster_id), data = jebs)
 
 *The estimate flipped*, from $-0.216$ to $+0.640$. This is the same weighting issue as in @sec-wb-two-between. Ordinary least squares (OLS, plain regression with no random effects) counts every *student* equally, so the largest schools dominate the estimate. The multilevel model weights each school by the information it carries. That puts large schools in between: they count for more than in the means-on-means regression of @sec-wb-two-between, where every school counts once, but for less than under OLS, where every student counts once.
 
-*The standard error went from 0.227 to 1.016*, about four and a half times larger. Neither estimate is distinguishable from zero, but the OLS standard error is far too small for what the data can support. The next section says why.
+*The standard error went from 0.227 to 1.016*, about four and a half times larger. Neither estimate is distinguishable from zero, but the OLS standard error is far too small given the design.
 
 **Why treatment explains almost nothing.** $\widehat{\tau}^2 = 5.0784^2 = 25.79$, compared with 25.58 in a model with no predictors at all — essentially no reduction in between-school variance; the small increase just reflects re-estimation. Because `treat` is a school-level variable, it can directly explain between-school differences, not differences among students within the same school. So any variance reduction we would expect from `treat` would primarily show up in the school-level variance, $\tau^2$, and because the estimated treatment effect is tiny (0.64 points) it explains almost none of it. And it leaves $\sigma^2$ essentially unchanged — 75.02 either way — for the reason in @sec-wb-mundlak-vc: a variable that is identical for everyone in a school says nothing about why classmates differ.
 
@@ -551,7 +549,7 @@ $$\text{ESS} = \frac{7797}{1 + 0.254\,(70.88-1)} = \frac{7797}{1 + 17.75} = \fra
 
 If the ICC were 1, every student in a school would have an identical score — Murnane and Willett say the students would be behaving "as clones of one another" — so a school of 100 students would carry exactly as much information as 1 student. The ESS would be $N/\bar{n}$, which for 1,000 students in 10 schools of 100 is 10: the number of schools. If the ICC were 0, students would be unrelated to their schoolmates and clustering would make no difference: the ESS would be $N = 1{,}000$. Real data sit between the two, and the ICC says where. Importantly, even a fairly small ICC can have a huge effect on the sample size required: in Murnane and Willett's example, increasing the ICC from 0 to just .10 raises the required sample from roughly 650 to 3,750.
 
-This also answers a design question: when planning a cluster trial, is it better to add students or add schools? Adding whole new schools raises $N$ without raising $\bar{n}$, so the effective sample size rises almost in step. Adding students to the schools you already have raises $\bar{n}$ too, and each extra student in a school that is already in the study adds less new information than the one before. In Murnane and Willett's words, statistical power in a cluster-randomized design "lies much more in the number of clusters than in the number of participants per cluster."
+This also answers a design question: when planning a cluster randomized trial, is it better to add students or add schools? Adding whole new schools raises $N$ without raising $\bar{n}$, so the effective sample size rises almost in step. Adding students to the schools you already have raises $\bar{n}$ too, and each extra student in a school that is already in the study adds less new information than the one before. In Murnane and Willett's words, statistical power in a cluster-randomized design "lies much more in the number of clusters than in the number of participants per cluster."
 :::
 
 ### Covariates improve precision {#sec-wb-covariates}
@@ -588,7 +586,7 @@ Both drops shrink the standard error, because a standard error is computed from 
 
 ![OLS + MAP is the ordinary regression with the BOY covariate added; MLM is the multilevel model. All four intervals cross zero.](images/03/fig06_treatment_se.png){#fig-wb-treatment-se width="72%"}
 
-## Why fixed effects cannot do this {#sec-wb-fe-collinear}
+## Why fixed effects cannot accomodate level-2 predictors {#sec-wb-fe-collinear}
 
 Under fixed effects, every school has its own intercept $\alpha_j$. Try to add treatment to that model:
 
@@ -606,7 +604,7 @@ This is a genuine advantage of the random effects approach. By replacing 110 fre
 
 Research question 2 was: *does treatment effectiveness vary by where students started?* Perhaps the intervention helps students who arrived behind more than others, or perhaps it builds on existing skill and helps stronger readers more.
 
-That is a question about whether the **slope** on a student-level variable (BOY MAP) depends on a **school-level** variable (treatment). Because the two variables live at different levels, this is called a **cross-level interaction**. One warning before we fit it: ordinary regression is an even poorer guide to precision here than it was for treatment on its own. The product term varies only across the 110 schools, just as `treat` does, so an OLS standard error on it is too small for the same reason and by even more.
+That is a question about whether the **slope** on a student-level variable (BOY MAP) depends on a **school-level** variable (treatment). Because the two variables are at different levels, this is called a **cross-level interaction**. One warning before we fit it: ordinary regression is an even poorer guide to precision here than it was for treatment on its own. The product term varies only across the 110 schools, just as `treat` does, so an OLS standard error on it is too small for the same reason and by even more.
 
 ### Hierarchical form {#sec-wb-cl-hier}
 
@@ -620,7 +618,7 @@ $$\begin{aligned}
 
 Two things to notice. First, $\beta_1$ now has a $j$ subscript: the slope can differ from school to school. Second, the double subscripts on the $\gamma$'s are bookkeeping. The first digit says which level-1 coefficient the term belongs to (0 for the intercept, 1 for the slope); the second says which level-2 predictor it goes with (0 for the constant, 1 for `treat`).
 
-**The slope equation has no** $u_j$. That matters. In this model the slope takes exactly two values: $\gamma_{10}$ in control schools and $\gamma_{10} + \gamma_{11}$ in treated schools. Two control schools have *identical* slopes; so do two treated schools. There is no school-to-school scatter in the slopes beyond what treatment explains. A **random slopes** model (@sec-random-slopes) adds a departure term to the slope equation so that each school can have its own slope, the same way each school already has its own intercept.
+**The slope equation has no** $u_j$. That matters. In this model the slope takes exactly two values: $\gamma_{10}$ in control schools and $\gamma_{10} + \gamma_{11}$ in treated schools. Two control schools have *identical* slopes; so do two treated schools. There is no school-to-school variation in the slopes beyond what treatment explains. A **random slopes** model (@sec-random-slopes) adds a departure term to the slope equation so that each school can have its own slope, the same way each school already has its own intercept.
 
 ### Reduced form
 
