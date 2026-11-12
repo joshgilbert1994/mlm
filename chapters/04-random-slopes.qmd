@@ -130,7 +130,7 @@ lmer(read_comp ~ 1 + std_baseline + (1 + std_baseline | cluster_id), jebs)
 
 The only change is inside the parentheses. Read `(1 | cluster_id)` as "let the intercept vary by school," and `(1 + std_baseline | cluster_id)` as "let the intercept **and the slope on** `std_baseline` vary by school." The intercept is still included — `(std_baseline | cluster_id)` is shorthand for `(1 + std_baseline | cluster_id)`, and the two are identical. The covariance between the two departures is estimated automatically; nothing extra needs to be requested.
 
-## Reading the output {#sec-rs-output}
+## Interpreting the output {#sec-rs-output}
 
 Fitting the random slopes model to all 7,797 students gives six numbers.
 
@@ -160,7 +160,7 @@ $\widehat{\tau_1} = 1.130$ is a standard deviation, so it can be turned into a r
 
 $$\text{PI} \approx \gamma_1 \pm 1.96 \times \tau_1 \approx 6.95 \pm 1.96 \times 1.13 \approx [4.74,\; 9.16]$$
 
-**We expect about 95% of the population of school-specific slopes to lie between 4.74 and 9.16.** (Computed from the unrounded estimates the lower bound is 4.73; the 4.74 here comes from the rounded 6.95 and 1.13. It is the same interval either way.) In every school, arriving with a higher BOY score is associated with a higher EOY score; the schools differ in how much, not in whether.
+**We expect about 95% of the population of school-specific slopes to lie between 4.74 and 9.16.** In every school, arriving with a higher BOY score is associated with a higher EOY score; the schools differ in how much, not in whether.
 
 Whether a large $\gamma_1$ is good news is a separate question, and a normative one. A strong BOY–EOY relationship means a student's BOY score accounts for much of their EOY score. A weak one means the year's schooling did more to compensate for differences students arrived with. Our 6.949 is strong: two thirds of an SD of EOY score for each SD of BOY score. Even a school two standard deviations below average on slope still has a slope of $6.95 - 2 \times 1.13 = 4.69$. On the scales set out in @sec-rs-data that is 0.47 SD of the EOY test for each SD of BOY score, against 0.69 in the average school — smaller, but still clearly positive.
 
@@ -181,34 +181,34 @@ The two models give nearly the same slope with very different standard errors:
 | Random intercepts |         6.995 | 0.0790 |
 | Random slopes     |         6.949 | 0.1402 |
 
-The estimate barely moved. The standard error rose by 77%, from 0.0790 to 0.1402. Nothing went wrong; the two models are answering slightly different questions.
+The estimate barely moved, but the standard error rose by 77%, from 0.0790 to 0.1402. Intuitively, the SE inflation occurs because the two models are answering slightly different questions.
 
-Under the random intercepts model, the slope is a single fixed quantity and the only thing that varies from sample to sample is which students we happened to draw. Under the random slopes model, each school has its own slope drawn from a distribution, so a new sample of 110 schools would have 110 **new slopes** as well as new students. That extra source of variation has to be carried in the standard error. Put another way: the random intercepts model reports uncertainty about the slope *in these particular schools*, while the random slopes model reports uncertainty about the slope *in schools like these*. The second is the harder question, so the answer is less precise.
+Under the random intercepts model, the slope is a single fixed quantity and the only thing that varies from sample to sample is which students we happened to draw. Under the random slopes model, each school has its own slope drawn from a distribution, so a new sample of 110 schools would have 110 **new slopes** as well as new students. That extra source of variation has to be carried in the standard error. Put another way: the random intercepts model reports uncertainty about the slope *in these particular schools*, while the random slopes model reports uncertainty about the slope *in schools like these*. The second is the more general question, so the answer is less precise.
 
 The practical consequence is that if the slopes really do vary and you fit a random intercepts model anyway, your standard error on the slope will be too small and your confidence intervals too narrow.
 
-## The intercept–slope correlation {#sec-rs-rho}
+## The intercept–slope correlation ($\rho$) {#sec-rs-rho}
 
 $\widehat{\rho} = -0.336$ is the one genuinely new kind of quantity in this chapter.
 
 ### What it is
 
-$\rho$ is an ordinary correlation, computed across the 110 schools, between two things each school has: its intercept departure $u_{0j}$ and its slope departure $u_{1j}$. Like any correlation it runs from $-1$ to $+1$, and like any correlation it describes a **tendency across the group**, not a rule that every member follows.
+$\rho$ is an ordinary correlation, computed across the 110 schools, between two quantities: its intercept departure $u_{0j}$ and its slope departure $u_{1j}$. Like any correlation, it runs from $-1$ to $+1$, and it describes a **tendency across the group**.
 
 - **Positive** $\rho$: schools with higher intercepts also tend to have steeper slopes. Draw the lines and they **fan out** — the schools that are ahead at low BOY scores get further ahead at high ones, so the gaps between schools widen as you move right.
 - **Negative** $\rho$: schools with higher intercepts tend to have flatter slopes. The lines **fan in** — schools that were far apart at low BOY scores come closer together as you move right. @sec-rs-scale adds a qualification: they converge only up to a point, and past it they begin to spread again.
-- $\rho$ at exactly $+1$ or $-1$: a school's slope is an exact linear function of its intercept, with no scatter at all. Geometrically the fanning is complete: every line passes through one common point, and at that point on the predictor the schools are not merely close but identical. With our estimates and $\rho = -1$ the crossing would be at $m = \tau_0/\tau_1 = 2.795/1.130 = 2.47$ — at a BOY score of 2.47 every school would be predicted to produce the same EOY score. (@sec-rs-appendix returns to $\rho = -1$ in a fitted model, where it means something quite different: not this substantive extreme but a sign that the data cannot identify the covariance.)
+- $\rho$ at exactly $+1$ or $-1$: a school's slope is an exact linear function of its intercept, with no scatter at all. Geometrically the fanning is complete: every line passes through one common point, and at that point on the predictor the schools are not merely close but identical. With our estimates and $\rho = -1$ the crossing would be at $\tau_0/\tau_1 = 2.795/1.130 = 2.47$ — at a BOY score of 2.47 every school would be predicted to produce the same EOY score. (@sec-rs-appendix returns to $\rho = -1$ in a fitted model, where it can mean something quite different: not this substantive extreme but a sign that the data cannot identify the covariance.)
 - $\rho$ near zero: knowing a school's intercept tells you nothing about its slope. Which lines cross which has nothing to do with the intercepts. The lines are still closest together at a predictor value of zero and spread further apart as you move away in either direction, by the same amount on each side, because the slopes still differ even though their differences are unrelated to the intercepts.
 
 ![Simulated schools at three values of the correlation. The intercept variance and the slope variance are the same in all three panels; only $\rho$ differs.](images/04/fig06_rho_meaning.png){#fig-rs-rho-meaning width="100%"}
 
 ### Our $-0.336$, in words {#sec-rs-rho-ours}
 
-**Schools that score higher at a BOY score of zero tend to have flatter BOY–EOY slopes.** Put a number on it. A school one standard deviation above average in intercept — about 2.8 EOY points — is expected to differ in slope by $\rho\,\tau_1 = -0.336 \times 1.130 = -0.38$ points, so about $6.949 - 0.380 = 6.57$ instead of 6.949. That is a real difference, and a small one: a school well above average in intercept is still expected to have a slope of more than six and a half EOY points per BOY point. Be careful about what $\rho$ does and does not say. Nothing here is a directional model: $u_{0j}$ and $u_{1j}$ are two correlated random variables, neither one predicting the other, so the right reading is a tendency for the pair to move together and not a share of one explained by the other. The tendency is also modest. Knowing a school is above average at a BOY score of 0 shifts our expectation of its slope down by a few tenths of a point; it does not tell us what that school's slope is, and plenty of schools run against the pattern altogether.
+**Schools that score higher at a BOY score of zero tend to have flatter BOY–EOY slopes.** In other words, a school one standard deviation above average in intercept — about 2.8 EOY points — is expected to differ in slope by $\rho\,\tau_1 = -0.336 \times 1.130 = -0.38$ points, so about $6.949 - 0.380 = 6.57$ instead of 6.949. That is a real difference, but a small one: a school well above average in intercept is still expected to have a slope of more than six and a half EOY points per BOY point. Be careful about what $\rho$ does and does not say. Nothing here is a directional model: $u_{0j}$ and $u_{1j}$ are two correlated random variables, neither one predicting the other, so the right reading is a tendency for the pair to move together and not a share of one explained by the other. The tendency is also modest. Knowing a school is above average at a BOY score of 0 shifts our expectation of its slope down by a few tenths of a point; it does not tell us what that school's slope is, and plenty of schools run against the pattern altogether.
+
+To build intuition, @fig-rs-rho-scatter shows the shrunken intercept and slope estimates in a scatterplot. The scatter shows what "moderate" looks like. The fitted line slopes downward, but the main cloud is close to shapeless and the tilt leans heavily on the two schools far out on the right: correlate the other 108 and you get $-0.025$. Plenty of schools are in the two quadrants that run against the tendency — above average on both, or below average on both. The one school far out on the right is an extreme case of the pattern: an intercept 15.7 points above the average school, more than five times $\tau_0$, and the flattest slope in the data, 2.07 against the average 6.949.
 
 ![Each dot is one school: intercept departure on the horizontal axis, slope departure on the vertical. The fitted line slopes downward because the correlation is negative.](images/04/fig05_rho_scatter.png){#fig-rs-rho-scatter width="72%"}
-
-The scatter shows what "moderate" looks like. The fitted line slopes downward, but the main cloud is close to shapeless and the tilt leans heavily on the two schools far out on the right: correlate the other 108 and you get $-0.025$. Plenty of schools are in the two quadrants that run against the tendency — above average on both, or below average on both. The one school far out on the right is an extreme case of the pattern: an intercept 15.7 points above the average school, more than five times $\tau_0$, and the flattest slope in the data, 2.07 against the average 6.949.
 
 A negative correlation here has a readable substantive meaning. The schools that do best with students who arrive at the average are also the schools where a student's starting score matters least — where the gap between a student who arrived ahead and a student who arrived behind is smallest by the end of the year. Whether that is good news depends on what is wanted from the system: it means gaps between students narrow most in the highest-scoring schools, and it also means those schools do least for the students who arrived furthest ahead.
 
@@ -220,14 +220,14 @@ $u_{0j}$ is the school's departure *at a BOY score of 0*, so $\rho$ describes th
 
 ### What $\rho$ is good for {#sec-rs-rho-use}
 
-A clear use for $\rho$ comes from a different design, based on an argument from Raudenbush and Bloom ([2015](https://psycnet.apa.org/doi/10.1177/1098214015600515)). Suppose a program is evaluated in many sites, and within each site individuals are randomly assigned to receive it or not. Fitting a random slopes model with the treatment indicator as the predictor makes each site's slope its own **program impact**, and each site's intercept the average outcome among its untreated people. The correlation between the two then answers a question a policymaker would actually ask (see @fig-rs-rho-meaning while reading the two cases below):
+A clear use for $\rho$ comes from a different design, based on an argument from Raudenbush and Bloom ([2015](https://psycnet.apa.org/doi/10.1177/1098214015600515)). Suppose a program is evaluated in many sites, and within each site individuals are randomly assigned to receive it or not. Fitting a random slopes model with the treatment indicator as the predictor makes each site's slope its own **program impact**, and each site's intercept the average outcome among its untreated participants. The correlation between the two then answers a question a policymaker would actually ask (see @fig-rs-rho-meaning while reading the two cases below):
 
 - **Negative** $\rho$: the sites where untreated people do worst are the sites where the program does most. The program does most where untreated outcomes are lowest, so it tends to **reduce inequality** between sites.
 - **Positive** $\rho$: the sites where untreated people already do best are the sites where the program does most. The program adds most where outcomes were already highest, so it tends to **widen inequality** between sites.
 
 That is a substantive finding about who a program helps, and it is not available from the average program impact alone. Two programs can have identical average program impacts and opposite signs on $\rho$, and they would be very different policies.
 
-Our own model is not of that kind — the predictor is a student's BOY score rather than a randomly assigned treatment, so its $\rho$ describes an association rather than a distribution of program impacts. The reading in @sec-rs-rho-ours remains correct, but it is the weaker, observational version of this idea.
+Our own model is not of that kind — the predictor is a student's BOY score rather than a randomly assigned treatment, so its $\rho$ describes an association rather than a distribution of program impacts. The interpretation in @sec-rs-rho-ours remains correct, but it is the weaker, observational version of this idea.
 
 ### Correlation vs. covariance {#sec-rs-rho-cov}
 
@@ -269,7 +269,7 @@ In the bottom row the schools have between 86 and 151 students, and the separate
 The effect of shrinkage on the collection as a whole is to remove most of the apparent spread, because most of that spread was noise:
 
 |                                    | Range of slopes    |    SD | Negative slopes |
-|:---------------------------|:--------------|--------------:|--------------:|
+|:------------------------|:---------------|---------------:|---------------:|
 | Separate regressions (106 schools) | $-4.62$ to $11.14$ | 2.451 |               4 |
 | Random slopes model (110 schools)  | 2.07 to 8.68       | 0.880 |               0 |
 
@@ -294,7 +294,7 @@ anova(ri, rs)
 ```
 
 | Model             | Parameters |     $\ell$ | $\chi^2$ |  df | p                       |
-|:-----------|-----------:|-----------:|-----------:|-----------:|:--------------|
+|:-----------|-----------:|-----------:|-----------:|-----------:|:-----------|
 | Random intercepts |          4 | $-25356.0$ |          |     |                         |
 | Random slopes     |          6 | $-25305.6$ |    100.8 |   2 | $< 2.2 \times 10^{-16}$ |
 
@@ -610,7 +610,7 @@ $$\gamma_1 \pm 1.96\,\tau_1$$
 **Our numbers on the full data (7,797 students, 110 schools)**
 
 | Quantity                                          |                  Value |
-|:-----------------------------------------------|-----------------------:|
+|:----------------------------------------------|-----------------------:|
 | Average intercept, $\widehat{\gamma_0}$           |     49.554 (SE 0.2867) |
 | Average slope, $\widehat{\gamma_1}$               |      6.949 (SE 0.1402) |
 | SD of school intercepts, $\widehat{\tau_0}$       |                  2.795 |
